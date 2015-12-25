@@ -29,6 +29,7 @@ Item {
             width: parent.width
             height: globalMargin * 10
             color: dark_blue
+
         }
 
         Rectangle{
@@ -81,7 +82,7 @@ Item {
 
                     model: myModel
 
-                    header: Rectangle {
+                    header: Rectangle { //Suchfeld
                         width: parent.width
                         height: searchBox.height + globalMargin * 2
                         z: 3
@@ -144,160 +145,8 @@ Item {
                                 }
                             }
                         }
-                    }
+                    }//Suchfeld
 
-//                        ListModel {
-//                        id: fruitModel
-
-//                        ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }
-//                        ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }ListElement {
-//                            name: "Apple"
-//                            cost: 2.45
-//                        }
-//                        ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }ListElement {
-//                            name: "Orange"
-//                            cost: 3.25
-//                        }
-//                        ListElement {
-//                            name: "Banana"
-//                            cost: 1.95
-//                        }
-//                        ListElement {
-//                            name: "Pear"
-//                            cost: 1.25
-//                        }
-//                        ListElement {
-//                            name: "Pineapple"
-//                            cost: 6.45
-//                        }
-//                        ListElement {
-//                            name: "peach"
-//                            cost: 2.50
-//                        }
-//                    }
                     delegate: Rectangle {
                         color: "black"
                         width: parent.width
