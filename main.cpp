@@ -23,7 +23,8 @@ int main(int argc, char *argv[])
 //    view.setResizeMode(QQuickView::SizeRootObjectToView);
 //    QQmlContext *ctxt = view.rootContext();
 
-    ctxt->setContextProperty("myModel", &model);
+    ctxt->setContextProperty("VocabularyModel", &model);
+    ctxt->setContextProperty("DictionaryModel", &model);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     //view.setSource(QUrl("qrc:/AppWindow.qml"));
     //view.show();

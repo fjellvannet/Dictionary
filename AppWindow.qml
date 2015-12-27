@@ -16,9 +16,17 @@ Item {
     property int globalMargin: fontHeight.height / 2
     property int globalBorder: globalMargin / 10 > 1 ? globalMargin / 10 : 1
 
+    property int languageInt: 0
+
     Text {
         id: fontHeight
         visible: false
+    }
+
+    function nextLanguage() {
+        languageInt++;
+        if(languageInt == 5 && root.state == "dictionary") languageInt = 0;
+        else if (languageInt == 4 && root.state == "vocabularyList") languageInt = 0;
     }
 
     Column{
@@ -49,19 +57,23 @@ Item {
                     spacing: globalMargin
 
                     HomeScreenButton{
+                        textLabel:qsTr("Waddensea Vocabulary List")
+                        anchors.left: parent.left; anchors.right: parent.right
+                        onClicked: {
+                            root.state = "vocabularyList"
+                        }
+                    }
+
+                    HomeScreenButton{
                         textLabel:qsTr("Waddensea Dictionary")
                         anchors.left: parent.left; anchors.right: parent.right
                         onClicked: {
                             root.state = "dictionary"
                         }
                     }
-
-                    HomeScreenButton{
-                        textLabel:qsTr("Image")
-                        anchors.left: parent.left; anchors.right: parent.right
-                    }
                 }
             }
+
             Rectangle
             {
                 id: dictionary
@@ -75,77 +87,15 @@ Item {
                     anchors.bottomMargin: 0
                     anchors.topMargin: 0
                     clip: true
+
                     headerPositioning: ListView.PullBackHeader
                     Component.onCompleted: {//notwendig, da ansonsten zu Anfang die Hälfte der ersten Kategorie/des ersten Elementes verdeckt wird
                         positionViewAtBeginning()
                     }
 
-                    model: myModel
+                    header: SearchField {}
 
-                    header: Rectangle { //Suchfeld
-                        width: parent.width
-                        height: searchBox.height + globalMargin * 2
-                        z: 3
-                        color: dictionary.color
-                        Rectangle {
-                            anchors.centerIn: parent
-                            id: searchBox
-                            width: parent.width
-                            height: 1.25 * searchField.height
-                            border.width: 2 * globalBorder
-                            border.color: "#666666"
-                            //color: "#00000000" //macht das ganze Suchfeld transparent, sodass man die Hintergrundfarbe sieht
-                            radius: height / 4
-                            RowLayout
-                            {
-                                anchors.fill: parent
-
-                                Image {
-                                    id: magnifying_glass
-                                    Layout.margins: parent.height / 5
-                                    Layout.rightMargin: 0
-                                    Layout.fillHeight: true
-                                    width: height
-                                    sourceSize.height: height
-                                    sourceSize.width: height
-                                    source: "qrc:/images/Lupe.svg"
-                                }
-
-
-                                TextField {
-                                    id: searchField
-                                    Layout.fillWidth: true
-                                    Layout.rightMargin: 1
-                                    placeholderText: qsTr("Search")
-                                    inputMethodHints: Qt.ImhNoPredictiveText
-                                    verticalAlignment: Text.AlignVCenter
-                                    style: TextFieldStyle {
-                                        background: Item{}
-                                    }
-                                }
-
-                                Image {
-                                    id: cross_searchfield
-                                    Layout.margins: parent.height / 5
-                                    Layout.leftMargin: 0
-                                    Layout.fillHeight: true
-                                    width: height
-                                    sourceSize.height: height
-                                    sourceSize.width: height
-                                    source: "qrc:/images/cross_searchfield.svg"
-                                    visible: searchField.length == 0 ? false : true
-
-                                    MouseArea {
-                                        id: cleanButton
-                                        anchors.fill: parent
-                                        onClicked: {
-                                            searchField.text = ""
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }//Suchfeld
+                    model: DictionaryModel
 
                     delegate: Rectangle {
                         color: "black"
@@ -158,16 +108,34 @@ Item {
                             Row {
                                 id: textRow
                                 spacing: globalMargin
-                                Text { text: Deutsch + " - " + English + " - " + Nederlands + " - " + Dansk + " - " + Scientific}
+                                Text { text: Deutsch}
+                                Text {
+                                    text: "(<i>" + Scientific + "</i>)"
+                                    visible: text.length == 9 ? false : true // Klammern nur anzeigen, wenn es überhaupt einen wissenschaftlichen Begriff gibt
+                                }
                             }
                         }
                     }
+
                     footer: Rectangle {
                         width: parent.width
                         height: globalBorder
                         color: "black"
-                        visible: myModel.rowCount() > 0 ? true : false
+                        visible: DictionaryModel.count > 0 ? true : false
                     }
+                }
+            }
+
+            Rectangle
+            {
+                id: vocabularyList
+                anchors.fill: parent
+                visible: false
+                color: light_blue
+
+
+                ListView {
+                    model: VocabularyModel
 
                     section.property: "Deutsch"
                     section.criteria: ViewSection.FirstCharacter
@@ -188,6 +156,39 @@ Item {
                             }
                         }
                     }
+
+                    anchors.fill:parent
+                    anchors.margins: globalMargin
+                    anchors.bottomMargin: 0
+                    anchors.topMargin: 0
+                    clip: true
+
+                    delegate: Rectangle {
+                        color: "black"
+                        width: parent.width
+                        height: textRowL.height + globalBorder
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: globalBorder
+                            anchors.bottomMargin: 0
+                            Row {
+                                id: textRowL
+                                spacing: globalMargin
+                                Text { text: Deutsch}
+                                Text {
+                                    text: "(<i>" + Scientific + "</i>)"
+                                    visible: text.length == 9 ? false : true // Klammern nur anzeigen, wenn es überhaupt einen wissenschaftlichen Begriff gibt
+                                }
+                            }
+                        }
+                    }
+
+                    footer: Rectangle {
+                        width: parent.width
+                        height: globalBorder
+                        color: "black"
+                        visible: VocabularyModel.count > 0 ? true: false
+                    }
                 }
             }
         }
@@ -198,6 +199,12 @@ Item {
             name: "dictionary"
             PropertyChanges { target: home; visible: false }
             PropertyChanges { target: dictionary; visible: true }
+        },
+
+        State {
+            name: "vocabularyList"
+            PropertyChanges { target: home; visible: false }
+            PropertyChanges { target: vocabularyList; visible: true }
         }
     ]
 }

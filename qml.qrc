@@ -3,6 +3,7 @@
         <file>AppWindow.qml</file>
         <file>HomeScreenButton.qml</file>
         <file>main.qml</file>
+        <file>SearchField.qml</file>
     </qresource>
     <qresource prefix="/database">
         <file>waddensea_vocabulary.csv</file>
