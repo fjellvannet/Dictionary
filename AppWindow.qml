@@ -66,7 +66,9 @@ Item {
                     }
                     MouseArea {
                         anchors.fill: parent
-                        onClicked: nextLanguage()
+                        onClicked: {
+                            nextLanguage()
+                        }
                     }
 
 

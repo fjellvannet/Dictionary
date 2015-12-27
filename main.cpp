@@ -4,6 +4,7 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickView>
+#include <QSortFilterProxyModel>
 
 int main(int argc, char *argv[])
 {
@@ -11,9 +12,9 @@ int main(int argc, char *argv[])
 
     VocabularyModel model;
     model.fillModelFromCsv(":/database/waddensea_vocabulary.csv");
-
+    QSortFilterProxyModel listModel;
+    listModel.setSourceModel(&model);
     //VocabularyModel model;
-
 
     QQmlApplicationEngine engine;
 
@@ -23,8 +24,8 @@ int main(int argc, char *argv[])
 //    view.setResizeMode(QQuickView::SizeRootObjectToView);
 //    QQmlContext *ctxt = view.rootContext();
 
-    ctxt->setContextProperty("VocabularyModel", &model);
-    ctxt->setContextProperty("DictionaryModel", &model);
+    ctxt->setContextProperty("VocabularyModel", &listModel);
+    //ctxt->setContextProperty("DictionaryModel", &model);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     //view.setSource(QUrl("qrc:/AppWindow.qml"));
     //view.show();
