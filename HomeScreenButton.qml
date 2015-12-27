@@ -17,7 +17,7 @@ Button {
             color: medium_blue
             border.width: control.activeFocus ? 2 * globalBorder : globalBorder
             border.color: "#888"
-            radius: 0
+            radius: height / 4
         }
     }
 }

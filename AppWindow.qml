@@ -9,8 +9,8 @@ Item {
     height: 480
     anchors.fill: parent
 
-    property color dark_blue: "#00313c"
-    property color medium_blue: "#00629b"
+    property color dark_blue: "#00629b"
+    property color medium_blue: "#00313c"
     property color light_blue: "#41b6e6"
 
     property int globalMargin: fontHeight.height / 2
@@ -24,9 +24,9 @@ Item {
     }
 
     function nextLanguage() {
-        languageInt++;
-        if(languageInt == 5 && root.state == "dictionary") languageInt = 0;
-        else if (languageInt == 4 && root.state == "vocabularyList") languageInt = 0;
+        if(languageInt < 3) languageInt++;
+        else if(languageInt == 4 && root.state == "dictionary") languageInt = 0;
+        else if (languageInt == 3 && root.state == "vocabularyList") languageInt = 0;
     }
 
     Column{
@@ -38,10 +38,10 @@ Item {
             height: globalMargin * 10
             color: dark_blue
 
-            ColumnLayout {
+            RowLayout {
                 id: dictionaryMenu
                 anchors.fill: parent
-                anchors.margins: globalMargin
+                anchors.margins: 1.5 * globalMargin
 
                 Item { //Platzhalter
                     Layout.fillWidth: true
@@ -50,6 +50,25 @@ Item {
                 Image {
                     id: languageButton
                     Layout.fillHeight: true
+                    sourceSize.height: height
+                    sourceSize.width: height / 3 * 5
+                    source: switch(languageInt) {
+                    case 0:
+                        return "qrc:/images/flags/german_flag.svg"
+                    case 1:
+                        return "qrc:/images/flags/union_jack.svg"
+                    case 2:
+                        return "qrc:/images/flags/danish_flag.svg"
+                    case 3:
+                        return "qrc:/images/flags/netherlands_flag.svg"
+                    case 4:
+                        return "qrc:/images/flags/all_languages.svg"
+                    }
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: nextLanguage()
+                    }
+
 
                 }
             }
@@ -173,6 +192,16 @@ Item {
                         }
                     }
 
+                    header: Rectangle {
+                        height: globalMargin
+                        width: parent.width
+                        color: light_blue
+                    }
+
+                    Component.onCompleted: {//notwendig, da ansonsten zu Anfang die Hälfte der ersten Kategorie/des ersten Elementes verdeckt wird
+                        positionViewAtBeginning()
+                    }
+
                     anchors.fill:parent
                     anchors.margins: globalMargin
                     anchors.bottomMargin: 0
@@ -190,7 +219,18 @@ Item {
                             Row {
                                 id: textRowL
                                 spacing: globalMargin
-                                Text { text: Deutsch}
+                                Text {
+                                    text: switch (languageInt) {
+                                        case 0:
+                                            return Deutsch
+                                        case 1:
+                                            return English
+                                        case 2:
+                                            return Nederlands
+                                        case 3:
+                                            return Dansk
+                                    }
+                                }
                                 Text {
                                     text: "(<i>" + Scientific + "</i>)"
                                     visible: text.length == 9 ? false : true // Klammern nur anzeigen, wenn es überhaupt einen wissenschaftlichen Begriff gibt
