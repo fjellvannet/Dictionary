@@ -38,6 +38,22 @@ Item {
             height: globalMargin * 10
             color: dark_blue
 
+            ColumnLayout {
+                id: dictionaryMenu
+                anchors.fill: parent
+                anchors.margins: globalMargin
+
+                Item { //Platzhalter
+                    Layout.fillWidth: true
+                }
+
+                Image {
+                    id: languageButton
+                    Layout.fillHeight: true
+
+                }
+            }
+
         }
 
         Rectangle{

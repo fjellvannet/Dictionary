@@ -29,7 +29,7 @@ Rectangle { //Suchfeld
                 width: height
                 sourceSize.height: height
                 sourceSize.width: height
-                source: "qrc:/images/Lupe.svg"
+                source: "qrc:/images/icons/Lupe.svg"
             }
             
             
@@ -53,7 +53,7 @@ Rectangle { //Suchfeld
                 width: height
                 sourceSize.height: height
                 sourceSize.width: height
-                source: "qrc:/images/cross_searchfield.svg"
+                source: "qrc:/images/icons/cross_searchfield.svg"
                 visible: searchField.length == 0 ? false : true
                 
                 MouseArea {
