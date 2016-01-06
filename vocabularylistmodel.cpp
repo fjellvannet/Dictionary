@@ -9,9 +9,19 @@ VocabularyListModel::VocabularyListModel(QObject *parent)
 void VocabularyListModel::sortBy(QVariant role)
 {
     int column = role.toInt();
-    for(int row = 0; row < rowCount(); ++row)
+    if(column == 0) //Deutsch
     {
-        m_preSort.append(sourceModel()->data(index(row, column), column).toString().toLower().remove(QRegExp("^\\(.*\\)\\s*")));
+        for(int row = 0; row < rowCount(); ++row)
+        {
+            m_preSort.append(sourceModel()->data(index(row, column), column).toString().toLower().remove(QRegExp("^\\(.*\\)\\s*")).replace("ä", "a").replace("ö", "o").replace("ü", "u"));
+        }
+    }
+    else
+    {
+        for(int row = 0; row < rowCount(); ++row)
+        {
+            m_preSort.append(sourceModel()->data(index(row, column), column).toString().toLower().remove(QRegExp("^\\(.*\\)\\s*")));
+        }
     }
     sort(column);
     m_preSort.clear();
