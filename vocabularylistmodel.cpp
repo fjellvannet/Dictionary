@@ -9,16 +9,12 @@ VocabularyListModel::VocabularyListModel(QObject *parent)
 void VocabularyListModel::sortBy(QVariant role)
 {
     int column = role.toInt();
-    m_preSort.clear();
     for(int row = 0; row < rowCount(); ++row)
     {
-        m_preSort.append(sourceModel()->data(index(row, column), column).toString().toLower().remove(QRegExp("^\\(.*\\)\\s*")));
+        m_preSort.append(sourceModel()->data(index(row, column), column).toString().toUpper().remove(QRegExp("^\\(.*\\)\\s*")));
     }
     sort(column);
-//    for(int i = 0; i < rowCount(); ++i)
-//    {
-//        qDebug() << data(index(i, role.toInt())) << QString::number(role.toInt());
-//    }
+    m_preSort.clear();
 }
 
 bool VocabularyListModel::lessThan(const QModelIndex &left, const QModelIndex &right) const

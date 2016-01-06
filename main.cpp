@@ -22,6 +22,8 @@ int main(int argc, char *argv[])
 
     QQuickView view;
     view.setResizeMode(QQuickView::SizeRootObjectToView);
+    view.setHeight(480);
+    view.setWidth(640);
     QQmlContext *ctxt = view.rootContext();
 
     ctxt->setContextProperty("VocabularyModel", &listModel);
