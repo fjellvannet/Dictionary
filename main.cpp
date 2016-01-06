@@ -1,10 +1,11 @@
 #include "vocabularymodel.h"
+#include "vocabularylistmodel.h"
 
 #include <QApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickView>
-#include <QSortFilterProxyModel>
+#include <QQuickItem>
 
 int main(int argc, char *argv[])
 {
@@ -12,23 +13,23 @@ int main(int argc, char *argv[])
 
     VocabularyModel model;
     model.fillModelFromCsv(":/database/waddensea_vocabulary.csv");
-    QSortFilterProxyModel listModel;
+    VocabularyListModel listModel;
     listModel.setSourceModel(&model);
     //VocabularyModel model;
 
-    QQmlApplicationEngine engine;
+//    QQmlApplicationEngine engine;
+//    QQmlContext *ctxt = engine.rootContext();
 
-    QQmlContext *ctxt = engine.rootContext();
-
-//    QQuickView view;
-//    view.setResizeMode(QQuickView::SizeRootObjectToView);
-//    QQmlContext *ctxt = view.rootContext();
+    QQuickView view;
+    view.setResizeMode(QQuickView::SizeRootObjectToView);
+    QQmlContext *ctxt = view.rootContext();
 
     ctxt->setContextProperty("VocabularyModel", &listModel);
+    view.setSource(QUrl("qrc:/AppWindow.qml"));
+    listModel.connect(view.rootObject()->findChild<QObject*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
     //ctxt->setContextProperty("DictionaryModel", &model);
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    //view.setSource(QUrl("qrc:/AppWindow.qml"));
-    //view.show();
+    //engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
+    view.show();
 
     return app.exec();
 }

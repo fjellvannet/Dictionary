@@ -49,6 +49,7 @@ Item {
 
                 Image {
                     id: languageButton
+                    objectName: "LanguageButton"
                     Layout.fillHeight: true
                     sourceSize.height: height
                     sourceSize.width: height / 3 * 5
@@ -64,10 +65,14 @@ Item {
                     case 4:
                         return "qrc:/images/flags/all_languages.svg"
                     }
+
+                    signal sortBy(var role)
+
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
                             nextLanguage()
+                            languageButton.sortBy(languageInt);
                         }
                     }
 
@@ -174,25 +179,25 @@ Item {
                 ListView {
                     model: VocabularyModel
 
-                    section.property: "Deutsch"
-                    section.criteria: ViewSection.FirstCharacter
-                    section.delegate: Rectangle {
-                        color: "black"
-                        width: parent.width
-                        height: text.height + globalBorder
-                        Rectangle {
-                            anchors.fill: parent
-                            anchors.margins: globalBorder
-                            anchors.bottomMargin: 0
-                            color: medium_blue
-                            Text {
-                                id: text
-                                text: section
-                                font.bold: true
-                                font.pointSize: 1.5 * fontHeight.font.pointSize
-                            }
-                        }
-                    }
+//                    section.property: "Deutsch"
+//                    section.criteria: ViewSection.FirstCharacter
+//                    section.delegate: Rectangle {
+//                        color: "black"
+//                        width: parent.width
+//                        height: text.height + globalBorder
+//                        Rectangle {
+//                            anchors.fill: parent
+//                            anchors.margins: globalBorder
+//                            anchors.bottomMargin: 0
+//                            color: medium_blue
+//                            Text {
+//                                id: text
+//                                text: section
+//                                font.bold: true
+//                                font.pointSize: 1.5 * fontHeight.font.pointSize
+//                            }
+//                        }
+//                    }
 
                     header: Rectangle {
                         height: globalMargin

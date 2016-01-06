@@ -37,7 +37,7 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
-#include <QAbstractListModel>
+#include <QAbstractTableModel>
 #include <QStringList>
 
 class WaddenseaWord : QStringList
@@ -55,7 +55,7 @@ public:
     bool fillFromCsvLine(QString csvLine);
 };
 
-class VocabularyModel : public QAbstractListModel
+class VocabularyModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
@@ -70,9 +70,10 @@ public:
     VocabularyModel(QObject *parent = 0);
     bool fillModelFromCsv(QString csvPath);
 
-    int rowCount(const QModelIndex & parent = QModelIndex()) const;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    int columnCount(const QModelIndex &parent) const;
 
-    QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+    QVariant data(const QModelIndex &index, int role) const;
 
 protected:
     QHash<int, QByteArray> roleNames() const;

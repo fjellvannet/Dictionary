@@ -7,8 +7,11 @@ ApplicationWindow {
     width: 640
     height: 480
     title: applicationName
+    id: appWindow
 
     property string applicationName: qsTr("IWSS Waddensea Dictionary")
     AppWindow {}
+
+
 }
 

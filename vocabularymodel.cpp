@@ -77,7 +77,7 @@ bool WaddenseaWord::fillFromCsvLine(QString csvLine)
 }
 
 VocabularyModel::VocabularyModel(QObject *parent)
-    : QAbstractListModel(parent)
+    : QAbstractTableModel(parent)
 {
 }
 
@@ -111,6 +111,12 @@ bool VocabularyModel::fillModelFromCsv(QString csvPath)
 int VocabularyModel::rowCount(const QModelIndex & parent) const {
     Q_UNUSED(parent);
     return m_vocabulary.count();
+}
+
+int VocabularyModel::columnCount(const QModelIndex & parent) const
+{
+    Q_UNUSED(parent);
+    return 5;
 }
 
 QVariant VocabularyModel::data(const QModelIndex & index, int role) const {
