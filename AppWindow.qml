@@ -179,25 +179,35 @@ Item {
                 ListView {
                     model: VocabularyModel
 
-//                    section.property: "Deutsch"
-//                    section.criteria: ViewSection.FirstCharacter
-//                    section.delegate: Rectangle {
-//                        color: "black"
-//                        width: parent.width
-//                        height: text.height + globalBorder
-//                        Rectangle {
-//                            anchors.fill: parent
-//                            anchors.margins: globalBorder
-//                            anchors.bottomMargin: 0
-//                            color: medium_blue
-//                            Text {
-//                                id: text
-//                                text: section
-//                                font.bold: true
-//                                font.pointSize: 1.5 * fontHeight.font.pointSize
-//                            }
-//                        }
-//                    }
+                    section.property: switch (languageInt) {
+                        case 0:
+                            return "Deutsch"
+                        case 1:
+                            return "English"
+                        case 2:
+                            return "Nederlands"
+                        case 3:
+                            return "Dansk"
+                    }
+
+                    section.criteria: ViewSection.FirstCharacter
+                    section.delegate: Rectangle {
+                        color: "black"
+                        width: parent.width
+                        height: text.height + globalBorder
+                        Rectangle {
+                            anchors.fill: parent
+                            anchors.margins: globalBorder
+                            anchors.bottomMargin: 0
+                            color: medium_blue
+                            Text {
+                                id: text
+                                text: section.toUpperCase()
+                                font.bold: true
+                                font.pointSize: 1.5 * fontHeight.font.pointSize
+                            }
+                        }
+                    }
 
                     header: Rectangle {
                         height: globalMargin
@@ -250,7 +260,7 @@ Item {
                         width: parent.width
                         height: globalBorder
                         color: "black"
-                        visible: VocabularyModel.count > 0 ? true: false
+                        visible: VocabularyModel.rowCount() > 0 ? true: false
                     }
                 }
             }

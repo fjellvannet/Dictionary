@@ -11,7 +11,7 @@ void VocabularyListModel::sortBy(QVariant role)
     int column = role.toInt();
     for(int row = 0; row < rowCount(); ++row)
     {
-        m_preSort.append(sourceModel()->data(index(row, column), column).toString().toUpper().remove(QRegExp("^\\(.*\\)\\s*")));
+        m_preSort.append(sourceModel()->data(index(row, column), column).toString().toLower().remove(QRegExp("^\\(.*\\)\\s*")));
     }
     sort(column);
     m_preSort.clear();
