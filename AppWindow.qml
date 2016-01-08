@@ -199,7 +199,8 @@ Item {
 
                         model: VocabularyModel
 
-                        //maximumFlickVelocity: 500
+                        maximumFlickVelocity: 10000
+                        flickDeceleration: maximumFlickVelocity / 2
 
                         section.property: switch (languageInt) {
                             case 0:
@@ -293,7 +294,7 @@ Item {
                         Text {
                             id: sectionLetter
                             z: parent.delegate.z + 2
-                            visible: parent.verticalVelocity == 0 ? false : true
+                            visible: parent.verticalVelocity <= parent.maximumFlickVelocity / 2 && parent.verticalVelocity >= -parent.maximumFlickVelocity / 2 ? false : true
                             anchors.centerIn: parent
                             text: parent.currentSection
                             color: "white"
