@@ -72,7 +72,11 @@ Item {
                         anchors.fill: parent
                         onClicked: {
                             nextLanguage()
-                            languageButton.sortBy(languageInt);
+                            if(root.state == "vocabularyList")
+                            {
+                                languageButton.sortBy(languageInt)
+                                lvVocabulary.positionViewAtBeginning()
+                            }
                         }
                     }
 
@@ -175,90 +179,126 @@ Item {
                 visible: false
                 color: light_blue
 
-
-                ListView {
-                    model: VocabularyModel
-
-                    section.property: switch (languageInt) {
-                        case 0:
-                            return "SecDeutsch"
-                        case 1:
-                            return "SecEnglish"
-                        case 2:
-                            return "SecNederlands"
-                        case 3:
-                            return "SecDansk"
-                    }
-                    section.delegate: Rectangle {
-                        color: "black"
-                        width: parent.width
-                        height: text.height + globalBorder
-                        Rectangle {
-                            anchors.fill: parent
-                            anchors.margins: globalBorder
-                            anchors.bottomMargin: 0
-                            color: medium_blue
-                            Text {
-                                id: text
-                                text: section
-                                font.bold: true
-                                font.pointSize: 1.5 * fontHeight.font.pointSize
-                            }
-                        }
-                    }
-
-                    header: Rectangle {
-                        height: globalMargin
-                        width: parent.width
-                        color: light_blue
-                    }
-
-                    Component.onCompleted: {//notwendig, da ansonsten zu Anfang die Hälfte der ersten Kategorie/des ersten Elementes verdeckt wird
-                        positionViewAtBeginning()
-                    }
-
+                ScrollView {
                     anchors.fill:parent
                     anchors.margins: globalMargin
                     anchors.bottomMargin: 0
                     anchors.topMargin: 0
-                    clip: true
+                    horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+                    frameVisible: true
+                    //__wheelAreaScrollSpeed: 500
+                    style: ScrollViewStyle {
+                        frame: Item{}
+                        transientScrollBars: false
+                        scrollToClickedPosition: true
+                    }
 
-                    delegate: Rectangle {
-                        color: "black"
-                        width: parent.width
-                        height: textRowL.height + globalBorder
-                        Rectangle {
-                            anchors.fill: parent
-                            anchors.margins: globalBorder
-                            anchors.bottomMargin: 0
-                            Row {
-                                id: textRowL
-                                spacing: globalMargin
+                    ListView {
+                        id: lvVocabulary
+                        boundsBehavior: Flickable.StopAtBounds
+
+                        model: VocabularyModel
+
+                        //maximumFlickVelocity: 500
+
+                        section.property: switch (languageInt) {
+                            case 0:
+                                return "SecDeutsch"
+                            case 1:
+                                return "SecEnglish"
+                            case 2:
+                                return "SecNederlands"
+                            case 3:
+                                return "SecDansk"
+                        }
+
+                        section.delegate: Rectangle {
+                            color: "black"
+                            width: parent.width
+                            height: text.height + globalBorder
+                            Rectangle {
+                                anchors.fill: parent
+                                anchors.margins: globalBorder
+                                anchors.bottomMargin: 0
+                                color: medium_blue
                                 Text {
-                                    text: switch (languageInt) {
-                                        case 0:
-                                            return Deutsch
-                                        case 1:
-                                            return English
-                                        case 2:
-                                            return Nederlands
-                                        case 3:
-                                            return Dansk
-                                    }
-                                }
-                                Text {
-                                    text: "(<i>" + Scientific + "</i>)"
-                                    visible: text.length == 9 ? false : true // Klammern nur anzeigen, wenn es überhaupt einen wissenschaftlichen Begriff gibt
+                                    id: text
+                                    text: section
+                                    font.bold: true
+                                    font.pointSize: 1.5 * fontHeight.font.pointSize
+                                    color: "white"
                                 }
                             }
                         }
-                    }
 
-                    footer: Rectangle {
-                        width: parent.width
-                        height: globalBorder
-                        color: "black"
-                        visible: VocabularyModel.rowCount() > 0 ? true: false
+                        header: Rectangle {
+                            height: globalMargin
+                            width: parent.width
+                            color: light_blue
+                        }
+
+                        Component.onCompleted: {//notwendig, da ansonsten zu Anfang die Hälfte der ersten Kategorie/des ersten Elementes verdeckt wird
+                            positionViewAtBeginning()
+                        }
+
+                        delegate: Rectangle {
+                            color: "black"
+                            width: parent.width
+                            height: textRowL.height + globalBorder
+                            Rectangle {
+                                anchors.fill: parent
+                                anchors.margins: globalBorder
+                                anchors.bottomMargin: 0
+                                Row {
+                                    id: textRowL
+                                    spacing: globalMargin
+                                    Text {
+                                        text: switch (languageInt) {
+                                            case 0:
+                                                return Deutsch
+                                            case 1:
+                                                return English
+                                            case 2:
+                                                return Nederlands
+                                            case 3:
+                                                return Dansk
+                                        }
+                                    }
+                                    Text {
+                                        text: "(<i>" + Scientific + "</i>)"
+                                        visible: text.length == 9 ? false : true // Klammern nur anzeigen, wenn es überhaupt einen wissenschaftlichen Begriff gibt
+                                    }
+                                }
+                            }
+                        }
+
+                        footer: Rectangle {
+                            width: parent.width
+                            height: globalBorder
+                            color: "black"
+                            visible: VocabularyModel.rowCount() > 0 ? true: false
+                        }
+
+                        Rectangle {
+                            z: sectionLetter.z - 1 //sonst verschwindet es hinter den Delegates...
+                            visible: sectionLetter.visible
+                            height: 2 * sectionLetter.height
+                            width: height
+                            color: "blue"
+                            opacity: 0.5
+                            anchors.centerIn: parent
+                            radius: height / 6
+                        }
+
+                        Text {
+                            id: sectionLetter
+                            z: parent.delegate.z + 2
+                            visible: parent.verticalVelocity == 0 ? false : true
+                            anchors.centerIn: parent
+                            text: parent.currentSection
+                            color: "white"
+                            font.pointSize: 3 * fontHeight.font.pointSize
+                        }
                     }
                 }
             }

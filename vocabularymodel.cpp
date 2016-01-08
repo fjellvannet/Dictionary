@@ -131,7 +131,7 @@ QVariant VocabularyModel::data(const QModelIndex & index, int role) const {
     if(section.isDigit()) return "0-9";
     else if(role == SecDeutschRole)
     {
-        if(section == QChar(196)) return QChar('A');
+        if(section == QChar(196)) return QChar('A');//ÄÖÜ durch AOU ersetzen
         else if(section == QChar(214)) return QChar('O');
         else if(section == QChar(220)) return QChar('U');
     }
