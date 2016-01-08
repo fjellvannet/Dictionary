@@ -59,12 +59,16 @@ class VocabularyModel : public QAbstractTableModel
 {
     Q_OBJECT
 public:
-    enum LanguageRoles {         
-        DeutschRole   ,
-        EnglishRole   ,
-        NederlandsRole,
-        DanskRole     ,
-        ScientificRole
+    enum Roles {
+        DeutschRole      ,
+        EnglishRole      ,
+        NederlandsRole   ,
+        DanskRole        ,
+        ScientificRole   ,
+        SecDeutschRole   ,
+        SecEnglishRole   ,
+        SecNederlandsRole,
+        SecDanskRole
     };
 
     VocabularyModel(QObject *parent = 0);

@@ -181,16 +181,14 @@ Item {
 
                     section.property: switch (languageInt) {
                         case 0:
-                            return "Deutsch"
+                            return "SecDeutsch"
                         case 1:
-                            return "English"
+                            return "SecEnglish"
                         case 2:
-                            return "Nederlands"
+                            return "SecNederlands"
                         case 3:
-                            return "Dansk"
+                            return "SecDansk"
                     }
-
-                    section.criteria: ViewSection.FirstCharacter
                     section.delegate: Rectangle {
                         color: "black"
                         width: parent.width
@@ -202,7 +200,7 @@ Item {
                             color: medium_blue
                             Text {
                                 id: text
-                                text: section.toUpperCase()
+                                text: section
                                 font.bold: true
                                 font.pointSize: 1.5 * fontHeight.font.pointSize
                             }

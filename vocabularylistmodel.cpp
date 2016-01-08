@@ -9,7 +9,7 @@ VocabularyListModel::VocabularyListModel(QObject *parent)
 void VocabularyListModel::sortBy(QVariant role)
 {
     int column = role.toInt();
-    if(column == 0) //Deutsch
+    if(column == 0) //Deutsch, sicherstellen, dass Ä, Ö und Ü eingereiht werden
     {
         for(int row = 0; row < rowCount(); ++row)
         {

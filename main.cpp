@@ -15,7 +15,6 @@ int main(int argc, char *argv[])
     model.fillModelFromCsv(":/database/waddensea_vocabulary.csv");
     VocabularyListModel listModel;
     listModel.setSourceModel(&model);
-    listModel.sortBy(0);//wichtig, sonst sind Ä, Ö und Ü eingereiht...
     //VocabularyModel model;
 
 //    QQmlApplicationEngine engine;

@@ -120,18 +120,34 @@ int VocabularyModel::columnCount(const QModelIndex & parent) const
 }
 
 QVariant VocabularyModel::data(const QModelIndex & index, int role) const {
-    if ((index.row() < 0 || index.row() >= m_vocabulary.count()) && (role >= 0 && role <= ScientificRole))
+    if ((index.row() < 0 || index.row() >= m_vocabulary.count()) && (role >= 0 && role <= SecDanskRole))
         return QVariant();
     WaddenseaWord waddenseaWord = m_vocabulary[index.row()];
-    return waddenseaWord.word(role);
+    if(role <= ScientificRole)
+    {
+        return waddenseaWord.word(role);
+    }
+    QChar section = waddenseaWord.word(role - 5).remove(QRegExp("^\\(.*\\)\\s*")).at(0).toUpper();
+    if(section.isDigit()) return "0-9";
+    else if(role == SecDeutschRole)
+    {
+        if(section == QChar(196)) return QChar('A');
+        else if(section == QChar(214)) return QChar('O');
+        else if(section == QChar(220)) return QChar('U');
+    }
+    return section;
 }
 
 QHash<int, QByteArray> VocabularyModel::roleNames() const {
     QHash<int, QByteArray> roles;
-    roles[DeutschRole   ] = "Deutsch";
-    roles[EnglishRole   ] = "English";
-    roles[NederlandsRole] = "Nederlands";
-    roles[DanskRole     ] = "Dansk";
-    roles[ScientificRole] = "Scientific";
+    roles[DeutschRole      ] = "Deutsch";
+    roles[EnglishRole      ] = "English";
+    roles[NederlandsRole   ] = "Nederlands";
+    roles[DanskRole        ] = "Dansk";
+    roles[ScientificRole   ] = "Scientific";
+    roles[SecDeutschRole   ] = "SecDeutsch";
+    roles[SecEnglishRole   ] = "SecEnglish";
+    roles[SecNederlandsRole] = "SecNederlands";
+    roles[SecDanskRole     ] = "SecDansk";
     return roles;
 }
