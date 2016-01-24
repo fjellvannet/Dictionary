@@ -72,22 +72,21 @@ Item {
                     MouseArea {
                         anchors.fill: parent
                         onClicked: {
-                            nextLanguage()
                             if(root.state == "vocabularyList")
                             {
-                                languageButton.sortBy(languageInt)
+
                                 lvVocabulary.visible = false
+                                nextLanguage()
+                                languageButton.sortBy(languageInt)
+                                lvVocabulary.positionViewAtEnd()
                                 lvVocabulary.positionViewAtBeginning()
                                 lvVocabulary.currentIndex = 0
                                 lvVocabulary.visible = true
                             }
                         }
                     }
-
-
                 }
             }
-
         }
 
         Rectangle{
@@ -183,65 +182,77 @@ Item {
                 visible: false
                 color: light_blue
 
-                ListView {
+                GridLayout {
                     anchors.fill: parent
-                    id: lvVocabulary
-                    boundsBehavior: Flickable.StopAtBounds
-                    model: VocabularyModel
-                    maximumFlickVelocity: globalMargin * 1000
-                    flickDeceleration: maximumFlickVelocity / 2
-                    focus: true
+                    flow:  width > height ? GridLayout.LeftToRight : GridLayout.TopToBottom
+                    rowSpacing: 0
+                    columnSpacing: 0
 
-                    section.labelPositioning: ViewSection.CurrentLabelAtStart | ViewSection.InlineLabels
-                    section.property: switch (languageInt) {
-                        case 0:
-                            return "SecDeutsch"
-                        case 1:
-                            return "SecEnglish"
-                        case 2:
-                            return "SecNederlands"
-                        case 3:
-                            return "SecDansk"
-                    }
+                    ListView {
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        id: lvVocabulary
+                        model: VocabularyModel
+                        maximumFlickVelocity: globalMargin * 1000
+                        flickDeceleration: maximumFlickVelocity / 2
+                        focus: true
 
-                    section.delegate: Rectangle {
-                        color: "black"
-                        width: parent.width
-                        height: text.height + globalBorder
-                        Rectangle {
-                            anchors.fill: parent
-                            anchors.margins: globalBorder
-                            anchors.bottomMargin: 0
-                            color: medium_blue
-                            Text {
-                                id: text
-                                text: section
-                                font.bold: true
-                                font.pointSize: 1.5 * fontHeight.font.pointSize
-                                color: "white"
+                        Component.onCompleted: {
+                            positionViewAtEnd()
+                            positionViewAtBeginning()
+                        }
+
+                        section.labelPositioning: ViewSection.CurrentLabelAtStart | ViewSection.InlineLabels
+                        section.property: switch (languageInt) {
+                            case 0:
+                                return "SecDeutsch"
+                            case 1:
+                                return "SecEnglish"
+                            case 2:
+                                return "SecNederlands"
+                            case 3:
+                                return "SecDansk"
+                        }
+
+                        section.delegate: Rectangle {
+                            id: sectionDelegate
+                            color: "black"
+                            width: parent.width
+                            height: 4 * globalMargin + globalBorder
+                            Rectangle {
+                                anchors.fill: parent
+                                anchors.margins: globalBorder
+                                anchors.leftMargin: globalMargin / 2
+                                anchors.bottomMargin: 0
+                                color: medium_blue
+                                Text {
+                                    id: text
+                                    text: section
+                                    font.bold: true
+                                    height: 4 * globalMargin
+                                    verticalAlignment: Text.AlignVCenter
+                                    font.pointSize: 1.5 * fontHeight.font.pointSize
+                                    color: "white"
+                                }
                             }
                         }
-                    }
 
-                    Component.onCompleted: {//notwendig, da ansonsten zu Anfang die Hälfte der ersten Kategorie/des ersten Elementes verdeckt wird
-                        positionViewAtBeginning()
-                    }
-
-                    delegate: Rectangle {
-                        id: word
-                        color: "black"
-                        width: parent.width
-                        height: textRowL.height + globalBorder
-                        Rectangle {
-                            id: wordBackground
-                            anchors.fill: parent
-                            anchors.topMargin: globalBorder
-                            anchors.bottomMargin: 0
-                            Row {
-                                id: textRowL
-                                spacing: globalMargin
+                        delegate: Rectangle {
+                            id: wordDelegate
+                            color: "black"
+                            width: parent.width
+                            height: word.height
+                            Rectangle {
+                                id: wordBackground
+                                anchors.fill: parent
+                                anchors.topMargin: globalBorder
+                                anchors.bottomMargin: 0
                                 Text {
-                                    text: switch (languageInt) {
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+                                    anchors.leftMargin: globalMargin / 2
+                                    id: word
+                                    property string wordText: switch (languageInt) {
                                         case 0:
                                             return Deutsch
                                         case 1:
@@ -251,50 +262,99 @@ Item {
                                         case 3:
                                             return Dansk
                                     }
-                                }
-                                Text {
-                                    text: "(<i>" + Scientific + "</i>)"
-                                    visible: text.length == 9 ? false : true // Klammern nur anzeigen, wenn es überhaupt einen wissenschaftlichen Begriff gibt
+                                    property string wordScientific: Scientific == "" ? "" : "(<i>" + Scientific + "</i>)"
+                                    text: wordText + " " + wordScientific
+                                    height: implicitHeight + globalMargin
+                                    verticalAlignment: Text.AlignVCenter
+                                    wrapMode: Text.Wrap
                                 }
                             }
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: wordDelegate.ListView.view.currentIndex = index
+                            }
+                            states: State {
+                                name: "Current"
+                                when: wordDelegate.ListView.isCurrentItem
+                                PropertyChanges { target: wordBackground; color: "blue" }
+                            }
                         }
-                        MouseArea {
-                            anchors.fill: parent
-                            onClicked: word.ListView.view.currentIndex = index
-                        }
-                        states: State {
-                            name: "Current"
-                            when: word.ListView.isCurrentItem
-                            PropertyChanges { target: wordBackground; color: "blue" }
-                        }
-                    }
 
-                    footer: Rectangle {
-                        width: parent.width
-                        height: globalBorder
-                        color: "black"
-                        visible: VocabularyModel.rowCount() > 0 ? true: false
+                        footer: Rectangle {
+                            width: parent.width
+                            height: globalBorder
+                            color: "black"
+                            visible: VocabularyModel.rowCount() > 0 ? true: false
+                        }
+
+                        Rectangle {
+                            z: sectionLetter.z - 1 //sonst verschwindet es hinter den Delegates...
+                            visible: sectionLetter.visible
+                            height: 2 * sectionLetter.height
+                            width: height
+                            color: "blue"
+                            opacity: 0.5
+                            anchors.centerIn: parent
+                            radius: height / 6
+                        }
+
+                        Text {
+                            id: sectionLetter
+                            z: parent.delegate.z + 2
+                            visible: parent.verticalVelocity <= parent.maximumFlickVelocity / 4 && parent.verticalVelocity >= -parent.maximumFlickVelocity / 4 ? false : true
+                            anchors.centerIn: parent
+                            text: parent.currentSection
+                            color: "white"
+                            font.pointSize: 3 * fontHeight.font.pointSize
+                        }
                     }
 
                     Rectangle {
-                        z: sectionLetter.z - 1 //sonst verschwindet es hinter den Delegates...
-                        visible: sectionLetter.visible
-                        height: 2 * sectionLetter.height
-                        width: height
-                        color: "blue"
-                        opacity: 0.5
-                        anchors.centerIn: parent
-                        radius: height / 6
-                    }
+                        id: resultWindow
+                        Layout.fillHeight: true
+                        Layout.fillWidth: true
+                        border.width: globalBorder
+                        color: light_blue
+                        property ListView resultView: lvVocabulary
+                        property int fromLanguage: languageInt
 
-                    Text {
-                        id: sectionLetter
-                        z: parent.delegate.z + 2
-                        visible: parent.verticalVelocity <= parent.maximumFlickVelocity / 4 && parent.verticalVelocity >= -parent.maximumFlickVelocity / 4 ? false : true
-                        anchors.centerIn: parent
-                        text: parent.currentSection
-                        color: "white"
-                        font.pointSize: 3 * fontHeight.font.pointSize
+                        Column {
+                            anchors.fill: parent
+                            anchors.margins: 2 * globalMargin
+                            Row {
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                property double resize: 1.5
+                                spacing: globalMargin
+                                Image {
+                                    id: flag
+                                    height: 4 * parent.resize * globalMargin > languageAndScientific.implicitHeight ? 4 * parent.resize * globalMargin : languageAndScientific.implicitHeight
+                                    sourceSize.height: height
+                                    sourceSize.width: height / 3 * 5
+                                    source: switch(languageInt) {
+                                    case 0:
+                                        return "qrc:/images/flags/german_flag.svg"
+                                    case 1:
+                                        return "qrc:/images/flags/union_jack.svg"
+                                    case 2:
+                                        return "qrc:/images/flags/danish_flag.svg"
+                                    case 3:
+                                        return "qrc:/images/flags/netherlands_flag.svg"
+                                    }
+                                }
+
+                                Text {
+                                    id: languageAndScientific
+                                    height: flag.height
+                                    text: String(VocabularyModel.data(3,3))
+                                }
+
+
+                            }
+                        }
+
+
+
                     }
                 }
             }
