@@ -10,9 +10,9 @@ Item {
     height: 480
     anchors.fill: parent
 
-    property color dark_blue: "#00629b"
-    property color medium_blue: "#00313c"
     property color light_blue: "#41b6e6"
+    property color medium_blue: "#00629b"
+    property color dark_blue: "#00313c"
 
     property int globalMargin: fontHeight.height / 2
     property int globalBorder: globalMargin / 10 > 1 ? globalMargin / 10 : 1
@@ -38,7 +38,7 @@ Item {
             id: menuBar
             width: parent.width
             height: globalMargin * (highDpi ? 8 : 11)
-            color: dark_blue
+            color: medium_blue
             z: 10
 
             RowLayout {
@@ -224,7 +224,7 @@ Item {
                             Rectangle {
                                 anchors.fill: parent
                                 anchors.topMargin: globalBorder
-                                color: medium_blue
+                                color: dark_blue
                                 Text {
                                     anchors.left: parent.left
                                     anchors.leftMargin: globalMargin / 2
@@ -316,6 +316,11 @@ Item {
 
                     Item {
                         id: resultWidget
+                        z: 9
+
+                        property ListView resultListView: lvVocabulary
+                        property int fromLanguage: languageInt
+
                         Layout.preferredHeight: resultView.height
                         Layout.preferredWidth: resultView.width
                         Layout.minimumWidth: gridLayoutVocabulary.width / 4
@@ -336,9 +341,6 @@ Item {
                                 PropertyChanges{target: seperatorLine; Layout.preferredHeight: globalBorder                     }
                         }
 
-                        z: 9
-                        property ListView resultListView: lvVocabulary
-                        property int fromLanguage: languageInt
                         Flickable {
                             anchors.fill: parent
                             contentWidth: resultView.width; contentHeight: resultView.height
@@ -359,26 +361,23 @@ Item {
                                         language: languageInt
                                         resize: highDpi ? 1.25 : 1.75
                                         scientific: true
+                                        visible: true
                                         row: resultWidget.resultListView.currentIndex
                                     }
                                     ResultLanguageWidget {
                                         language: 0
-                                        visible: languageInt !== language
                                         row: resultWidget.resultListView.currentIndex
                                     }
                                     ResultLanguageWidget {
                                         language: 1
-                                        visible: languageInt !== language
                                         row: resultWidget.resultListView.currentIndex
                                     }
                                     ResultLanguageWidget {
                                         language: 2
-                                        visible: languageInt !== language
                                         row: resultWidget.resultListView.currentIndex
                                     }
                                     ResultLanguageWidget {
                                         language: 3
-                                        visible: languageInt !== language
                                         row: resultWidget.resultListView.currentIndex
                                     }
                                 }

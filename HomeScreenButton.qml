@@ -14,7 +14,7 @@ Button {
         }
 
         background: Rectangle {
-            color: medium_blue
+            color: dark_blue
             border.width: control.activeFocus ? 2 * globalBorder : globalBorder
             border.color: "#888"
             radius: height / 4

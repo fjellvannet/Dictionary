@@ -8,7 +8,10 @@ Row {
     property int language
     property int row
     property bool scientific: false
+
     spacing: globalMargin
+    visible: resultWidget.fromLanguage !== language
+
     Image {
         id: flag
         height: 4 * parent.resize * globalMargin
