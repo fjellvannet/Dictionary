@@ -27,8 +27,8 @@ Item {
 
     function nextLanguage() {
         if(languageInt < 3) languageInt++;
-        else if(languageInt == 4 && root.state == "dictionary") languageInt = 0;
-        else if (languageInt == 3 && root.state == "vocabularyList") languageInt = 0;
+        else if(languageInt === 4 && root.state === "dictionary") languageInt = 0;
+        else if (languageInt === 3 && root.state === "vocabularyList") languageInt = 0;
     }
 
     Column{
@@ -45,10 +45,29 @@ Item {
                 id: dictionaryMenu
                 anchors.fill: parent
                 anchors.margins: parent.height / 8
+                visible: false
 
-                Item { //Platzhalter
-                    Layout.fillWidth: true
+                Item {
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: height
+                    Image {
+                        anchors.centerIn: parent
+                        id: backButton
+                        //Layout.fillHeight: true
+                        sourceSize.height: parent.height / 1.35
+                        sourceSize.width: parent.height / 1.35
+                        source: "qrc:/images/icons/arrow.svg"
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            root.state = ""
+                        }
+                    }
                 }
+
+                Item { Layout.fillWidth: true } //Platzhalter
 
                 Image {
                     id: languageButton
@@ -76,7 +95,6 @@ Item {
                         onClicked: {
                             if(root.state == "vocabularyList")
                             {
-
                                 lvVocabulary.visible = false
                                 nextLanguage()
                                 languageButton.sortBy(languageInt)
@@ -125,56 +143,56 @@ Item {
                 }
             }
 
-            Item
-            {
-                id: dictionary
-                anchors.fill: parent
-                visible: false
+//            Item
+//            {
+//                id: dictionary
+//                anchors.fill: parent
+//                visible: false
 
-                ListView {
-                    anchors.fill:parent
-                    anchors.margins: globalMargin
-                    anchors.bottomMargin: 0
-                    anchors.topMargin: 0
-                    clip: true
+//                ListView {
+//                    anchors.fill:parent
+//                    anchors.margins: globalMargin
+//                    anchors.bottomMargin: 0
+//                    anchors.topMargin: 0
+//                    clip: true
 
-                    headerPositioning: ListView.PullBackHeader
-                    Component.onCompleted: {//notwendig, da ansonsten zu Anfang die Hälfte der ersten Kategorie/des ersten Elementes verdeckt wird
-                        positionViewAtBeginning()
-                    }
+//                    headerPositioning: ListView.PullBackHeader
+//                    Component.onCompleted: {//notwendig, da ansonsten zu Anfang die Hälfte der ersten Kategorie/des ersten Elementes verdeckt wird
+//                        positionViewAtBeginning()
+//                    }
 
-                    header: SearchField {}
+//                    header: SearchField {}
 
-                    //model: DictionaryModel
+//                    //model: DictionaryModel
 
-                    delegate: Rectangle {
-                        color: "black"
-                        width: parent.width
-                        height: textRow.height + globalBorder
-                        Rectangle {
-                            anchors.fill: parent
-                            anchors.margins: globalBorder
-                            anchors.bottomMargin: 0
-                            Row {
-                                id: textRow
-                                spacing: globalMargin
-                                Text { text: Deutsch}
-                                Text {
-                                    text: "(<i>" + Scientific + "</i>)"
-                                    visible: text.length !== 9 // Klammern nur anzeigen, wenn es überhaupt einen wissenschaftlichen Begriff gibt
-                                }
-                            }
-                        }
-                    }
+//                    delegate: Rectangle {
+//                        color: "black"
+//                        width: parent.width
+//                        height: textRow.height + globalBorder
+//                        Rectangle {
+//                            anchors.fill: parent
+//                            anchors.margins: globalBorder
+//                            anchors.bottomMargin: 0
+//                            Row {
+//                                id: textRow
+//                                spacing: globalMargin
+//                                Text { text: Deutsch}
+//                                Text {
+//                                    text: "(<i>" + Scientific + "</i>)"
+//                                    visible: text.length !== 9 // Klammern nur anzeigen, wenn es überhaupt einen wissenschaftlichen Begriff gibt
+//                                }
+//                            }
+//                        }
+//                    }
 
-                    footer: Rectangle {
-                        width: parent.width
-                        height: globalBorder
-                        color: "black"
-                        //visible: DictionaryModel.count > 0 ? true : false
-                    }
-                }
-            }
+//                    footer: Rectangle {
+//                        width: parent.width
+//                        height: globalBorder
+//                        color: "black"
+//                        //visible: DictionaryModel.count > 0 ? true : false
+//                    }
+//                }
+//            }
 
             Item
             {
@@ -283,6 +301,13 @@ Item {
                                 PropertyChanges { target: wordDelegate; z: 4 }
                                 PropertyChanges { target: word; height: Math.max(4 * globalMargin + globalBorder, implicitHeight + globalMargin) }
                             }
+
+                            Keys.onReleased: {
+                                if(event.key === Qt.Key_Back) {
+                                    event.accepted = true
+                                    root.state = ""
+                                }
+                            }
                         }
 
                         Rectangle {
@@ -390,16 +415,17 @@ Item {
     }
 
     states: [
-        State {
-            name: "dictionary"
-            PropertyChanges { target: home; visible: false }
-            PropertyChanges { target: dictionary; visible: true }
-        },
+//        State {
+//            name: "dictionary"
+//            PropertyChanges { target: home; visible: false }
+//            PropertyChanges { target: dictionary; visible: true }
+//        },
 
         State {
             name: "vocabularyList"
             PropertyChanges { target: home; visible: false }
             PropertyChanges { target: vocabularyList; visible: true }
+            PropertyChanges { target: dictionaryMenu; visible: true }
         }
     ]
 }

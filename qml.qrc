@@ -10,8 +10,9 @@
         <file>waddensea_vocabulary.csv</file>
     </qresource>
     <qresource prefix="/images/icons">
-        <file>Lupe.svg</file>
+        <file>magnifying_glass.svg</file>
         <file>cross_searchfield.svg</file>
+        <file>arrow.svg</file>
     </qresource>
     <qresource prefix="/images/flags">
         <file>german_flag.svg</file>
