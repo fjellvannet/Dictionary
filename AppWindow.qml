@@ -2,6 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.2
+import QtQuick.Window 2.0
 
 Item {
     id: root
@@ -15,6 +16,7 @@ Item {
 
     property int globalMargin: fontHeight.height / 2
     property int globalBorder: globalMargin / 10 > 1 ? globalMargin / 10 : 1
+    property bool highDpi: Math.max(Screen.height, Screen.width) / globalMargin < 100
 
     property int languageInt: 0
 
@@ -35,14 +37,14 @@ Item {
         Rectangle{
             id: menuBar
             width: parent.width
-            height: globalMargin * 10
+            height: globalMargin * (highDpi ? 8 : 11)
             color: dark_blue
             z: 10
 
             RowLayout {
                 id: dictionaryMenu
                 anchors.fill: parent
-                anchors.margins: 1.5 * globalMargin
+                anchors.margins: parent.height / 8
 
                 Item { //Platzhalter
                     Layout.fillWidth: true
@@ -93,9 +95,9 @@ Item {
             id: window
             width: parent.width
             height: parent.height - menuBar.height
-            Rectangle {
+            color: light_blue
+            Item {
                 id: home //um den Grundzustand wiederherzustellen: root.state = ""
-                color: light_blue
                 anchors.fill: parent
                 visible: true
                 Column {
@@ -123,12 +125,11 @@ Item {
                 }
             }
 
-            Rectangle
+            Item
             {
                 id: dictionary
                 anchors.fill: parent
                 visible: false
-                color: light_blue
 
                 ListView {
                     anchors.fill:parent
@@ -144,7 +145,7 @@ Item {
 
                     header: SearchField {}
 
-                    model: DictionaryModel
+                    //model: DictionaryModel
 
                     delegate: Rectangle {
                         color: "black"
@@ -160,7 +161,7 @@ Item {
                                 Text { text: Deutsch}
                                 Text {
                                     text: "(<i>" + Scientific + "</i>)"
-                                    visible: text.length == 9 ? false : true // Klammern nur anzeigen, wenn es überhaupt einen wissenschaftlichen Begriff gibt
+                                    visible: text.length !== 9 // Klammern nur anzeigen, wenn es überhaupt einen wissenschaftlichen Begriff gibt
                                 }
                             }
                         }
@@ -170,19 +171,19 @@ Item {
                         width: parent.width
                         height: globalBorder
                         color: "black"
-                        visible: DictionaryModel.count > 0 ? true : false
+                        //visible: DictionaryModel.count > 0 ? true : false
                     }
                 }
             }
 
-            Rectangle
+            Item
             {
                 id: vocabularyList
                 anchors.fill: parent
                 visible: false
-                color: light_blue
 
                 GridLayout {
+                    id: gridLayoutVocabulary
                     anchors.fill: parent
                     flow:  width > height ? GridLayout.LeftToRight : GridLayout.TopToBottom
                     rowSpacing: 0
@@ -196,7 +197,7 @@ Item {
                         maximumFlickVelocity: globalMargin * 1000
                         flickDeceleration: maximumFlickVelocity / 2
                         focus: true
-
+                        clip: true
                         Component.onCompleted: {
                             positionViewAtEnd()
                             positionViewAtBeginning()
@@ -219,13 +220,14 @@ Item {
                             color: "black"
                             width: parent.width
                             height: 4 * globalMargin + globalBorder
+                            z:3
                             Rectangle {
                                 anchors.fill: parent
-                                anchors.margins: globalBorder
-                                anchors.leftMargin: globalMargin / 2
-                                anchors.bottomMargin: 0
+                                anchors.topMargin: globalBorder
                                 color: medium_blue
                                 Text {
+                                    anchors.left: parent.left
+                                    anchors.leftMargin: globalMargin / 2
                                     id: text
                                     text: section
                                     font.bold: true
@@ -242,6 +244,7 @@ Item {
                             color: "black"
                             width: parent.width
                             height: word.height
+                            z: 2
                             Rectangle {
                                 id: wordBackground
                                 anchors.fill: parent
@@ -277,14 +280,9 @@ Item {
                                 name: "Current"
                                 when: wordDelegate.ListView.isCurrentItem
                                 PropertyChanges { target: wordBackground; color: "blue" }
+                                PropertyChanges { target: wordDelegate; z: 4 }
+                                PropertyChanges { target: word; height: Math.max(4 * globalMargin + globalBorder, implicitHeight + globalMargin) }
                             }
-                        }
-
-                        footer: Rectangle {
-                            width: parent.width
-                            height: globalBorder
-                            color: "black"
-                            visible: VocabularyModel.rowCount() > 0 ? true: false
                         }
 
                         Rectangle {
@@ -301,7 +299,7 @@ Item {
                         Text {
                             id: sectionLetter
                             z: parent.delegate.z + 2
-                            visible: parent.verticalVelocity <= parent.maximumFlickVelocity / 4 && parent.verticalVelocity >= -parent.maximumFlickVelocity / 4 ? false : true
+                            visible: parent.verticalVelocity >= parent.maximumFlickVelocity / 4 || parent.verticalVelocity <= -parent.maximumFlickVelocity / 4
                             anchors.centerIn: parent
                             text: parent.currentSection
                             color: "white"
@@ -310,51 +308,82 @@ Item {
                     }
 
                     Rectangle {
-                        id: resultWindow
+                        id: seperatorLine
+                        color: "black"
+                        Layout.preferredWidth: globalBorder
                         Layout.fillHeight: true
-                        Layout.fillWidth: true
-                        border.width: globalBorder
-                        color: light_blue
-                        property ListView resultView: lvVocabulary
-                        property int fromLanguage: languageInt
+                    }
 
-                        Column {
-                            anchors.fill: parent
-                            anchors.margins: 2 * globalMargin
-                            Row {
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                property double resize: 1.5
-                                spacing: globalMargin
-                                Image {
-                                    id: flag
-                                    height: 4 * parent.resize * globalMargin > languageAndScientific.implicitHeight ? 4 * parent.resize * globalMargin : languageAndScientific.implicitHeight
-                                    sourceSize.height: height
-                                    sourceSize.width: height / 3 * 5
-                                    source: switch(languageInt) {
-                                    case 0:
-                                        return "qrc:/images/flags/german_flag.svg"
-                                    case 1:
-                                        return "qrc:/images/flags/union_jack.svg"
-                                    case 2:
-                                        return "qrc:/images/flags/danish_flag.svg"
-                                    case 3:
-                                        return "qrc:/images/flags/netherlands_flag.svg"
-                                    }
-                                }
+                    Item {
+                        id: resultWidget
+                        Layout.preferredHeight: resultView.height
+                        Layout.preferredWidth: resultView.width
+                        Layout.minimumWidth: gridLayoutVocabulary.width / 4
+                        Layout.maximumWidth: gridLayoutVocabulary.width / 2
+                        Layout.fillHeight: true
+                        Layout.fillWidth: false
 
-                                Text {
-                                    id: languageAndScientific
-                                    height: flag.height
-                                    text: String(VocabularyModel.data(3,3))
-                                }
+                        states: State{
+                                name: "TopToBottom"
+                                when: gridLayoutVocabulary.flow == GridLayout.TopToBottom
+                                PropertyChanges{target: resultWidget; Layout.fillHeight: false                                  }
+                                PropertyChanges{target: resultWidget; Layout.fillWidth: true                                    }
+                                PropertyChanges{target: resultWidget; Layout.maximumWidth: -1                                   }
+                                PropertyChanges{target: resultWidget; Layout.maximumHeight: gridLayoutVocabulary.height / 2     }
 
-
-                            }
+                                PropertyChanges{target: seperatorLine; Layout.fillWidth: true                                   }
+                                PropertyChanges{target: seperatorLine; Layout.fillHeight: false                                 }
+                                PropertyChanges{target: seperatorLine; Layout.preferredHeight: globalBorder                     }
                         }
 
+                        z: 9
+                        property ListView resultListView: lvVocabulary
+                        property int fromLanguage: languageInt
+                        Flickable {
+                            anchors.fill: parent
+                            contentWidth: resultView.width; contentHeight: resultView.height
+                            flickableDirection: Flickable.HorizontalAndVerticalFlick
+                            clip: true
 
-
+                            boundsBehavior: Flickable.StopAtBounds
+                            Item {
+                                id: resultView
+                                height: resultColumn.implicitHeight + 2 * resultColumn.anchors.margins
+                                width: resultColumn.implicitWidth + 2 * resultColumn.anchors.margins
+                                Column {
+                                    id: resultColumn
+                                    anchors.fill: parent
+                                    anchors.margins: 1.5 * globalMargin
+                                    spacing: globalMargin
+                                    ResultLanguageWidget {
+                                        language: languageInt
+                                        resize: highDpi ? 1.25 : 1.75
+                                        scientific: true
+                                        row: resultWidget.resultListView.currentIndex
+                                    }
+                                    ResultLanguageWidget {
+                                        language: 0
+                                        visible: languageInt !== language
+                                        row: resultWidget.resultListView.currentIndex
+                                    }
+                                    ResultLanguageWidget {
+                                        language: 1
+                                        visible: languageInt !== language
+                                        row: resultWidget.resultListView.currentIndex
+                                    }
+                                    ResultLanguageWidget {
+                                        language: 2
+                                        visible: languageInt !== language
+                                        row: resultWidget.resultListView.currentIndex
+                                    }
+                                    ResultLanguageWidget {
+                                        language: 3
+                                        visible: languageInt !== language
+                                        row: resultWidget.resultListView.currentIndex
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
