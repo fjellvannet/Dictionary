@@ -4,6 +4,7 @@ import QtQuick.Controls.Styles 1.4
 
 Button {
     property string textLabel
+    width: parent.width
     height: 2 * implicitHeight
     style: ButtonStyle {
         label:  Label {

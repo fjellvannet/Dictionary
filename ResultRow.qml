@@ -14,7 +14,7 @@ Row {
 
     Image {
         id: flag
-        height: 4 * parent.resize * globalMargin
+        height: 4 * resize * globalMargin
         sourceSize.height: height
         sourceSize.width: height / 3 * 5
         source: switch(language) {
@@ -33,15 +33,15 @@ Row {
         id: languageAndScientific
         anchors.verticalCenter: flag.verticalCenter
         Text {
-            text: VocabularyModel.data(VocabularyModel.index(row, language), language)
-            font.pointSize: parent.parent.resize * fontHeight.font.pointSize
+            text: resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, language), language)
+            font.pointSize: resize * fontHeight.font.pointSize
         }
         
         Text {//Scientific
-            text: VocabularyModel.data(VocabularyModel.index(row, 4), 4)
+            text: resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, 4), 4)
             visible: scientific && text.length > 0
             font.italic: true
-            font.pointSize: (parent.parent.resize - 0.5) * fontHeight.font.pointSize
+            font.pointSize: (resize - 0.5) * fontHeight.font.pointSize
         }
     }
 }
