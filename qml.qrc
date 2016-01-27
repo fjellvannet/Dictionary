@@ -4,7 +4,6 @@
         <file>HomeScreenButton.qml</file>
         <file>SearchField.qml</file>
         <file>ResultRow.qml</file>
-        <file>ResultWidget.qml</file>
     </qresource>
     <qresource prefix="/database">
         <file>waddensea_vocabulary.csv</file>

@@ -34,14 +34,14 @@ Row {
         anchors.verticalCenter: flag.verticalCenter
         Text {
             text: resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, language), language)
-            font.pointSize: resize * fontHeight.font.pointSize
+            font.pointSize: (resize <= 0 ? 1 : resize) * fontHeight.font.pointSize
         }
         
         Text {//Scientific
             text: resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, 4), 4)
             visible: scientific && text.length > 0
             font.italic: true
-            font.pointSize: (resize - 0.5) * fontHeight.font.pointSize
+            font.pointSize: ((resize <= 0 ? 1 : resize) - 0.5) * fontHeight.font.pointSize
         }
     }
 }

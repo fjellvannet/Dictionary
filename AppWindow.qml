@@ -136,57 +136,6 @@ ColumnLayout{
             }
         }
 
-//            Item
-//            {
-//                id: dictionary
-//                anchors.fill: parent
-//                visible: false
-
-//                ListView {
-//                    anchors.fill:parent
-//                    anchors.margins: globalMargin
-//                    anchors.bottomMargin: 0
-//                    anchors.topMargin: 0
-//                    clip: true
-
-//                    headerPositioning: ListView.PullBackHeader
-//                    Component.onCompleted: {//notwendig, da ansonsten zu Anfang die Hälfte der ersten Kategorie/des ersten Elementes verdeckt wird
-//                        positionViewAtBeginning()
-//                    }
-
-//                    header: SearchField {}
-
-//                    //model: DictionaryModel
-
-//                    delegate: Rectangle {
-//                        color: "black"
-//                        width: parent.width
-//                        height: textRow.height + globalBorder
-//                        Rectangle {
-//                            anchors.fill: parent
-//                            anchors.margins: globalBorder
-//                            anchors.bottomMargin: 0
-//                            Row {
-//                                id: textRow
-//                                spacing: globalMargin
-//                                Text { text: Deutsch}
-//                                Text {
-//                                    text: "(<i>" + Scientific + "</i>)"
-//                                    visible: text.length !== 9 // Klammern nur anzeigen, wenn es überhaupt einen wissenschaftlichen Begriff gibt
-//                                }
-//                            }
-//                        }
-//                    }
-
-//                    footer: Rectangle {
-//                        width: parent.width
-//                        height: globalBorder
-//                        color: "black"
-//                        //visible: DictionaryModel.count > 0 ? true : false
-//                    }
-//                }
-//            }
-
         GridLayout {
             id: gridLayout
             visible: false
@@ -224,32 +173,27 @@ ColumnLayout{
 
                 section.delegate: Rectangle {
                     id: sectionDelegate
-                    color: "black"
+                    color: dark_blue
                     width: parent.width
-                    height: 4 * globalMargin + globalBorder
+                    height: 4 * globalMargin
                     z:3
-                    Rectangle {
-                        anchors.fill: parent
-                        anchors.topMargin: globalBorder
-                        color: dark_blue
-                        Text {
-                            anchors.left: parent.left
-                            anchors.leftMargin: globalMargin / 2
-                            id: text
-                            text: section
-                            font.bold: true
-                            height: 4 * globalMargin
-                            verticalAlignment: Text.AlignVCenter
-                            font.pointSize: 1.5 * fontHeight.font.pointSize
-                            color: "white"
-                        }
+                    Text {
+                        anchors.left: parent.left
+                        anchors.leftMargin: globalMargin / 2
+                        id: text
+                        text: section
+                        font.bold: true
+                        height: parent.height
+                        verticalAlignment: Text.AlignVCenter
+                        font.pointSize: 1.5 * fontHeight.font.pointSize
+                        color: "white"
                     }
                 }
 
                 delegate: Rectangle {
                     id: wordDelegate
                     width: parent.width
-                    height: childrenRect.height
+                    height: Math.max(4 * globalMargin, word.implicitHeight + globalMargin)
                     z: 2
                     Text {
                         id: word
@@ -267,7 +211,7 @@ ColumnLayout{
                         }
                         property string wordScientific: Scientific == "" ? "" : "(<i>" + Scientific + "</i>)"
                         text: wordText + " " + wordScientific
-                        height: implicitHeight + globalMargin
+                        height: parent.height
                         verticalAlignment: Text.AlignVCenter
                         wrapMode: Text.Wrap
                     }
@@ -280,7 +224,6 @@ ColumnLayout{
                     states: State {
                         when: wordDelegate.ListView.isCurrentItem
                         PropertyChanges { target: wordDelegate; color: "blue"; z: 4 }
-                        PropertyChanges { target: word; height: Math.max(4 * globalMargin + globalBorder, implicitHeight + globalMargin) }
                     }
                 }
 
@@ -330,10 +273,70 @@ ColumnLayout{
                 }
             }
 
-            ResultWidget{
+            Item {
                 id: resultWidget
-                fromLanguage: languageInt
-                resultListView: lvVocabulary
+                property ListView resultListView: lvVocabulary
+                property int fromLanguage: languageInt
+
+                Layout.preferredHeight: resultView.height
+                Layout.preferredWidth: resultView.width
+                Layout.minimumWidth: parent.width / 4
+                Layout.maximumWidth: parent.width / 2
+                Layout.fillHeight: true
+                Layout.fillWidth: false
+
+                Flickable {
+                    anchors.fill: parent
+                    contentWidth: childrenRect.width; contentHeight: childrenRect.height
+                    clip: true
+                    boundsBehavior: Flickable.StopAtBounds
+                    Item {
+                        id: resultView
+                        height: resultColumn.implicitHeight + 2 * resultColumn.anchors.margins
+                        width: resultColumn.implicitWidth + 2 * resultColumn.anchors.margins
+                        Column {
+                            id: resultColumn
+                            anchors.fill: parent
+                            anchors.margins: 1.5 * globalMargin
+                            spacing: globalMargin
+                            ResultRow {
+                                language: languageInt
+                                resize: highDpi ? 1.25 : 1.75
+                                scientific: true
+                                visible: true
+                                row: resultWidget.resultListView.currentIndex
+                            }
+                            ResultRow {
+                                language: 0
+                                row: resultWidget.resultListView.currentIndex
+                            }
+                            ResultRow {
+                                language: 1
+                                row: resultWidget.resultListView.currentIndex
+                            }
+                            ResultRow {
+                                language: 2
+                                row: resultWidget.resultListView.currentIndex
+                            }
+                            ResultRow {
+                                language: 3
+                                row: resultWidget.resultListView.currentIndex
+                            }
+                        }
+                    }
+                }
+
+                states: State{
+                    name: "TopToBottom"
+                    when: gridLayout.flow === GridLayout.TopToBottom
+                    PropertyChanges{
+                        target: resultWidget
+                        Layout.fillHeight: false
+                        Layout.fillWidth: true
+                        Layout.maximumWidth: -1
+                        Layout.maximumHeight: parent.height / 2
+                    }
+                }
             }
         }
     }
