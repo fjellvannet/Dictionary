@@ -4,11 +4,13 @@ QT += qml quick widgets svg
 
 SOURCES += main.cpp \
     vocabularymodel.cpp \
-    vocabularylistmodel.cpp
+    vocabularylistmodel.cpp \
+    dictionarymodel.cpp
 
 HEADERS += \
     vocabularymodel.h \
-    vocabularylistmodel.h
+    vocabularylistmodel.h \
+    dictionarymodel.h
 
 RESOURCES += qml.qrc
 

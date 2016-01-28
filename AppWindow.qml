@@ -22,12 +22,13 @@ ColumnLayout{
     property int globalBorder: globalMargin / 10 > 1 ? globalMargin / 10 : 1
     property bool highDpi: Math.max(Screen.height, Screen.width) / globalMargin < 100
 
-    property int languageInt: 0
+    property int language: 0
+    property int appLanguage: 0
 
     function nextLanguage() {
-        if(languageInt < 3) languageInt++;
-        else if(languageInt === 4 && root.state === "dictionary") languageInt = 0;
-        else if (languageInt === 3 && root.state === "vocabularyList") languageInt = 0;
+        if(language < 3) language++;
+        else if(language === 4 && root.state === "dictionary") language = 0;
+        else if (language === 3 && root.state === "vocabularyList") language = 0;
     }
 
     Rectangle{
@@ -70,7 +71,7 @@ ColumnLayout{
                 Layout.fillHeight: true
                 sourceSize.height: height
                 sourceSize.width: height / 3 * 5
-                source: switch(languageInt) {
+                source: switch(language) {
                         case 0:
                             return "qrc:/images/flags/german_flag.svg"
                         case 1:
@@ -92,7 +93,7 @@ ColumnLayout{
                         {
                             lvVocabulary.visible = false
                             nextLanguage()
-                            languageButton.sortBy(languageInt)
+                            languageButton.sortBy(language)
                             lvVocabulary.positionViewAtEnd()
                             lvVocabulary.positionViewAtBeginning()
                             lvVocabulary.currentIndex = 0
@@ -147,7 +148,7 @@ ColumnLayout{
                 Layout.fillHeight: true
                 Layout.fillWidth: true
 
-                model: VocabularyModel
+                model: vocabularyModel
                 maximumFlickVelocity: globalMargin * 1000
                 flickDeceleration: maximumFlickVelocity / 2
                 clip: true
@@ -158,7 +159,7 @@ ColumnLayout{
                 }
 
                 section.labelPositioning: ViewSection.CurrentLabelAtStart | ViewSection.InlineLabels
-                section.property: switch (languageInt) {
+                section.property: switch (language) {
                     case 0:
                         return "SecDeutsch"
                     case 1:
@@ -197,7 +198,7 @@ ColumnLayout{
                         id: word
                         anchors.left: parent.left; anchors.right: parent.right
                         anchors.leftMargin: globalMargin / 2
-                        property string wordText: switch (languageInt) {
+                        property string wordText: switch (language) {
                             case 0:
                                 return Deutsch
                             case 1:
@@ -207,8 +208,8 @@ ColumnLayout{
                             case 3:
                                 return Dansk
                         }
-                        property string wordScientific: Scientific == "" ? "" : "(<i>" + Scientific + "</i>)"
-                        text: wordText + " " + wordScientific
+                        property string wordScientific: Scientific == "" ? "" : " (<i>" + Scientific + "</i>)"
+                        text: wordText + wordScientific
                         height: parent.height
                         verticalAlignment: Text.AlignVCenter
                         wrapMode: Text.Wrap
@@ -276,7 +277,6 @@ ColumnLayout{
                             source: "qrc:/images/icons/magnifying_glass.svg"
                         }
 
-
                         TextInput {
                             id: searchField
                             Layout.fillWidth: true
@@ -324,17 +324,47 @@ ColumnLayout{
                     Layout.fillWidth: true
                     clip: true
 
-                    model: ListModel {
-                        ListElement {
-                            Deutsch: "Boyfriend"
-                            Scientific: "skitt!"
-                            English: "Love u"
-                            Dansk: "elsker dig!"
-                            Nederlands: "fuck u"
+                    model: dictionaryModel
+
+                    delegate: Rectangle {
+                        id: dictionaryDelegate
+                        width: parent.width
+                        height: Math.max(4 * globalMargin, dictionaryWord.implicitHeight + globalMargin)
+                        z: 2
+                        Text {
+                            id: dictionaryWord
+                            anchors.left: parent.left; anchors.right: parent.right
+                            anchors.margins: globalMargin / 2
+                            property string wordScientific: Scientific == "" ? "" : " (<i>" + Scientific + "</i>)"
+                            property string appLanguageScientific: switch (appLanguage) {
+                                                                   case 0:
+                                                                      return Deutsch
+                                                                   case 1:
+                                                                      return English
+                                                                   case 2:
+                                                                      return Nederlands
+                                                                   case 3:
+                                                                      return Dansk
+                            }
+                            text: (ResultLanguage == 4 ? appLanguageScientific : ResultWord) + wordScientific
+                            height: parent.height
+                            verticalAlignment: Text.AlignVCenter
+                            wrapMode: Text.Wrap
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                lvDictionary.focus = true
+                                dictionaryDelegate.ListView.view.currentIndex = index
+                            }
+                        }
+
+                        states: State {
+                            when: dictionaryDelegate.ListView.isCurrentItem
+                            PropertyChanges { target: dictionaryDelegate; color: "blue"; z: 4 }
                         }
                     }
-
-                    delegate: lvVocabulary.delegate
 
                     Keys.onReleased: {
                         if(event.key === Qt.Key_Back) {
@@ -343,7 +373,6 @@ ColumnLayout{
                         }
                     }
                 }
-
             }
 
             Rectangle {
@@ -366,7 +395,7 @@ ColumnLayout{
             Item {
                 id: resultWidget
                 property ListView resultListView: lvVocabulary
-                property int fromLanguage: languageInt
+                property int fromLanguage: language
 
                 Layout.preferredHeight: resultView.height
                 Layout.preferredWidth: resultView.width
@@ -390,7 +419,7 @@ ColumnLayout{
                             anchors.margins: 1.5 * globalMargin
                             spacing: globalMargin
                             ResultRow {
-                                language: languageInt
+                                language: language
                                 resize: highDpi ? 1.25 : 1.75
                                 scientific: true
                                 visible: true
@@ -447,7 +476,8 @@ ColumnLayout{
             PropertyChanges { target: home; visible: false }
             PropertyChanges { target: gridLayout; visible: true }
             PropertyChanges { target: lvVocabulary; visible: false }
-            PropertyChanges { target: dictionaryWidget; focus: true; visible: true }
+            PropertyChanges { target: dictionaryWidget; visible: true }
+            PropertyChanges { target: lvDictionary; focus: true}
             PropertyChanges { target: dictionaryMenu; visible: true }
             PropertyChanges { target: resultWidget; resultListView: lvDictionary }
 

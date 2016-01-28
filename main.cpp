@@ -1,5 +1,6 @@
 #include "vocabularymodel.h"
 #include "vocabularylistmodel.h"
+#include "dictionarymodel.h"
 
 #include <QApplication>
 #include <QQmlApplicationEngine>
@@ -15,6 +16,9 @@ int main(int argc, char *argv[])
     model.fillModelFromCsv(":/database/waddensea_vocabulary.csv");
     VocabularyListModel listModel;
     listModel.setSourceModel(&model);
+    DictionaryModel dictionaryModel(&model);
+    dictionaryModel.fillWithSearchResults("x", 4);
+
     //VocabularyModel model;
 
 //    QQmlApplicationEngine engine;
@@ -26,7 +30,9 @@ int main(int argc, char *argv[])
     view.setWidth(640);
     QQmlContext *ctxt = view.rootContext();
 
-    ctxt->setContextProperty("VocabularyModel", &listModel);
+    ctxt->setContextProperty("vocabularyModel", &listModel);
+    ctxt->setContextProperty("dictionaryModel", &dictionaryModel);
+//    ctxt->setContextProperty("dictionaryModel", &listModel);
     view.setSource(QUrl("qrc:/AppWindow.qml"));
     listModel.connect(view.rootObject()->findChild<QObject*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
     //ctxt->setContextProperty("DictionaryModel", &model);

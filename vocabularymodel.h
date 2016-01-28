@@ -37,6 +37,9 @@
 ** $QT_END_LICENSE$
 **
 ****************************************************************************/
+#ifndef VOCABULARYMODEL_H
+#define VOCABULARYMODEL_H
+
 #include <QAbstractTableModel>
 #include <QStringList>
 
@@ -72,15 +75,17 @@ public:
     };
 
     VocabularyModel(QObject *parent = 0);
-    bool fillModelFromCsv(QString csvPath);
+    bool fillModelFromCsv(QString a_csvPath);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent) const;
-
-    QVariant data(const QModelIndex &index, int role) const;
+    QVariant data(const QModelIndex &index, int role = -1) const;
 
 protected:
     QHash<int, QByteArray> roleNames() const;
+
 private:
     QList<WaddenseaWord> m_vocabulary;
 };
+
+#endif //VOCABULARYMODEL_H

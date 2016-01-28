@@ -120,8 +120,14 @@ int VocabularyModel::columnCount(const QModelIndex & parent) const
 }
 
 QVariant VocabularyModel::data(const QModelIndex & index, int role) const {
-    if ((index.row() < 0 || index.row() >= m_vocabulary.count()) && (role >= 0 && role <= SecDanskRole))
+    if ((index.row() < 0 || index.row() >= rowCount()) || (role < -1 || role > SecDanskRole))
+    {
         return QVariant();
+    }
+    if(role == -1)
+    {
+        role = index.column();
+    }
     WaddenseaWord waddenseaWord = m_vocabulary[index.row()];
     if(role <= ScientificRole)
     {
