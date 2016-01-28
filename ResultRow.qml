@@ -5,19 +5,19 @@ import QtQuick.Layouts 1.2
 
 Row {
     property double resize: highDpi ? 1 : 1.25
-    property int language
+    property int rowLanguage
     property int row
     property bool scientific: false
 
     spacing: globalMargin
-    visible: resultWidget.fromLanguage !== language
+    visible: resultWidget.fromLanguage !== rowLanguage
 
     Image {
         id: flag
         height: 4 * resize * globalMargin
         sourceSize.height: height
         sourceSize.width: height / 3 * 5
-        source: switch(language) {
+        source: switch(rowLanguage) {
                 case 0:
                     return "qrc:/images/flags/german_flag.svg"
                 case 1:
@@ -26,14 +26,14 @@ Row {
                     return "qrc:/images/flags/netherlands_flag.svg"
                 case 3:
                     return "qrc:/images/flags/danish_flag.svg"
-                }
+        }
     }
 
     Column {
         id: languageAndScientific
         anchors.verticalCenter: flag.verticalCenter
         Text {
-            text: resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, language), language)
+            text: resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, rowLanguage), rowLanguage)
             font.pointSize: (resize <= 0 ? 1 : resize) * fontHeight.font.pointSize //dieses völlig bescheuerte Konstrukt um resize ist Compiler-Errors geschuldet
         }
         

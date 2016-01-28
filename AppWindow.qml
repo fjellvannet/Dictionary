@@ -23,12 +23,13 @@ ColumnLayout{
     property bool highDpi: Math.max(Screen.height, Screen.width) / globalMargin < 100
 
     property int language: 0
-    property int appLanguage: 0
+    property int appLanguage: 3
 
     function nextLanguage() {
         if(language < 3) language++;
         else if(language === 4 && root.state === "dictionary") language = 0;
         else if (language === 3 && root.state === "vocabularyList") language = 0;
+        else if (language === 3 && root.state === "dictionary") language = 4;
     }
 
     Rectangle{
@@ -98,6 +99,10 @@ ColumnLayout{
                             lvVocabulary.positionViewAtBeginning()
                             lvVocabulary.currentIndex = 0
                             lvVocabulary.visible = true
+                        }
+                        if(root.state == "dictionary")
+                        {
+                            nextLanguage()
                         }
                     }
                 }
@@ -323,6 +328,8 @@ ColumnLayout{
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     clip: true
+                    maximumFlickVelocity: globalMargin * 1000
+                    flickDeceleration: maximumFlickVelocity / 2
 
                     model: dictionaryModel
 
@@ -331,25 +338,59 @@ ColumnLayout{
                         width: parent.width
                         height: Math.max(4 * globalMargin, dictionaryWord.implicitHeight + globalMargin)
                         z: 2
-                        Text {
-                            id: dictionaryWord
-                            anchors.left: parent.left; anchors.right: parent.right
+                        RowLayout {
+                            anchors.fill: parent
                             anchors.margins: globalMargin / 2
-                            property string wordScientific: Scientific == "" ? "" : " (<i>" + Scientific + "</i>)"
-                            property string appLanguageScientific: switch (appLanguage) {
-                                                                   case 0:
-                                                                      return Deutsch
-                                                                   case 1:
-                                                                      return English
-                                                                   case 2:
-                                                                      return Nederlands
-                                                                   case 3:
-                                                                      return Dansk
+                            Image {
+                                visible: language == 4
+                                Layout.preferredHeight: 3 * globalMargin
+                                sourceSize.height: height
+                                sourceSize.width: height / 3 * 5
+                                source: switch(ResultLanguage) {
+                                        case 0:
+                                            return "qrc:/images/flags/german_flag.svg"
+                                        case 1:
+                                            return "qrc:/images/flags/union_jack.svg"
+                                        case 2:
+                                            return "qrc:/images/flags/netherlands_flag.svg"
+                                        case 3:
+                                            return "qrc:/images/flags/danish_flag.svg"
+                                        case 4:
+                                            switch (appLanguage) {
+                                            case 0:
+                                                return "qrc:/images/flags/german_flag.svg"
+                                            case 1:
+                                                return "qrc:/images/flags/union_jack.svg"
+                                            case 2:
+                                                return "qrc:/images/flags/netherlands_flag.svg"
+                                            case 3:
+                                                return "qrc:/images/flags/danish_flag.svg"
+                                            }
+
+                                }
                             }
-                            text: (ResultLanguage == 4 ? appLanguageScientific : ResultWord) + wordScientific
-                            height: parent.height
-                            verticalAlignment: Text.AlignVCenter
-                            wrapMode: Text.Wrap
+
+
+                            Text {
+                                id: dictionaryWord
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                property string wordScientific: Scientific == "" ? "" : " (<i>" + Scientific + "</i>)"
+                                property string appLanguageScientific: switch (appLanguage) {
+                                                                       case 0:
+                                                                          return Deutsch
+                                                                       case 1:
+                                                                          return English
+                                                                       case 2:
+                                                                          return Nederlands
+                                                                       case 3:
+                                                                          return Dansk
+                                }
+                                text: (ResultLanguage == 4 ? appLanguageScientific : ResultWord) + wordScientific
+                                height: parent.height
+                                verticalAlignment: Text.AlignVCenter
+                                wrapMode: Text.Wrap
+                            }
                         }
 
                         MouseArea {
@@ -395,7 +436,7 @@ ColumnLayout{
             Item {
                 id: resultWidget
                 property ListView resultListView: lvVocabulary
-                property int fromLanguage: language
+                property int fromLanguage: language === 4 ? appLanguage : language
 
                 Layout.preferredHeight: resultView.height
                 Layout.preferredWidth: resultView.width
@@ -419,26 +460,26 @@ ColumnLayout{
                             anchors.margins: 1.5 * globalMargin
                             spacing: globalMargin
                             ResultRow {
-                                language: language
+                                rowLanguage: resultWidget.fromLanguage
                                 resize: highDpi ? 1.25 : 1.75
                                 scientific: true
                                 visible: true
                                 row: resultWidget.resultListView.currentIndex
                             }
                             ResultRow {
-                                language: 0
+                                rowLanguage: 0
                                 row: resultWidget.resultListView.currentIndex
                             }
                             ResultRow {
-                                language: 1
+                                rowLanguage: 1
                                 row: resultWidget.resultListView.currentIndex
                             }
                             ResultRow {
-                                language: 2
+                                rowLanguage: 2
                                 row: resultWidget.resultListView.currentIndex
                             }
                             ResultRow {
-                                language: 3
+                                rowLanguage: 3
                                 row: resultWidget.resultListView.currentIndex
                             }
                         }
@@ -464,6 +505,7 @@ ColumnLayout{
 
         State {
             name: "vocabularyList"
+            PropertyChanges { target: root; language: language === 4 ? 0 : language}
             PropertyChanges { target: home; visible: false }
             PropertyChanges { target: gridLayout; visible: true }
             PropertyChanges { target: lvVocabulary; focus: true; visible: true }
