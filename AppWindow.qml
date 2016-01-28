@@ -6,8 +6,6 @@ import QtQuick.Window 2.0
 
 ColumnLayout{
     id: root
-    width: 640
-    height: 480
     anchors.fill: parent
     spacing: 0
 
@@ -247,13 +245,101 @@ ColumnLayout{
                     color: "white"
                     font.pointSize: 3 * fontHeight.font.pointSize
                 }
+            }
 
-                Keys.onReleased: {
-                    if(event.key === Qt.Key_Back) {
-                        event.accepted = true
-                        root.state = ""
+            ColumnLayout {
+                id: dictionaryWidget
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                visible: false
+                spacing: 0
+
+                Rectangle { //Suchfeld
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 1.3 * searchField.implicitHeight
+                    Layout.margins: globalMargin
+
+                    border.width: 2 * globalBorder
+                    border.color: "#666666"
+                    radius: height / 4
+                    RowLayout
+                    {
+                        anchors.fill: parent
+                        anchors.margins: parent.height / 5
+                        spacing: 0
+
+                        Image {
+                            Layout.fillHeight: true
+                            width: height
+                            sourceSize.height: height
+                            sourceSize.width: height
+                            source: "qrc:/images/icons/magnifying_glass.svg"
+                        }
+
+
+                        TextField {
+                            id: searchField
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            Layout.rightMargin: 1
+                            placeholderText: qsTr("Search")
+                            inputMethodHints: Qt.ImhNoPredictiveText
+                            verticalAlignment: Text.AlignVCenter
+                            style: TextFieldStyle {
+                                background: Item{}
+                            }
+                        }
+
+                        Image {
+                            Layout.fillHeight: true
+                            width: height
+                            sourceSize.height: height
+                            sourceSize.width: height
+                            source: "qrc:/images/icons/cross_searchfield.svg"
+                            visible: searchField.length !== 0
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    searchField.text = ""
+                                }
+                            }
+                        }
                     }
                 }
+
+                Rectangle {
+                    color: "black"
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: globalBorder
+                }
+
+                ListView {
+                    id: lvDictionary
+                    Layout.fillHeight: true
+                    Layout.fillWidth: true
+                    clip: true
+
+                    model: ListModel {
+                        ListElement {
+                            Deutsch: "Boyfriend"
+                            Scientific: "skitt!"
+                            English: "Love u"
+                            Dansk: "elsker dig!"
+                            Nederlands: "fuck u"
+                        }
+                    }
+
+                    delegate: lvVocabulary.delegate
+
+                    Keys.onReleased: {
+                        if(event.key === Qt.Key_Back) {
+                            event.accepted = true
+                            root.state = ""
+                        }
+                    }
+                }
+
             }
 
             Rectangle {
@@ -287,7 +373,7 @@ ColumnLayout{
 
                 Flickable {
                     anchors.fill: parent
-                    contentWidth: childrenRect.width; contentHeight: childrenRect.height
+                    contentWidth: resultView.width; contentHeight: resultView.height
                     clip: true
                     boundsBehavior: Flickable.StopAtBounds
                     Item {
@@ -342,11 +428,6 @@ ColumnLayout{
     }
 
     states: [
-//        State {
-//            name: "dictionary"
-//            PropertyChanges { target: home; visible: false }
-//            PropertyChanges { target: dictionary; visible: true }
-//        },
 
         State {
             name: "vocabularyList"
@@ -354,6 +435,17 @@ ColumnLayout{
             PropertyChanges { target: gridLayout; visible: true }
             PropertyChanges { target: lvVocabulary; focus: true; visible: true }
             PropertyChanges { target: dictionaryMenu; visible: true }
+
+        },
+
+        State {
+            name: "dictionary"
+            PropertyChanges { target: home; visible: false }
+            PropertyChanges { target: gridLayout; visible: true }
+            PropertyChanges { target: lvVocabulary; visible: false }
+            PropertyChanges { target: dictionaryWidget; focus: true; visible: true }
+            PropertyChanges { target: dictionaryMenu; visible: true }
+            PropertyChanges { target: resultWidget; resultListView: lvDictionary }
 
         }
     ]

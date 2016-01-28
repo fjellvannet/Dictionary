@@ -2,7 +2,6 @@
     <qresource prefix="/">
         <file>AppWindow.qml</file>
         <file>HomeScreenButton.qml</file>
-        <file>SearchField.qml</file>
         <file>ResultRow.qml</file>
     </qresource>
     <qresource prefix="/database">
