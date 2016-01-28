@@ -256,7 +256,7 @@ ColumnLayout{
 
                 Rectangle { //Suchfeld
                     Layout.fillWidth: true
-                    Layout.preferredHeight: 1.3 * searchField.implicitHeight
+                    Layout.preferredHeight: 2 * searchField.implicitHeight
                     Layout.margins: globalMargin
 
                     border.width: 2 * globalBorder
@@ -266,7 +266,7 @@ ColumnLayout{
                     {
                         anchors.fill: parent
                         anchors.margins: parent.height / 5
-                        spacing: 0
+                        spacing: parent.height / 10
 
                         Image {
                             Layout.fillHeight: true
@@ -277,16 +277,20 @@ ColumnLayout{
                         }
 
 
-                        TextField {
+                        TextInput {
                             id: searchField
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             Layout.rightMargin: 1
-                            placeholderText: qsTr("Search")
+                            clip: true
                             inputMethodHints: Qt.ImhNoPredictiveText
                             verticalAlignment: Text.AlignVCenter
-                            style: TextFieldStyle {
-                                background: Item{}
+                            Text {
+                                anchors.fill: parent
+                                text: qsTr("Search")
+                                color: "#888"
+                                visible: !parent.focus && parent.length === 0
+                                verticalAlignment: Text.AlignVCenter
                             }
                         }
 
@@ -420,7 +424,7 @@ ColumnLayout{
                         Layout.fillHeight: false
                         Layout.fillWidth: true
                         Layout.maximumWidth: -1
-                        Layout.maximumHeight: parent.height / 2
+                        Layout.maximumHeight: gridLayout.height / 2
                     }
                 }
             }
