@@ -23,9 +23,9 @@ Row {
                 case 1:
                     return "qrc:/images/flags/union_jack.svg"
                 case 2:
-                    return "qrc:/images/flags/danish_flag.svg"
-                case 3:
                     return "qrc:/images/flags/netherlands_flag.svg"
+                case 3:
+                    return "qrc:/images/flags/danish_flag.svg"
                 }
     }
 
