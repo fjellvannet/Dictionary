@@ -83,6 +83,8 @@ ColumnLayout{
                             return "qrc:/images/flags/danish_flag.svg"
                         case 4:
                             return "qrc:/images/flags/all_languages.svg"
+                        case undefined:
+                            return ""
                         }
 
                 signal sortBy(var role)
@@ -97,7 +99,6 @@ ColumnLayout{
                             languageButton.sortBy(language)
                             lvVocabulary.positionViewAtEnd()
                             lvVocabulary.positionViewAtBeginning()
-                            lvVocabulary.currentIndex = 0
                             lvVocabulary.visible = true
                         }
                         if(root.state == "dictionary")
@@ -127,6 +128,7 @@ ColumnLayout{
                 HomeScreenButton{
                     textLabel:qsTr("Waddensea Vocabulary List")
                     onClicked: {
+                        if(language === 4) language = 0
                         root.state = "vocabularyList"
                     }
                 }
@@ -152,16 +154,9 @@ ColumnLayout{
                 id: lvVocabulary
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-
-                model: vocabularyModel
                 maximumFlickVelocity: globalMargin * 1000
                 flickDeceleration: maximumFlickVelocity / 2
                 clip: true
-
-                Component.onCompleted: {
-                    positionViewAtEnd()
-                    positionViewAtBeginning()
-                }
 
                 section.labelPositioning: ViewSection.CurrentLabelAtStart | ViewSection.InlineLabels
                 section.property: switch (language) {
@@ -173,6 +168,8 @@ ColumnLayout{
                         return "SecNederlands"
                     case 3:
                         return "SecDansk"
+                    default:
+                        return ""
                 }
 
                 section.delegate: Rectangle {
@@ -212,6 +209,8 @@ ColumnLayout{
                                 return Nederlands
                             case 3:
                                 return Dansk
+                            default:
+                                return ""
                         }
                         property string wordScientific: Scientific == "" ? "" : " (<i>" + Scientific + "</i>)"
                         text: wordText + wordScientific
@@ -366,7 +365,8 @@ ColumnLayout{
                                             case 3:
                                                 return "qrc:/images/flags/danish_flag.svg"
                                             }
-
+                                        default:
+                                            return ""
                                 }
                             }
 
@@ -505,22 +505,18 @@ ColumnLayout{
 
         State {
             name: "vocabularyList"
-            PropertyChanges { target: root; language: language === 4 ? 0 : language}
             PropertyChanges { target: home; visible: false }
             PropertyChanges { target: gridLayout; visible: true }
-            PropertyChanges { target: lvVocabulary; focus: true; visible: true }
+            PropertyChanges { target: lvVocabulary; focus: true; visible: true; model: vocabularyModel}
             PropertyChanges { target: dictionaryMenu; visible: true }
-
         },
 
         State {
             name: "dictionary"
-            PropertyChanges { target: home; visible: false }
-            PropertyChanges { target: gridLayout; visible: true }
-            PropertyChanges { target: lvVocabulary; visible: false }
+            extend: "vocabularyList"
+            PropertyChanges { target: lvVocabulary; visible: false; focus: false; model: ""}
             PropertyChanges { target: dictionaryWidget; visible: true }
             PropertyChanges { target: lvDictionary; focus: true}
-            PropertyChanges { target: dictionaryMenu; visible: true }
             PropertyChanges { target: resultWidget; resultListView: lvDictionary }
 
         }

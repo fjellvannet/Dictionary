@@ -32,13 +32,14 @@ Row {
     Column {
         id: languageAndScientific
         anchors.verticalCenter: flag.verticalCenter
+
         Text {
-            text: resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, rowLanguage), rowLanguage)
+            text: resultWidget.resultListView.model ? resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, rowLanguage), rowLanguage) : ""
             font.pointSize: (resize <= 0 ? 1 : resize) * fontHeight.font.pointSize //dieses völlig bescheuerte Konstrukt um resize ist Compiler-Errors geschuldet
         }
         
         Text {//Scientific
-            text: resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, 4), 4)
+            text: resultWidget.resultListView.model ? resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, 4), 4) : ""
             visible: scientific && text.length > 0
             font.italic: true
             font.pointSize: ((resize <= 0 ? 1 : resize) - 0.5) * fontHeight.font.pointSize
