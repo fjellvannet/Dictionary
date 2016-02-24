@@ -250,6 +250,13 @@ ColumnLayout{
                     color: "white"
                     font.pointSize: 3 * fontHeight.font.pointSize
                 }
+
+                Keys.onReleased: {
+                    if(event.key === Qt.Key_Back) {
+                        event.accepted = true
+                        root.state = ""
+                    }
+                }
             }
 
             ColumnLayout {
@@ -364,6 +371,8 @@ ColumnLayout{
                                                 return "qrc:/images/flags/netherlands_flag.svg"
                                             case 3:
                                                 return "qrc:/images/flags/danish_flag.svg"
+                                            default:
+                                                return ""
                                             }
                                         default:
                                             return ""
