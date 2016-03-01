@@ -26,6 +26,9 @@ public:
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role = -1) const;
 
+public slots:
+    void search(QVariant v_searchPattern, QVariant v_language);
+
 protected:
     QHash<int, QByteArray> roleNames() const;
 

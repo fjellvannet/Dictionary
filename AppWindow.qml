@@ -23,7 +23,7 @@ ColumnLayout{
     property bool highDpi: Math.max(Screen.height, Screen.width) / globalMargin < 100
 
     property int language: 0
-    property int appLanguage: 3
+    property int appLanguage: 0
 
     function nextLanguage() {
         if(language < 3) language++;
@@ -128,7 +128,11 @@ ColumnLayout{
                 HomeScreenButton{
                     textLabel:qsTr("Waddensea Vocabulary List")
                     onClicked: {
-                        if(language === 4) language = 0
+                        if(language === 4){
+                            language = 0;
+                            languageButton.sortBy(language);
+                        }
+
                         root.state = "vocabularyList"
                     }
                 }
@@ -290,12 +294,16 @@ ColumnLayout{
 
                         TextInput {
                             id: searchField
+                            objectName: "SearchField"
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             Layout.rightMargin: 1
                             clip: true
                             inputMethodHints: Qt.ImhNoPredictiveText
                             verticalAlignment: Text.AlignVCenter
+
+                            signal textChanged(var text, var language)
+
                             Text {
                                 anchors.fill: parent
                                 text: qsTr("Search")
@@ -303,6 +311,21 @@ ColumnLayout{
                                 visible: !parent.focus && parent.length === 0
                                 verticalAlignment: Text.AlignVCenter
                             }
+
+                            onEditingFinished: {
+                                searchField.textChanged(searchField.text, language)
+                                lvDictionary.forceActiveFocus()
+                                resultColumn.updateText = !resultColumn.updateText
+                                if(lvDictionary.count > 0)
+                                {
+                                    lvDictionary.currentIndex = 0
+                                }
+                            }
+
+                            onVisibleChanged: {
+                                if(visible) forceActiveFocus();
+                            }
+
                         }
 
                         Image {
@@ -348,7 +371,7 @@ ColumnLayout{
                             anchors.fill: parent
                             anchors.margins: globalMargin / 2
                             Image {
-                                visible: language == 4
+                                visible: language === 4
                                 Layout.preferredHeight: 3 * globalMargin
                                 sourceSize.height: height
                                 sourceSize.width: height / 3 * 5
@@ -395,7 +418,7 @@ ColumnLayout{
                                                                        case 3:
                                                                           return Dansk
                                 }
-                                text: (ResultLanguage == 4 ? appLanguageScientific : ResultWord) + wordScientific
+                                text: (ResultLanguage === 4 ? appLanguageScientific : ResultWord) + wordScientific
                                 height: parent.height
                                 verticalAlignment: Text.AlignVCenter
                                 wrapMode: Text.Wrap
@@ -404,10 +427,7 @@ ColumnLayout{
 
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: {
-                                lvDictionary.focus = true
-                                dictionaryDelegate.ListView.view.currentIndex = index
-                            }
+                            onClicked: parent.ListView.view.currentIndex = index
                         }
 
                         states: State {
@@ -425,11 +445,14 @@ ColumnLayout{
                 }
             }
 
+
+
             Rectangle {
                 id: seperatorLine
                 color: "black"
                 Layout.preferredWidth: globalBorder
                 Layout.fillHeight: true
+                visible: resultWidget.visible
 
                 states: State{
                     when: gridLayout.flow === GridLayout.TopToBottom
@@ -454,6 +477,8 @@ ColumnLayout{
                 Layout.fillHeight: true
                 Layout.fillWidth: false
 
+                visible: resultListView.count > 0
+
                 Flickable {
                     anchors.fill: parent
                     contentWidth: resultView.width; contentHeight: resultView.height
@@ -468,28 +493,25 @@ ColumnLayout{
                             anchors.fill: parent
                             anchors.margins: 1.5 * globalMargin
                             spacing: globalMargin
+                            property int row: resultWidget.resultListView.currentIndex
+                            property bool updateText
                             ResultRow {
                                 rowLanguage: resultWidget.fromLanguage
                                 resize: highDpi ? 1.25 : 1.75
                                 scientific: true
                                 visible: true
-                                row: resultWidget.resultListView.currentIndex
                             }
                             ResultRow {
                                 rowLanguage: 0
-                                row: resultWidget.resultListView.currentIndex
                             }
                             ResultRow {
                                 rowLanguage: 1
-                                row: resultWidget.resultListView.currentIndex
                             }
                             ResultRow {
                                 rowLanguage: 2
-                                row: resultWidget.resultListView.currentIndex
                             }
                             ResultRow {
                                 rowLanguage: 3
-                                row: resultWidget.resultListView.currentIndex
                             }
                         }
                     }
@@ -525,7 +547,6 @@ ColumnLayout{
             extend: "vocabularyList"
             PropertyChanges { target: lvVocabulary; visible: false; focus: false; model: ""}
             PropertyChanges { target: dictionaryWidget; visible: true }
-            PropertyChanges { target: lvDictionary; focus: true}
             PropertyChanges { target: resultWidget; resultListView: lvDictionary }
 
         }

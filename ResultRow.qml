@@ -6,8 +6,9 @@ import QtQuick.Layouts 1.2
 Row {
     property double resize: highDpi ? 1 : 1.25
     property int rowLanguage
-    property int row
+    property int row: parent.row
     property bool scientific: false
+    property bool updateText: parent.updateText
 
     spacing: globalMargin
     visible: resultWidget.fromLanguage !== rowLanguage
@@ -34,12 +35,14 @@ Row {
         anchors.verticalCenter: flag.verticalCenter
 
         Text {
-            text: resultWidget.resultListView.model ? resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, rowLanguage), rowLanguage) : ""
+            property var textCheck: resultWidget.resultListView.model && (updateText || !updateText) ? resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, rowLanguage), rowLanguage) : ""
+            text: textCheck ? textCheck : "" //der Zwischenschritt über die var-Variable ist notwendig, da es sonst zu errors kommt, wenn das Model leer ist. Einer var kann man gut undefined zuweisen - einem String nicht
             font.pointSize: (resize <= 0 ? 1 : resize) * fontHeight.font.pointSize //dieses völlig bescheuerte Konstrukt um resize ist Compiler-Errors geschuldet
         }
         
         Text {//Scientific
-            text: resultWidget.resultListView.model ? resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, 4), 4) : ""
+            property var textCheck: resultWidget.resultListView.model && (updateText || !updateText) ? resultWidget.resultListView.model.data(resultWidget.resultListView.model.index(row, 4), 4) : ""
+            text: textCheck ? textCheck : ""
             visible: scientific && text.length > 0
             font.italic: true
             font.pointSize: ((resize <= 0 ? 1 : resize) - 0.5) * fontHeight.font.pointSize

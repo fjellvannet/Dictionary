@@ -10,36 +10,60 @@ DictionaryModel::DictionaryModel(VocabularyModel *a_sourceModel, QObject *parent
 
 void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int language)
 {
-    m_searchPattern = new QRegularExpression(a_searchPattern);
+    m_searchPattern = new QRegularExpression(a_searchPattern, QRegularExpression::CaseInsensitiveOption);
+    beginResetModel();
     m_searchResultIndexes->clear();
+    endResetModel();
+    QList<QModelIndex> *searchResultIndexes = new QList<QModelIndex>;
     if(language == 4)//alle Sprachen
     {
         for(int row = 0; row < m_sourceModel->rowCount(); ++row)
         {
-            for(int column = 0; column < 5; ++column)
+            bool exists = false;//um zu umgehen, dass das Wort mehrmals auftaucht, wegen einem Treffer im lat. Namen
+            for(int column = 0; column <= 3; ++column)
             {
                 QModelIndex index = m_sourceModel->index(row, column);
                 if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
                 {
-                    m_searchResultIndexes->append(index);
+                    searchResultIndexes->append(index);
+                    exists = true;
+                }
+            }
+            if(!exists)
+            {
+                QModelIndex index = m_sourceModel->index(row, 4);
+                if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
+                {
+                    searchResultIndexes->append(index);
                 }
             }
         }
     }
-    for(int row = 0; row < m_sourceModel->rowCount(); ++row)
+    else
     {
-        QModelIndex index = m_sourceModel->index(row, language);
-        if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
+        for(int row = 0; row < m_sourceModel->rowCount(); ++row)
         {
-            m_searchResultIndexes->append(index);
-        }
-        index = m_sourceModel->index(row, 4);//Scientific zusätzlich immer überprüfen
-        if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
-        {
-            m_searchResultIndexes->append(index);
+            QModelIndex index = m_sourceModel->index(row, language);
+            if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
+            {
+                searchResultIndexes->append(index);
+            }
+            else
+            {
+                index = m_sourceModel->index(row, 4);//Scientific zusätzlich immer überprüfen
+                if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
+                {
+                    searchResultIndexes->append(index);
+                }
+            }
         }
     }
-
+    if(searchResultIndexes->count() > 0)
+    {
+        beginInsertRows(QModelIndex(), 0, searchResultIndexes->count() - 1);
+        m_searchResultIndexes = searchResultIndexes;
+        endInsertRows();
+    }
 }
 
 int DictionaryModel::rowCount(const QModelIndex & parent) const {
@@ -74,6 +98,11 @@ QVariant DictionaryModel::data(const QModelIndex & index, int role) const
     }
     //else - role == ResultLanguageRole
     return m_searchResultIndexes->at(index.row()).column();
+}
+
+void DictionaryModel::search(QVariant v_searchPattern, QVariant v_language)
+{
+    fillWithSearchResults(v_searchPattern.toString(), v_language.toInt());
 }
 
 QHash<int, QByteArray> DictionaryModel::roleNames() const {

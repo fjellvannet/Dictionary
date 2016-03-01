@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     VocabularyListModel listModel;
     listModel.setSourceModel(&model);
     DictionaryModel dictionaryModel(&model);
-    dictionaryModel.fillWithSearchResults("x", 4);
+    dictionaryModel.search("Larus", 0);
 
     //VocabularyModel model;
 
@@ -35,6 +35,7 @@ int main(int argc, char *argv[])
 //    ctxt->setContextProperty("dictionaryModel", &listModel);
     view.setSource(QUrl("qrc:/AppWindow.qml"));
     listModel.connect(view.rootObject()->findChild<QObject*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
+    dictionaryModel.connect(view.rootObject()->findChild<QObject*>("SearchField"), SIGNAL(textChanged(QVariant, QVariant)), SLOT(search(QVariant, QVariant)));
     //ctxt->setContextProperty("DictionaryModel", &model);
     //engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     view.show();
