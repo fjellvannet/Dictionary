@@ -27,6 +27,8 @@ Row {
                     return "qrc:/images/flags/netherlands_flag.svg"
                 case 3:
                     return "qrc:/images/flags/danish_flag.svg"
+                default:
+                    return ""
         }
     }
 

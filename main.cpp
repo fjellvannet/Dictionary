@@ -17,7 +17,6 @@ int main(int argc, char *argv[])
     VocabularyListModel listModel;
     listModel.setSourceModel(&model);
     DictionaryModel dictionaryModel(&model);
-    dictionaryModel.search("Larus", 0);
 
     //VocabularyModel model;
 

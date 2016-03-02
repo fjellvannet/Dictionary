@@ -8,6 +8,7 @@ ColumnLayout{
     id: root
     anchors.fill: parent
     spacing: 0
+    focus: true
 
     property color light_blue: "#41b6e6"
     property color medium_blue: "#00629b"
@@ -50,7 +51,6 @@ ColumnLayout{
                 Image {
                     anchors.centerIn: parent
                     id: backButton
-                    //Layout.fillHeight: true
                     sourceSize.height: parent.height / 1.35
                     sourceSize.width: parent.height / 1.35
                     source: "qrc:/images/icons/arrow.svg"
@@ -104,6 +104,7 @@ ColumnLayout{
                         if(root.state == "dictionary")
                         {
                             nextLanguage()
+                            searchField.performSearch()
                         }
                     }
                 }
@@ -216,7 +217,7 @@ ColumnLayout{
                             default:
                                 return ""
                         }
-                        property string wordScientific: Scientific == "" ? "" : " (<i>" + Scientific + "</i>)"
+                        property string wordScientific: Scientific === "" ? "" : " (<i>" + Scientific + "</i>)"
                         text: wordText + wordScientific
                         height: parent.height
                         verticalAlignment: Text.AlignVCenter
@@ -290,6 +291,10 @@ ColumnLayout{
                             sourceSize.height: height
                             sourceSize.width: height
                             source: "qrc:/images/icons/magnifying_glass.svg"
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: searchField.performSearch()
+                            }
                         }
 
                         TextInput {
@@ -312,20 +317,32 @@ ColumnLayout{
                                 verticalAlignment: Text.AlignVCenter
                             }
 
-                            onEditingFinished: {
+                            function performSearch() {
                                 searchField.textChanged(searchField.text, language)
-                                lvDictionary.forceActiveFocus()
-                                resultColumn.updateText = !resultColumn.updateText
-                                if(lvDictionary.count > 0)
+                                if(length > 0)
                                 {
-                                    lvDictionary.currentIndex = 0
+                                    noSearchResults.visible = lvDictionary.count === 0
+                                    if(!noSearchResults.visible)
+                                    {
+                                        lvDictionary.forceActiveFocus()
+                                        lvDictionary.currentIndex = 0
+                                    }
                                 }
+                                resultColumn.updateText = !resultColumn.updateText
                             }
+
+                            onEditingFinished: performSearch()
 
                             onVisibleChanged: {
                                 if(visible) forceActiveFocus();
                             }
 
+                            Keys.onReleased: {
+                                if(event.key === Qt.Key_Back) {
+                                    event.accepted = true
+                                    root.state = ""
+                                }
+                            }
                         }
 
                         Image {
@@ -340,6 +357,8 @@ ColumnLayout{
                                 anchors.fill: parent
                                 onClicked: {
                                     searchField.text = ""
+                                    searchField.performSearch()
+                                    searchField.forceActiveFocus()
                                 }
                             }
                         }
@@ -350,6 +369,7 @@ ColumnLayout{
                     color: "black"
                     Layout.fillWidth: true
                     Layout.preferredHeight: globalBorder
+                    visible: lvDictionary.count > 0
                 }
 
                 ListView {
@@ -385,7 +405,7 @@ ColumnLayout{
                                         case 3:
                                             return "qrc:/images/flags/danish_flag.svg"
                                         case 4:
-                                            switch (appLanguage) {
+                                            switch (language === 4 ? appLanguage : language) {
                                             case 0:
                                                 return "qrc:/images/flags/german_flag.svg"
                                             case 1:
@@ -407,8 +427,8 @@ ColumnLayout{
                                 id: dictionaryWord
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
-                                property string wordScientific: Scientific == "" ? "" : " (<i>" + Scientific + "</i>)"
-                                property string appLanguageScientific: switch (appLanguage) {
+                                property string wordScientific: Scientific === "" ? "" : " (<i>" + Scientific + "</i>)"
+                                property string appLanguageScientific: switch (language === 4 ? appLanguage : language) {
                                                                        case 0:
                                                                           return Deutsch
                                                                        case 1:
@@ -442,6 +462,15 @@ ColumnLayout{
                             root.state = ""
                         }
                     }
+
+                    Text {
+                        id: noSearchResults
+                        anchors.fill: parent
+                        text: qsTr("No matches found!")
+                        horizontalAlignment: Text.AlignHCenter
+                        anchors.margins: globalMargin
+                        visible: false
+                    }
                 }
             }
 
@@ -468,7 +497,7 @@ ColumnLayout{
             Item {
                 id: resultWidget
                 property ListView resultListView: lvVocabulary
-                property int fromLanguage: language === 4 ? appLanguage : language
+                property int fromLanguage: language === 4 && lvDictionary.count > 0 ? (dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex, 6), 6) === 4 ? appLanguage : dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex, 6), 6)) : language
 
                 Layout.preferredHeight: resultView.height
                 Layout.preferredWidth: resultView.width
@@ -537,6 +566,7 @@ ColumnLayout{
         State {
             name: "vocabularyList"
             PropertyChanges { target: home; visible: false }
+            PropertyChanges { target: root; focus: false }
             PropertyChanges { target: gridLayout; visible: true }
             PropertyChanges { target: lvVocabulary; focus: true; visible: true; model: vocabularyModel}
             PropertyChanges { target: dictionaryMenu; visible: true }

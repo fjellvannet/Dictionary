@@ -14,6 +14,7 @@ void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int languag
     beginResetModel();
     m_searchResultIndexes->clear();
     endResetModel();
+    if (m_searchPattern->pattern().isEmpty()) return;
     QList<QModelIndex> *searchResultIndexes = new QList<QModelIndex>;
     if(language == 4)//alle Sprachen
     {
@@ -74,7 +75,7 @@ int DictionaryModel::rowCount(const QModelIndex & parent) const {
 int DictionaryModel::columnCount(const QModelIndex & parent) const
 {
     Q_UNUSED(parent);
-    return 5;
+    return 7;
 }
 
 QVariant DictionaryModel::data(const QModelIndex & index, int role) const
@@ -96,8 +97,10 @@ QVariant DictionaryModel::data(const QModelIndex & index, int role) const
     {
         return m_sourceModel->data(m_sourceModel->index(m_searchResultIndexes->at(index.row()).row(), role));
     }
-    //else - role == ResultLanguageRole
-    return m_searchResultIndexes->at(index.row()).column();
+    else// role == ResultLanguageRole
+    {
+        return m_searchResultIndexes->at(index.row()).column();
+    }
 }
 
 void DictionaryModel::search(QVariant v_searchPattern, QVariant v_language)
