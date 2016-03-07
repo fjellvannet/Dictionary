@@ -26,6 +26,10 @@ win32 {
     RC_ICONS = app_icon.ico
 }
 
+!android{
+    TARGET = "IWSS Waddensea Dictionary"
+}
+
 android {
 DISTFILES += \
     android/AndroidManifest.xml \
@@ -47,4 +51,5 @@ DISTFILES += \
     android/res/drawable-tvdpi/app_icon.png \
     android/res/drawable-xhdpi/app_icon.png \
     android/res/drawable-xxhdpi/app_icon.png \
-    android/res/drawable-xxxhdpi/app_icon.png
+    android/res/drawable-xxxhdpi/app_icon.png \
+    android/res/values/strings.xml
