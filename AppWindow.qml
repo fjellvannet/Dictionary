@@ -26,6 +26,9 @@ ColumnLayout{
     property int language: 0
     property int appLanguage: 0
 
+    property string waddensea_wordlist: qsTr("Waddensea wordlist")
+    property string waddensea_dictionary: qsTr("Waddensea dictionary")
+
     function nextLanguage() {
         if(language < 3) language++;
         else if(language === 4 && root.state === "dictionary") language = 0;
@@ -34,20 +37,29 @@ ColumnLayout{
     }
 
     Rectangle{
-        id: menuBar
         Layout.fillWidth: true
         Layout.preferredHeight: globalMargin *(highDpi ? 6 : 11)
         color: medium_blue
 
         RowLayout {
-            id: dictionaryMenu
             anchors.fill: parent
             anchors.margins: parent.height / 8
-            visible: false
+            spacing: parent.height / 8
+
+            Image {
+                id: appIcon
+                Layout.fillHeight: true
+                sourceSize.height: height
+                sourceSize.width: height
+                source: "qrc:/images/icons/app_icon.svg"
+            }
 
             Item {
+                id: backArrow
+                visible: false
                 Layout.fillHeight: true
                 Layout.preferredWidth: height
+
                 Image {
                     anchors.centerIn: parent
                     id: backButton
@@ -64,9 +76,20 @@ ColumnLayout{
                 }
             }
 
-            Item { Layout.fillWidth: true } //Platzhalter
+            Text {
+                id: activityTitle
+                Layout.fillHeight: true
+                Layout.fillWidth: true
+                verticalAlignment: Text.AlignVCenter
+                horizontalAlignment: Text.AlignHCenter
+                font.pixelSize: parent.height / 2.5
+                font.bold: true
+                color: "white"
+                text: appName
+            }
 
             Image {
+                visible: false
                 id: languageButton
                 objectName: "LanguageButton"
                 Layout.fillHeight: true
@@ -127,7 +150,7 @@ ColumnLayout{
                 spacing: globalMargin
 
                 HomeScreenButton{
-                    textLabel:qsTr("Waddensea Vocabulary List")
+                    textLabel: waddensea_wordlist
                     onClicked: {
                         if(language === 4){
                             language = 0;
@@ -139,7 +162,7 @@ ColumnLayout{
                 }
 
                 HomeScreenButton{
-                    textLabel:qsTr("Waddensea Dictionary")
+                    textLabel: waddensea_dictionary
                     onClicked: {
                         root.state = "dictionary"
                     }
@@ -328,7 +351,7 @@ ColumnLayout{
                                         lvDictionary.currentIndex = 0
                                     }
                                 }
-                                resultColumn.updateText = !resultColumn.updateText
+                                resultColumn.updateText = !resultColumn.updateText//damit ResultWidget aktualisiert und ggf ausgeblendet wird
                             }
 
                             onEditingFinished: performSearch()
@@ -565,20 +588,23 @@ ColumnLayout{
 
         State {
             name: "vocabularyList"
+            PropertyChanges { target: appIcon; visible: false }
+            PropertyChanges { target: backArrow; visible: true }
+            PropertyChanges { target: activityTitle; text: waddensea_wordlist }
+            PropertyChanges { target: languageButton; visible: true }
             PropertyChanges { target: home; visible: false }
             PropertyChanges { target: root; focus: false }
             PropertyChanges { target: gridLayout; visible: true }
             PropertyChanges { target: lvVocabulary; focus: true; visible: true; model: vocabularyModel}
-            PropertyChanges { target: dictionaryMenu; visible: true }
         },
 
         State {
             name: "dictionary"
             extend: "vocabularyList"
+            PropertyChanges { target: activityTitle; text: waddensea_dictionary }
             PropertyChanges { target: lvVocabulary; visible: false; focus: false; model: ""}
             PropertyChanges { target: dictionaryWidget; visible: true }
             PropertyChanges { target: resultWidget; resultListView: lvDictionary }
-
         }
     ]
 }

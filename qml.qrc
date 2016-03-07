@@ -11,6 +11,8 @@
         <file>magnifying_glass.svg</file>
         <file>cross_searchfield.svg</file>
         <file>arrow.svg</file>
+        <file>app_icon.svg</file>
+        <file>app_icon.ico</file>
     </qresource>
     <qresource prefix="/images/flags">
         <file>german_flag.svg</file>

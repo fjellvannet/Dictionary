@@ -3,6 +3,7 @@
 #include "dictionarymodel.h"
 
 #include <QApplication>
+#include <QTranslator>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickView>
@@ -11,17 +12,13 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    app.setApplicationName(QCoreApplication::tr("IWSS Waddensea Dictionary"));
 
     VocabularyModel model;
     model.fillModelFromCsv(":/database/waddensea_vocabulary.csv");
     VocabularyListModel listModel;
     listModel.setSourceModel(&model);
     DictionaryModel dictionaryModel(&model);
-
-    //VocabularyModel model;
-
-//    QQmlApplicationEngine engine;
-//    QQmlContext *ctxt = engine.rootContext();
 
     QQuickView view;
     view.setResizeMode(QQuickView::SizeRootObjectToView);
@@ -31,12 +28,10 @@ int main(int argc, char *argv[])
 
     ctxt->setContextProperty("vocabularyModel", &listModel);
     ctxt->setContextProperty("dictionaryModel", &dictionaryModel);
-//    ctxt->setContextProperty("dictionaryModel", &listModel);
+    ctxt->setContextProperty("appName", app.applicationName());
     view.setSource(QUrl("qrc:/AppWindow.qml"));
     listModel.connect(view.rootObject()->findChild<QObject*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
     dictionaryModel.connect(view.rootObject()->findChild<QObject*>("SearchField"), SIGNAL(textChanged(QVariant, QVariant)), SLOT(search(QVariant, QVariant)));
-    //ctxt->setContextProperty("DictionaryModel", &model);
-    //engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     view.show();
 
     return app.exec();
