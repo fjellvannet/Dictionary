@@ -23,8 +23,8 @@ ColumnLayout{
     property int globalBorder: globalMargin / 10 > 1 ? globalMargin / 10 : 1
     property bool highDpi: Math.max(Screen.height, Screen.width) / globalMargin < 100
 
-    property int language: 0
-    property int appLanguage: 0
+    property int language: appLanguage
+
 
     property string waddensea_wordlist: qsTr("Waddensea wordlist")
     property string waddensea_dictionary: qsTr("Waddensea dictionary")

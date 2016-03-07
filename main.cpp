@@ -19,6 +19,8 @@ int main(int argc, char *argv[])
     VocabularyListModel listModel;
     listModel.setSourceModel(&model);
     DictionaryModel dictionaryModel(&model);
+    int appLanguage = 1;
+    listModel.sortBy(appLanguage);
 
     QQuickView view;
     view.setResizeMode(QQuickView::SizeRootObjectToView);
@@ -29,6 +31,7 @@ int main(int argc, char *argv[])
     ctxt->setContextProperty("vocabularyModel", &listModel);
     ctxt->setContextProperty("dictionaryModel", &dictionaryModel);
     ctxt->setContextProperty("appName", app.applicationName());
+    ctxt->setContextProperty("appLanguage", appLanguage);
     view.setSource(QUrl("qrc:/AppWindow.qml"));
     listModel.connect(view.rootObject()->findChild<QObject*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
     dictionaryModel.connect(view.rootObject()->findChild<QObject*>("SearchField"), SIGNAL(textChanged(QVariant, QVariant)), SLOT(search(QVariant, QVariant)));
