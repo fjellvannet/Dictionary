@@ -1,9 +1,4 @@
 <RCC>
-    <qresource prefix="/">
-        <file>AppWindow.qml</file>
-        <file>HomeScreenButton.qml</file>
-        <file>ResultRow.qml</file>
-    </qresource>
     <qresource prefix="/database">
         <file>waddensea_vocabulary.csv</file>
     </qresource>
@@ -20,5 +15,10 @@
         <file>danish_flag.svg</file>
         <file>netherlands_flag.svg</file>
         <file>all_languages.svg</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>AppWindow.qml</file>
+        <file>HomeScreenButton.qml</file>
+        <file>ResultRow.qml</file>
     </qresource>
 </RCC>
