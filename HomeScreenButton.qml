@@ -21,4 +21,10 @@ Button {
             radius: height / 4
         }
     }
+
+    Keys.onReleased: {
+        if(event.key === Qt.Key_Enter) {
+            clicked()
+        }
+    }
 }

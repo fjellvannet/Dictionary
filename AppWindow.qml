@@ -54,11 +54,12 @@ ColumnLayout{
                 source: "qrc:/images/icons/app_icon.svg"
             }
 
-            Item {
+            Button {
                 id: backArrow
                 visible: false
                 Layout.fillHeight: true
                 Layout.preferredWidth: height
+                activeFocusOnTab: true
 
                 Image {
                     anchors.centerIn: parent
@@ -68,11 +69,16 @@ ColumnLayout{
                     source: "qrc:/images/icons/arrow.svg"
                 }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        root.state = ""
+                style: ButtonStyle {
+                    background: Rectangle{
+                        color: "#00000000"
+                        border.color: "#888"
+                        border.width: backArrow.activeFocus ? 2 * globalBorder : 0
                     }
+                }
+
+                onClicked: {
+                    root.state = ""
                 }
             }
 
@@ -112,8 +118,10 @@ ColumnLayout{
 
                 signal sortBy(var role)
 
-                MouseArea {
+                Button {
+                    id: languageBtn
                     anchors.fill: parent
+                    activeFocusOnTab: true
                     onClicked: {
                         if(root.state == "vocabularyList")
                         {
@@ -122,6 +130,7 @@ ColumnLayout{
                             languageButton.sortBy(language)
                             lvVocabulary.positionViewAtEnd()
                             lvVocabulary.positionViewAtBeginning()
+                            lvVocabulary.currentIndex = 0
                             lvVocabulary.visible = true
                         }
                         if(root.state == "dictionary")
@@ -130,6 +139,23 @@ ColumnLayout{
                             searchField.performSearch()
                         }
                     }
+
+                    style: ButtonStyle {
+                        background: Rectangle{
+                            color: "#00000000"
+                            border.color: "#888"
+                            border.width: languageBtn.activeFocus ? 2 * globalBorder : 0
+                        }
+                    }
+
+                    Keys.onReleased: {
+                        if(event.key === Qt.Key_Back)
+                        {
+                            event.accepted = true
+                            root.state = ""
+                        }
+                    }
+
                 }
             }
         }
@@ -185,6 +211,7 @@ ColumnLayout{
                 maximumFlickVelocity: globalMargin * 1000
                 flickDeceleration: maximumFlickVelocity / 2
                 clip: true
+                activeFocusOnTab: true
 
                 section.labelPositioning: ViewSection.CurrentLabelAtStart | ViewSection.InlineLabels
                 section.property: switch (language) {
@@ -329,6 +356,7 @@ ColumnLayout{
                             clip: true
                             inputMethodHints: Qt.ImhNoPredictiveText
                             verticalAlignment: Text.AlignVCenter
+                            activeFocusOnTab: true
 
                             signal textChanged(var text, var language)
 
@@ -402,6 +430,7 @@ ColumnLayout{
                     clip: true
                     maximumFlickVelocity: globalMargin * 1000
                     flickDeceleration: maximumFlickVelocity / 2
+                    activeFocusOnTab: true
 
                     model: dictionaryModel
 
