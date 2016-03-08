@@ -29,20 +29,21 @@ include(deployment.pri)
 
 CONFIG+=qml_debug
 
-TRANSLATIONS = translations\IWSS_Waddensea_Dictionary_da.ts \
-               translations\IWSS_Waddensea_Dictionary_de.ts \
-               translations\IWSS_Waddensea_Dictionary_nl.ts
+TRANSLATIONS += \
+    translations\IWSS_Waddensea_Dictionary_da.ts \
+    translations\IWSS_Waddensea_Dictionary_de.ts \
+    translations\IWSS_Waddensea_Dictionary_nl.ts
 
 DISTFILES += \
     translations/IWSS_Waddensea_Dictionary_da.ts \
     translations/IWSS_Waddensea_Dictionary_de.ts \
-    translations/IWSS_Waddensea_Dictionary_nl.ts \
-    android/res/values-da/strings.xml \
-    android/res/values-de/strings.xml \
-    android/res/values-nl/strings.xml
+    translations/IWSS_Waddensea_Dictionary_nl.ts
 
 win32 {
-    RC_ICONS = app_icon.ico
+    DISTFILES += \
+        icon\app_icon.ico
+
+    RC_ICONS = icon\app_icon.ico
 }
 
 !android{
@@ -65,7 +66,10 @@ android {
         android/res/drawable-tvdpi/app_icon.png \
         android/res/drawable-xhdpi/app_icon.png \
         android/res/drawable-xxhdpi/app_icon.png \
-        android/res/drawable-xxxhdpi/app_icon.png
+        android/res/drawable-xxxhdpi/app_icon.png \
+        android/res/values-da/strings.xml \
+        android/res/values-de/strings.xml \
+        android/res/values-nl/strings.xml
 
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 }
