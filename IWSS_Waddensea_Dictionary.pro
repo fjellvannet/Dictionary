@@ -29,14 +29,17 @@ include(deployment.pri)
 
 CONFIG+=qml_debug
 
-TRANSLATIONS = translations\IWSS_Waddensea_Dictionary_de.ts \
-               translations\IWSS_Waddensea_Dictionary_dk.ts \
+TRANSLATIONS = translations\IWSS_Waddensea_Dictionary_da.ts \
+               translations\IWSS_Waddensea_Dictionary_de.ts \
                translations\IWSS_Waddensea_Dictionary_nl.ts
 
 DISTFILES += \
+    translations/IWSS_Waddensea_Dictionary_da.ts \
     translations/IWSS_Waddensea_Dictionary_de.ts \
-    translations/IWSS_Waddensea_Dictionary_dk.ts \
-    translations/IWSS_Waddensea_Dictionary_nl.ts
+    translations/IWSS_Waddensea_Dictionary_nl.ts \
+    android/res/values-da/strings.xml \
+    android/res/values-de/strings.xml \
+    android/res/values-nl/strings.xml
 
 win32 {
     RC_ICONS = app_icon.ico

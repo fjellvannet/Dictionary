@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="da_DK" sourcelanguage="en_GB">
+<TS version="2.1" language="da_DK">
 <context>
     <name>AppWindow</name>
     <message>
         <location filename="../AppWindow.qml" line="29"/>
         <source>Waddensea wordlist</source>
-        <translation>vadehavs ordliste</translation>
+        <translation>vadehavsordliste</translation>
     </message>
     <message>
         <location filename="../AppWindow.qml" line="30"/>
         <source>Waddensea dictionary</source>
-        <translation>vadehavs ordbog</translation>
+        <translation>vadehavsordbog</translation>
     </message>
     <message>
         <location filename="../AppWindow.qml" line="337"/>
@@ -21,15 +21,15 @@
     <message>
         <location filename="../AppWindow.qml" line="492"/>
         <source>No matches found!</source>
-        <translation>Fandt ingen passende indskrivninger!</translation>
+        <translation>Ingen passende indskrivninger fundet!</translation>
     </message>
 </context>
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../main.cpp" line="15"/>
+        <location filename="../main.cpp" line="39"/>
         <source>IWSS Waddensea Dictionary</source>
-        <translation>IWSS vadehavs ordbog</translation>
+        <translation>IWSS vadehavsordbog</translation>
     </message>
 </context>
 </TS>

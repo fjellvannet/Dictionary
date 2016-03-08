@@ -12,6 +12,30 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    //QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
+    //QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
+    //QLocale::setDefault(QLocale(QLocale::Dutch, QLocale::Netherlands));
+    //QLocale::setDefault(QLocale(QLocale::Danish, QLocale::Denmark));
+    QTranslator translator;
+    int appLanguage = 1;//default - English UK
+    if (translator.load(QLocale(), "translations/IWSS_Waddensea_Dictionary", "_", ":/translations", ".qm"))
+    {
+        app.installTranslator(&translator);
+        switch(QLocale().language())
+        {
+        case QLocale::German:
+            appLanguage = 0;
+            break;
+        case QLocale::Dutch:
+            appLanguage = 2;
+            break;
+        case QLocale::Danish:
+            appLanguage = 3;
+        default:
+            ;//nur um Compiler-Warnungen zu unterdrücken, kann durch das vorangegangene if nicht auftreten
+        }
+    }
     app.setApplicationName(QCoreApplication::tr("IWSS Waddensea Dictionary"));
 
     VocabularyModel model;
@@ -19,13 +43,13 @@ int main(int argc, char *argv[])
     VocabularyListModel listModel;
     listModel.setSourceModel(&model);
     DictionaryModel dictionaryModel(&model);
-    int appLanguage = 1;
     listModel.sortBy(appLanguage);
 
     QQuickView view;
     view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.setHeight(480);
     view.setWidth(640);
+    view.setTitle(app.applicationName());
     QQmlContext *ctxt = view.rootContext();
 
     ctxt->setContextProperty("vocabularyModel", &listModel);

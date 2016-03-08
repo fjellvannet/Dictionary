@@ -21,4 +21,9 @@
         <file>HomeScreenButton.qml</file>
         <file>ResultRow.qml</file>
     </qresource>
+    <qresource prefix="/translations">
+        <file>translations/IWSS_Waddensea_Dictionary_de.qm</file>
+        <file>translations/IWSS_Waddensea_Dictionary_nl.qm</file>
+        <file>translations/IWSS_Waddensea_Dictionary_da.qm</file>
+    </qresource>
 </RCC>

@@ -27,7 +27,7 @@
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../main.cpp" line="15"/>
+        <location filename="../main.cpp" line="39"/>
         <source>IWSS Waddensea Dictionary</source>
         <translation>IWSS Waddenzee woordenboek</translation>
     </message>

@@ -6,7 +6,7 @@
     <message>
         <location filename="../AppWindow.qml" line="29"/>
         <source>Waddensea wordlist</source>
-        <translation>Wattenmeer Worliste</translation>
+        <translation>Wattenmeer Wörterliste</translation>
     </message>
     <message>
         <location filename="../AppWindow.qml" line="30"/>
@@ -27,7 +27,7 @@
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../main.cpp" line="15"/>
+        <location filename="../main.cpp" line="39"/>
         <source>IWSS Waddensea Dictionary</source>
         <translation>IWSS Wattenmeer Wörterbuch</translation>
     </message>
