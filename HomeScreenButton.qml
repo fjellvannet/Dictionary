@@ -16,15 +16,9 @@ Button {
 
         background: Rectangle {
             color: dark_blue
-            border.width: control.activeFocus ? 2 * globalBorder : globalBorder
+            border.width: control.activeFocus ? 2 * globalBorder : 0
             border.color: "#888"
             radius: height / 4
-        }
-    }
-
-    Keys.onReleased: {
-        if(event.key === Qt.Key_Enter) {
-            clicked()
         }
     }
 }
