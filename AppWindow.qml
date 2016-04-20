@@ -14,7 +14,7 @@ ColumnLayout{
     property color medium_blue: "#00629b"
     property color dark_blue: "#00313c"
 
-    Text {
+    AdaptedText {
         id: fontHeight
         visible: false
     }
@@ -82,7 +82,7 @@ ColumnLayout{
                 }
             }
 
-            Text {
+            AdaptedText {
                 id: activityTitle
                 Layout.fillHeight: true
                 Layout.fillWidth: true
@@ -233,7 +233,7 @@ ColumnLayout{
                     width: window.width
                     height: 4 * globalMargin
                     z:3
-                    Text {
+                    AdaptedText {
                         anchors.left: parent.left
                         anchors.leftMargin: globalMargin / 2
                         id: text
@@ -251,7 +251,7 @@ ColumnLayout{
                     width: lvVocabulary.width
                     height: Math.max(4 * globalMargin, word.implicitHeight + globalMargin)
                     z: 2
-                    Text {
+                    AdaptedText {
                         id: word
                         anchors.left: parent.left; anchors.right: parent.right
                         anchors.leftMargin: globalMargin / 2
@@ -296,7 +296,7 @@ ColumnLayout{
                     radius: height / 6
                 }
 
-                Text {
+                AdaptedText {
                     id: sectionLetter
                     z: parent.delegate.z + 2
                     visible: parent.verticalVelocity >= parent.maximumFlickVelocity / 4 || parent.verticalVelocity <= -parent.maximumFlickVelocity / 4
@@ -357,10 +357,11 @@ ColumnLayout{
                             inputMethodHints: Qt.ImhNoPredictiveText
                             verticalAlignment: Text.AlignVCenter
                             activeFocusOnTab: true
+                            font: fontHeight.font
 
                             signal textChanged(var text, var language)
 
-                            Text {
+                            AdaptedText {
                                 anchors.fill: parent
                                 text: qsTr("Search")
                                 color: "#888"
@@ -475,7 +476,7 @@ ColumnLayout{
                             }
 
 
-                            Text {
+                            AdaptedText {
                                 id: dictionaryWord
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
@@ -513,7 +514,7 @@ ColumnLayout{
                             event.accepted = true
                             root.state = ""
                         }
-                        else if(event.key === Qt.Key_tab)
+                        else if(event.key === Qt.Ksey_tab)
                         {
                             nextItemInFocusChain()
                         }
@@ -523,7 +524,7 @@ ColumnLayout{
                         }
                     }
 
-                    Text {
+                    AdaptedText {
                         id: noSearchResults
                         anchors.fill: parent
                         text: qsTr("No matches found!")

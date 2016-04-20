@@ -7,7 +7,7 @@ Button {
     width: parent.width
     height: 2 * implicitHeight
     style: ButtonStyle {
-        label:  Label {
+        label:  AdaptedText {
             text: textLabel
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
