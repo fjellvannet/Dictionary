@@ -230,7 +230,7 @@ ColumnLayout{
                 section.delegate: Rectangle {
                     id: sectionDelegate
                     color: dark_blue
-                    width: parent.width
+                    width: window.width
                     height: 4 * globalMargin
                     z:3
                     Text {
@@ -248,7 +248,7 @@ ColumnLayout{
 
                 delegate: Rectangle {
                     id: wordDelegate
-                    width: parent.width
+                    width: lvVocabulary.width
                     height: Math.max(4 * globalMargin, word.implicitHeight + globalMargin)
                     z: 2
                     Text {
@@ -436,7 +436,7 @@ ColumnLayout{
 
                     delegate: Rectangle {
                         id: dictionaryDelegate
-                        width: parent.width
+                        width: lvDictionary.width
                         height: Math.max(4 * globalMargin, dictionaryWord.implicitHeight + globalMargin)
                         z: 2
                         RowLayout {

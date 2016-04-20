@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  IWSS_Waddensea_Dictionary
+
+  Created by Lukas Neuenschwander on 13.04.16.
+
+*/
+"CFBundleDisplayName" = "IWSS vadehavsordbog";
+"CFBundleName" = "IWSS vadehavsordbog";

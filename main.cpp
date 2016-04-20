@@ -8,6 +8,7 @@
 #include <QQmlContext>
 #include <QQuickView>
 #include <QQuickItem>
+#include <QDebug>
 
 int main(int argc, char *argv[])
 {
@@ -50,6 +51,7 @@ int main(int argc, char *argv[])
     view.setHeight(480);
     view.setWidth(640);
     view.setTitle(app.applicationName());
+    view.setIcon(QIcon("D:/Dokumente/Qt/Workspace/IWSS_Waddensea_Dictionary/icon/app_icon.ico"));
     QQmlContext *ctxt = view.rootContext();
 
     ctxt->setContextProperty("vocabularyModel", &listModel);
