@@ -67,8 +67,8 @@ ColumnLayout{
                 AdaptedImage {
                     anchors.centerIn: parent
                     id: backButton
-                    a_height: parent.height / 1.35
-                    a_width: parent.height / 1.35
+                    height: parent.height / 1.35
+                    width: height
                     source: "qrc:/images/icons/arrow"
                 }
 
@@ -102,8 +102,7 @@ ColumnLayout{
                 id: languageButton
                 objectName: "LanguageButton"
                 Layout.fillHeight: true
-                a_height: height
-                a_width: height / 3 * 5
+                Layout.preferredWidth: height / 3 * 5
                 source: switch(language) {
                         case 0:
                             return "qrc:/images/flags/german_flag"
@@ -165,8 +164,7 @@ ColumnLayout{
             AdaptedImage {
                 id: appIcon
                 Layout.fillHeight: true
-                a_height: height
-                a_width: height
+                Layout.preferredWidth: height
                 source: "qrc:/images/icons/app_icon"
             }
         }
@@ -426,9 +424,7 @@ ColumnLayout{
 
                         AdaptedImage {
                             Layout.fillHeight: true
-                            width: height
-                            a_height: height
-                            a_width: height
+                            Layout.preferredWidth: height
                             source: "qrc:/images/icons/magnifying_glass"
                             MouseArea {
                                 anchors.fill: parent
@@ -489,9 +485,7 @@ ColumnLayout{
 
                         AdaptedImage {
                             Layout.fillHeight: true
-                            width: height
-                            a_height: height
-                            a_width: height
+                            Layout.preferredWidth: height
                             source: "qrc:/images/icons/cross_searchfield"
                             visible: searchField.length !== 0
 
@@ -535,8 +529,7 @@ ColumnLayout{
                             AdaptedImage {
                                 visible: language === 4
                                 Layout.preferredHeight: 3 * globalMargin
-                                a_height: height
-                                a_width: height / 3 * 5
+                                Layout.preferredWidth: height / 3 * 5
                                 source: switch(ResultLanguage) {
                                         case 0:
                                             return "qrc:/images/flags/german_flag"

@@ -16,8 +16,7 @@ Row {
     AdaptedImage {
         id: flag
         height: 4 * resize * globalMargin
-        a_height: height
-        a_width: height / 3 * 5
+        width: height / 3 * 5
         source: switch(rowLanguage) {
                 case 0:
                     return "qrc:/images/flags/german_flag"
