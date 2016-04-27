@@ -56,38 +56,41 @@ osx {
 }
 
 ios {
-    DISTFILES += \
-        ios/HowToInXCode.rtf \
-        ios/Info.plist \
-        ios/da.lproj/InfoPlist.strings \
-        ios/de.lproj/InfoPlist.strings \
-        ios/en.lproj/File.strings \
-        ios/en.lproj/InfoPlist.strings \
-        ios/nl.lproj/InfoPlist.strings \
-        ios/app_icon.xcassets/AppIcon.appiconset/Contents.json \
-        ios/app_icon.xcassets/Contents.json \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-50.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-50@2x.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-57.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-57@2x.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-60@2x.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-60@3x.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-72.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-72@2x.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-76.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-76@2x.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-83.5@2x.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-Small-1.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-Small-40.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-Small-40@2x-1.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-Small-40@2x.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-Small-40@3x.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-Small.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-Small@2x-1.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-Small@2x.png \
-        ios/app_icon.xcassets/AppIcon.appiconset/Icon-Small@3x.png
+    RESOURCES -= images.qrc
+    RESOURCES += images_ios.qrc
 
-    assets_catalogs.files = $$files($$PWD/ios/*.xcassets)
+    DISTFILES += \
+        ios/translations/HowToInXCode.rtf \
+        ios/translations/Info.plist \
+        ios/translations/da.lproj/InfoPlist.strings \
+        ios/translations/de.lproj/InfoPlist.strings \
+        ios/translations/en.lproj/File.strings \
+        ios/translations/en.lproj/InfoPlist.strings \
+        ios/translations/nl.lproj/InfoPlist.strings \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Contents.json \
+        ios/icon/app_icon.xcassets/Contents.json \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-50.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-50@2x.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-57.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-57@2x.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-60@2x.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-60@3x.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-72.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-72@2x.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-76.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-76@2x.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-83.5@2x.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-Small-1.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-Small-40.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-Small-40@2x-1.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-Small-40@2x.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-Small-40@3x.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-Small.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-Small@2x-1.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-Small@2x.png \
+        ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-Small@3x.png
+
+    assets_catalogs.files = $$files($$PWD/ios/icon/*.xcassets)
     QMAKE_BUNDLE_DATA += assets_catalogs
 }
 

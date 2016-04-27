@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/images/icons">
+        <file alias="magnifying_glass">ios/images/magnifying_glass.png</file>
+        <file alias="cross_searchfield">ios/images/cross_searchfield.png</file>
+        <file alias="arrow">ios/images/arrow.png</file>
+        <file alias="app_icon">ios/images/app_icon.png</file>
+    </qresource>
+    <qresource prefix="/images/flags">
+        <file alias="german_flag">ios/images/german_flag.png</file>
+        <file alias="union_jack">ios/images/union_jack.png</file>
+        <file alias="danish_flag">ios/images/danish_flag.png</file>
+        <file alias="netherlands_flag">ios/images/netherlands_flag.png</file>
+        <file alias="all_languages">ios/images/all_languages.png</file>
+    </qresource>
+    <qresource prefix="/qml">
+        <file alias="AdaptedImage.qml">ios/images/AdaptedImage.qml</file>
+    </qresource>
+</RCC>
