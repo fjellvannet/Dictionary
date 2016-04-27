@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/images/icons">
+        <file>magnifying_glass.svg</file>
+        <file>cross_searchfield.svg</file>
+        <file>arrow.svg</file>
+        <file>app_icon.svg</file>
+    </qresource>
+    <qresource prefix="/images/flags">
+        <file>german_flag.svg</file>
+        <file>union_jack.svg</file>
+        <file>danish_flag.svg</file>
+        <file>netherlands_flag.svg</file>
+        <file>all_languages.svg</file>
+    </qresource>
+</RCC>

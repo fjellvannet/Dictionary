@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     ctxt->setContextProperty("dictionaryModel", &dictionaryModel);
     ctxt->setContextProperty("appName", app.applicationName());
     ctxt->setContextProperty("appLanguage", appLanguage);
-    view.setSource(QUrl("qrc:/AppWindow.qml"));
+    view.setSource(QUrl("qrc:/qml/AppWindow.qml"));
     listModel.connect(view.rootObject()->findChild<QObject*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
     dictionaryModel.connect(view.rootObject()->findChild<QObject*>("SearchField"), SIGNAL(textChanged(QVariant, QVariant)), SLOT(search(QVariant, QVariant)));
     view.show();

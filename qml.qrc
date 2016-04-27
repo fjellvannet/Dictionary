@@ -1,29 +1,9 @@
 <RCC>
-    <qresource prefix="/database">
-        <file>waddensea_vocabulary.csv</file>
-    </qresource>
-    <qresource prefix="/images/icons">
-        <file>magnifying_glass.svg</file>
-        <file>cross_searchfield.svg</file>
-        <file>arrow.svg</file>
-        <file>app_icon.svg</file>
-    </qresource>
-    <qresource prefix="/images/flags">
-        <file>german_flag.svg</file>
-        <file>union_jack.svg</file>
-        <file>danish_flag.svg</file>
-        <file>netherlands_flag.svg</file>
-        <file>all_languages.svg</file>
-    </qresource>
-    <qresource prefix="/">
+    <qresource prefix="/qml">
         <file>AppWindow.qml</file>
         <file>HomeScreenButton.qml</file>
         <file>ResultRow.qml</file>
         <file>AdaptedText.qml</file>
-    </qresource>
-    <qresource prefix="/translations">
-        <file>translations/IWSS_Waddensea_Dictionary_de.qm</file>
-        <file>translations/IWSS_Waddensea_Dictionary_nl.qm</file>
-        <file>translations/IWSS_Waddensea_Dictionary_da.qm</file>
+        <file>SettingSwitch.qml</file>
     </qresource>
 </RCC>
