@@ -20,13 +20,13 @@ Row {
         sourceSize.width: height / 3 * 5
         source: switch(rowLanguage) {
                 case 0:
-                    return "qrc:/images/flags/german_flag.svg"
+                    return "qrc:/images/flags/german_flag"
                 case 1:
-                    return "qrc:/images/flags/union_jack.svg"
+                    return "qrc:/images/flags/union_jack"
                 case 2:
-                    return "qrc:/images/flags/netherlands_flag.svg"
+                    return "qrc:/images/flags/netherlands_flag"
                 case 3:
-                    return "qrc:/images/flags/danish_flag.svg"
+                    return "qrc:/images/flags/danish_flag"
                 default:
                     return ""
         }

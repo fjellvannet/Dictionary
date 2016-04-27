@@ -69,7 +69,7 @@ ColumnLayout{
                     id: backButton
                     sourceSize.height: parent.height / 1.35
                     sourceSize.width: parent.height / 1.35
-                    source: "qrc:/images/icons/arrow.svg"
+                    source: "qrc:/images/icons/arrow"
                 }
 
                 style: ButtonStyle {
@@ -106,15 +106,15 @@ ColumnLayout{
                 sourceSize.width: height / 3 * 5
                 source: switch(language) {
                         case 0:
-                            return "qrc:/images/flags/german_flag.svg"
+                            return "qrc:/images/flags/german_flag"
                         case 1:
-                            return "qrc:/images/flags/union_jack.svg"
+                            return "qrc:/images/flags/union_jack"
                         case 2:
-                            return "qrc:/images/flags/netherlands_flag.svg"
+                            return "qrc:/images/flags/netherlands_flag"
                         case 3:
-                            return "qrc:/images/flags/danish_flag.svg"
+                            return "qrc:/images/flags/danish_flag"
                         case 4:
-                            return "qrc:/images/flags/all_languages.svg"
+                            return "qrc:/images/flags/all_languages"
                         case undefined:
                             return ""
                         }
@@ -167,7 +167,7 @@ ColumnLayout{
                 Layout.fillHeight: true
                 sourceSize.height: height
                 sourceSize.width: height
-                source: "qrc:/images/icons/app_icon.svg"
+                source: "qrc:/images/icons/app_icon"
             }
         }
     }
@@ -429,7 +429,7 @@ ColumnLayout{
                             width: height
                             sourceSize.height: height
                             sourceSize.width: height
-                            source: "qrc:/images/icons/magnifying_glass.svg"
+                            source: "qrc:/images/icons/magnifying_glass"
                             MouseArea {
                                 anchors.fill: parent
                                 onClicked: searchField.performSearch()
@@ -492,7 +492,7 @@ ColumnLayout{
                             width: height
                             sourceSize.height: height
                             sourceSize.width: height
-                            source: "qrc:/images/icons/cross_searchfield.svg"
+                            source: "qrc:/images/icons/cross_searchfield"
                             visible: searchField.length !== 0
 
                             MouseArea {
@@ -539,23 +539,23 @@ ColumnLayout{
                                 sourceSize.width: height / 3 * 5
                                 source: switch(ResultLanguage) {
                                         case 0:
-                                            return "qrc:/images/flags/german_flag.svg"
+                                            return "qrc:/images/flags/german_flag"
                                         case 1:
-                                            return "qrc:/images/flags/union_jack.svg"
+                                            return "qrc:/images/flags/union_jack"
                                         case 2:
-                                            return "qrc:/images/flags/netherlands_flag.svg"
+                                            return "qrc:/images/flags/netherlands_flag"
                                         case 3:
-                                            return "qrc:/images/flags/danish_flag.svg"
+                                            return "qrc:/images/flags/danish_flag"
                                         case 4:
                                             switch (language === 4 ? appLanguage : language) {
                                             case 0:
-                                                return "qrc:/images/flags/german_flag.svg"
+                                                return "qrc:/images/flags/german_flag"
                                             case 1:
-                                                return "qrc:/images/flags/union_jack.svg"
+                                                return "qrc:/images/flags/union_jack"
                                             case 2:
-                                                return "qrc:/images/flags/netherlands_flag.svg"
+                                                return "qrc:/images/flags/netherlands_flag"
                                             case 3:
-                                                return "qrc:/images/flags/danish_flag.svg"
+                                                return "qrc:/images/flags/danish_flag"
                                             default:
                                                 return ""
                                             }
