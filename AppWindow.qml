@@ -3,6 +3,7 @@ import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.2
 import QtQuick.Window 2.0
+import Qt.labs.settings 1.0
 
 ColumnLayout{
     id: root
@@ -13,10 +14,20 @@ ColumnLayout{
     property color light_blue: "#41b6e6"
     property color medium_blue: "#00629b"
     property color dark_blue: "#00313c"
+    property double rootSize: settings.sized
 
     AdaptedText {
         id: fontHeight
         visible: false
+    }
+
+    Settings {
+        id: settings
+        property alias sized: sizeSlider.value
+        property alias x: window.x
+        property alias y: window.y
+        property alias width: root.width
+        property alias height: root.height
     }
 
     property int globalMargin: fontHeight.height / 2
@@ -36,7 +47,7 @@ ColumnLayout{
         else if (language === 3 && root.state === "dictionary") language = 4;
     }
 
-    Rectangle{
+    Rectangle{//Menubar
         Layout.fillWidth: true
         Layout.preferredHeight: globalMargin *(highDpi ? 6 : 11)
         color: medium_blue
@@ -45,14 +56,6 @@ ColumnLayout{
             anchors.fill: parent
             anchors.margins: parent.height / 8
             spacing: parent.height / 8
-
-            Image {
-                id: appIcon
-                Layout.fillHeight: true
-                sourceSize.height: height
-                sourceSize.width: height
-                source: "qrc:/images/icons/app_icon.svg"
-            }
 
             Button {
                 id: backArrow
@@ -158,6 +161,14 @@ ColumnLayout{
 
                 }
             }
+
+            Image {
+                id: appIcon
+                Layout.fillHeight: true
+                sourceSize.height: height
+                sourceSize.width: height
+                source: "qrc:/images/icons/app_icon.svg"
+            }
         }
     }
 
@@ -193,8 +204,86 @@ ColumnLayout{
                         root.state = "dictionary"
                     }
                 }
+
+                HomeScreenButton{
+                    textLabel: qsTr("Settings")
+                    onClicked: {
+                        root.state = "settings"
+                    }
+                }
             }
         }
+
+        ColumnLayout {
+            id: settingsWindow
+            visible: false
+            anchors.fill: parent
+            anchors.margins: globalMargin
+            spacing: globalMargin
+
+            AdaptedText {
+                text: qsTr("Layout size")
+            }
+
+
+            Slider {
+                id: sizeSlider
+                maximumValue: 30
+                minimumValue: 5
+                stepSize: 0.5
+                Layout.preferredWidth: parent.width
+                Text{
+                    id: fontSize
+                }
+                value: fontSize.font.pointSize
+
+                style: SliderStyle{
+
+                    handle: Rectangle {
+                        color: dark_blue
+                        height: 2.5 * globalMargin
+                        width: height
+                        radius: height / 2
+                    }
+
+                    groove: Rectangle {
+                        height: globalMargin
+                        width: parent.width
+                        color: "#888"
+                        radius: height / 2
+                        Rectangle {
+                            height: parent.height
+                            width: styleData.handlePosition
+                            radius: parent.radius
+                            color: medium_blue
+                        }
+                    }
+                }
+            }
+
+//            Rectangle {
+//                color: "black"
+//                Layout.fillWidth: true
+//                Layout.preferredHeight: globalBorder
+//            }
+
+//            AdaptedText {
+//                text: qsTr("Dictionary Search")
+//            }
+
+//            SettingSwitch {
+//                a_text: qsTr("use regular expressions")
+//            }
+
+//            SettingSwitch {
+//                a_text: qsTr("find æøåäöü when searching aou (mowe finds Möwe)")
+//            }
+
+            Item {
+                Layout.fillHeight: true
+            }
+        }
+
 
         GridLayout {
             id: gridLayout
@@ -623,15 +712,22 @@ ColumnLayout{
     }
 
     states: [
+        State {
+            name: "settings"
+            PropertyChanges { target: backArrow; visible: true }
+            PropertyChanges { target: activityTitle; text: qsTr("Settings") }
+            PropertyChanges { target: home; visible: false }
+            PropertyChanges { target: root; focus: false }
+            PropertyChanges { target: settingsWindow; visible: true }
+        },
 
         State {
             name: "vocabularyList"
+            extend: "settings"
             PropertyChanges { target: appIcon; visible: false }
-            PropertyChanges { target: backArrow; visible: true }
             PropertyChanges { target: activityTitle; text: waddensea_wordlist }
+            PropertyChanges { target: settingsWindow; visible: false }
             PropertyChanges { target: languageButton; visible: true }
-            PropertyChanges { target: home; visible: false }
-            PropertyChanges { target: root; focus: false }
             PropertyChanges { target: gridLayout; visible: true }
             PropertyChanges { target: lvVocabulary; focus: true; visible: true; model: vocabularyModel}
         },
