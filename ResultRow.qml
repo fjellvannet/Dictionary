@@ -13,11 +13,11 @@ Row {
     spacing: globalMargin
     visible: resultWidget.fromLanguage !== rowLanguage
 
-    Image {
+    AdaptedImage {
         id: flag
         height: 4 * resize * globalMargin
-        sourceSize.height: height
-        sourceSize.width: height / 3 * 5
+        a_height: height
+        a_width: height / 3 * 5
         source: switch(rowLanguage) {
                 case 0:
                     return "qrc:/images/flags/german_flag"

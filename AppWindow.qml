@@ -64,11 +64,11 @@ ColumnLayout{
                 Layout.preferredWidth: height
                 activeFocusOnTab: true
 
-                Image {
+                AdaptedImage {
                     anchors.centerIn: parent
                     id: backButton
-                    sourceSize.height: parent.height / 1.35
-                    sourceSize.width: parent.height / 1.35
+                    a_height: parent.height / 1.35
+                    a_width: parent.height / 1.35
                     source: "qrc:/images/icons/arrow"
                 }
 
@@ -97,13 +97,13 @@ ColumnLayout{
                 text: appName
             }
 
-            Image {
+            AdaptedImage {
                 visible: false
                 id: languageButton
                 objectName: "LanguageButton"
                 Layout.fillHeight: true
-                sourceSize.height: height
-                sourceSize.width: height / 3 * 5
+                a_height: height
+                a_width: height / 3 * 5
                 source: switch(language) {
                         case 0:
                             return "qrc:/images/flags/german_flag"
@@ -162,11 +162,11 @@ ColumnLayout{
                 }
             }
 
-            Image {
+            AdaptedImage {
                 id: appIcon
                 Layout.fillHeight: true
-                sourceSize.height: height
-                sourceSize.width: height
+                a_height: height
+                a_width: height
                 source: "qrc:/images/icons/app_icon"
             }
         }
@@ -424,11 +424,11 @@ ColumnLayout{
                         anchors.margins: parent.height / 5
                         spacing: parent.height / 10
 
-                        Image {
+                        AdaptedImage {
                             Layout.fillHeight: true
                             width: height
-                            sourceSize.height: height
-                            sourceSize.width: height
+                            a_height: height
+                            a_width: height
                             source: "qrc:/images/icons/magnifying_glass"
                             MouseArea {
                                 anchors.fill: parent
@@ -487,11 +487,11 @@ ColumnLayout{
                             }
                         }
 
-                        Image {
+                        AdaptedImage {
                             Layout.fillHeight: true
                             width: height
-                            sourceSize.height: height
-                            sourceSize.width: height
+                            a_height: height
+                            a_width: height
                             source: "qrc:/images/icons/cross_searchfield"
                             visible: searchField.length !== 0
 
@@ -532,11 +532,11 @@ ColumnLayout{
                         RowLayout {
                             anchors.fill: parent
                             anchors.margins: globalMargin / 2
-                            Image {
+                            AdaptedImage {
                                 visible: language === 4
                                 Layout.preferredHeight: 3 * globalMargin
-                                sourceSize.height: height
-                                sourceSize.width: height / 3 * 5
+                                a_height: height
+                                a_width: height / 3 * 5
                                 source: switch(ResultLanguage) {
                                         case 0:
                                             return "qrc:/images/flags/german_flag"
