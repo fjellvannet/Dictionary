@@ -28,6 +28,7 @@ ColumnLayout{
         property alias y: window.y
         property alias width: root.width
         property alias height: root.height
+        property alias language: root.language
     }
 
     property int globalMargin: fontHeight.height / 2
@@ -222,7 +223,7 @@ ColumnLayout{
 
             Slider {
                 id: sizeSlider
-                maximumValue: 30
+                maximumValue: 40
                 minimumValue: 5
                 stepSize: 0.5
                 Layout.preferredWidth: parent.width
@@ -232,9 +233,8 @@ ColumnLayout{
                 value: fontSize.font.pointSize
 
                 style: SliderStyle{
-
                     handle: Rectangle {
-                        color: dark_blue
+                        color: sizeSlider.activeFocus ? dark_blue : "gray"
                         height: 2.5 * globalMargin
                         width: height
                         radius: height / 2
@@ -243,7 +243,7 @@ ColumnLayout{
                     groove: Rectangle {
                         height: globalMargin
                         width: parent.width
-                        color: "#888"
+                        color: "lightgray"
                         radius: height / 2
                         Rectangle {
                             height: parent.height
@@ -255,23 +255,23 @@ ColumnLayout{
                 }
             }
 
-//            Rectangle {
-//                color: "black"
-//                Layout.fillWidth: true
-//                Layout.preferredHeight: globalBorder
-//            }
+            Rectangle {
+                color: "black"
+                Layout.fillWidth: true
+                Layout.preferredHeight: 2 * globalBorder
+            }
 
-//            AdaptedText {
-//                text: qsTr("Dictionary Search")
-//            }
+            AdaptedText {
+                text: qsTr("Dictionary Search")
+            }
 
-//            SettingSwitch {
-//                a_text: qsTr("use regular expressions")
-//            }
+            SettingSwitch {
+                _text: qsTr("use regular expressions")
+            }
 
-//            SettingSwitch {
-//                a_text: qsTr("find æøåäöü when searching aou (mowe finds Möwe)")
-//            }
+            SettingSwitch {
+                _text: qsTr("find æøåäöü when searching aou (mowe finds Möwe)")
+            }
 
             Item {
                 Layout.fillHeight: true
