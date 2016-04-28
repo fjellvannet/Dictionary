@@ -170,44 +170,40 @@ ColumnLayout{
         }
     }
 
-
     Rectangle{
         id: window
         Layout.fillWidth: true
         Layout.fillHeight: true
         color: light_blue
-        Item {
+        Column {
             id: home //um den Grundzustand wiederherzustellen: root.state = ""
             anchors.fill: parent
-            Column {
-                anchors.fill: parent
-                anchors.margins: globalMargin
-                spacing: globalMargin
+            anchors.margins: globalMargin
+            spacing: globalMargin
 
-                HomeScreenButton{
-                    textLabel: waddensea_wordlist
-                    onClicked: {
-                        if(language === 4){
-                            language = 0;
-                            languageButton.sortBy(language);
-                        }
-
-                        root.state = "vocabularyList"
+            HomeScreenButton{
+                textLabel: waddensea_wordlist
+                onClicked: {
+                    if(language === 4){
+                        language = 0;
+                        languageButton.sortBy(language);
                     }
+
+                    root.state = "vocabularyList"
                 }
+            }
 
-                HomeScreenButton{
-                    textLabel: waddensea_dictionary
-                    onClicked: {
-                        root.state = "dictionary"
-                    }
+            HomeScreenButton{
+                textLabel: waddensea_dictionary
+                onClicked: {
+                    root.state = "dictionary"
                 }
+            }
 
-                HomeScreenButton{
-                    textLabel: qsTr("Settings")
-                    onClicked: {
-                        root.state = "settings"
-                    }
+            HomeScreenButton{
+                textLabel: qsTr("Settings")
+                onClicked: {
+                    root.state = "settings"
                 }
             }
         }
@@ -461,7 +457,7 @@ ColumnLayout{
                                     noSearchResults.visible = lvDictionary.count === 0
                                     if(!noSearchResults.visible)
                                     {
-                                        lvDictionary.forceActiveFocus()
+                                        if(!fontHeight.ios) lvDictionary.forceActiveFocus()
                                         lvDictionary.currentIndex = 0
                                     }
                                 }
