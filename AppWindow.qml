@@ -283,6 +283,13 @@ ColumnLayout{
             Item {
                 Layout.fillHeight: true
             }
+
+            Keys.onReleased: {
+                if(event.key === Qt.Key_Back) {
+                    event.accepted = true
+                    root.state = ""
+                }
+            }
         }
 
 
@@ -464,7 +471,7 @@ ColumnLayout{
                                     noSearchResults.visible = lvDictionary.count === 0
                                     if(!noSearchResults.visible)
                                     {
-                                        if(!fontHeight.ios) lvDictionary.forceActiveFocus()
+                                        if(!fontHeight.ios && searchField.activeFocus) lvDictionary.forceActiveFocus()
                                         lvDictionary.currentIndex = 0
                                     }
                                 }
@@ -632,7 +639,7 @@ ColumnLayout{
                             event.accepted = true
                             root.state = ""
                         }
-                        else if(event.key === Qt.Ksey_tab)
+                        else if(event.key === Qt.Key_tab)
                         {
                             nextItemInFocusChain()
                         }
@@ -652,8 +659,6 @@ ColumnLayout{
                     }
                 }
             }
-
-
 
             Rectangle {
                 id: seperatorLine
@@ -747,7 +752,7 @@ ColumnLayout{
             PropertyChanges { target: activityTitle; text: qsTr("Settings") }
             PropertyChanges { target: home; visible: false }
             PropertyChanges { target: root; focus: false }
-            PropertyChanges { target: settingsWindow; visible: true }
+            PropertyChanges { target: settingsWindow; visible: true; focus: true }
         },
 
         State {
