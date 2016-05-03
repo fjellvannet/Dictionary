@@ -24,6 +24,7 @@ ColumnLayout{
     Settings {
         id: settings
         property alias sized: sizeSlider.value
+        property alias flags_in_list: flags_in_all_language.checked
         property alias x: window.x
         property alias y: window.y
         property alias width: root.width
@@ -271,6 +272,12 @@ ColumnLayout{
 
             SettingSwitch {
                 _text: qsTr("find æøåäöü when searching aou (mowe finds Möwe)")
+            }
+
+            SettingSwitch {
+                id: flags_in_all_language
+                _text: qsTr("show flags in all-language mode")
+                checked: true
             }
 
             Item {
@@ -523,7 +530,7 @@ ColumnLayout{
                             anchors.fill: parent
                             anchors.margins: globalMargin / 2
                             AdaptedImage {
-                                visible: language === 4
+                                visible: language === 4 && settings.flags_in_list
                                 Layout.preferredHeight: 3 * globalMargin
                                 Layout.preferredWidth: height / 3 * 5
                                 source: switch(ResultLanguage) {
@@ -553,6 +560,39 @@ ColumnLayout{
                                 }
                             }
 
+                            AdaptedText {
+                                visible: language === 4 && !settings.flags_in_list
+                                Layout.preferredHeight: 3 * globalMargin
+                                Layout.preferredWidth: 4 * globalMargin
+                                font.pixelSize: 3 * globalMargin
+                                color: dark_blue
+                                verticalAlignment: Text.AlignVCenter
+                                text: switch(ResultLanguage) {
+                                      case 0:
+                                          return "DE"
+                                      case 1:
+                                          return "EN"
+                                      case 2:
+                                          return "NL"
+                                      case 3:
+                                          return "DK"
+                                      case 4:
+                                          switch (language === 4 ? appLanguage : language) {
+                                          case 0:
+                                              return "DE"
+                                          case 1:
+                                              return "EN"
+                                          case 2:
+                                              return "NL"
+                                          case 3:
+                                              return "DK"
+                                          default:
+                                              return ""
+                                          }
+                                      default:
+                                          return ""
+                               }
+                            }
 
                             AdaptedText {
                                 id: dictionaryWord

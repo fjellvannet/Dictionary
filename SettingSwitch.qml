@@ -6,7 +6,7 @@ import QtQuick.Window 2.0
 RowLayout {
     id: rootLayout
     property string _text
-    property bool checked
+    property bool checked: false
     spacing: globalMargin
 
     Rectangle {
