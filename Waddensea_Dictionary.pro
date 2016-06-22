@@ -29,25 +29,25 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 
 TRANSLATIONS += \
-    translations\IWSS_Waddensea_Dictionary_da.ts \
-    translations\IWSS_Waddensea_Dictionary_de.ts \
-    translations\IWSS_Waddensea_Dictionary_nl.ts
+    translations\Waddensea_Dictionary_da.ts \
+    translations\Waddensea_Dictionary_de.ts \
+    translations\Waddensea_Dictionary_nl.ts
 
 DISTFILES += \
-    translations/IWSS_Waddensea_Dictionary_da.ts \
-    translations/IWSS_Waddensea_Dictionary_de.ts \
-    translations/IWSS_Waddensea_Dictionary_nl.ts
+    translations/Waddensea_Dictionary_da.ts \
+    translations/Waddensea_Dictionary_de.ts \
+    translations/Waddensea_Dictionary_nl.ts \
+    icon/Waddensea_Dictionary.rc
 
 windows {
     DISTFILES += \
-        icon/app_icon.ico \
-        icon/IWSS_Waddensea_Dictionary.rc
+        icon/app_icon.ico
 
-    RC_FILE = icon\IWSS_Waddensea_Dictionary.rc
+    RC_FILE = icon\Waddensea_Dictionary.rc
 }
 
 windows || osx {
-    TARGET = "IWSS Waddensea Dictionary"
+    TARGET = "Waddensea Dictionary"
 }
 
 osx {
