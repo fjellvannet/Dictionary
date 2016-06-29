@@ -8,11 +8,12 @@ RowLayout {
     property string _text
     property bool checked: false
     spacing: globalMargin
+    anchors.left: parent.left; anchors.right: parent.right
 
     Rectangle {
         id: background
-        Layout.preferredHeight: txt.height
-        Layout.preferredWidth: 2.5 * txt.height
+        Layout.preferredHeight: 1.5 * txt.height
+        Layout.preferredWidth: 2.5 * height
         radius: parent.height / 2
         property int duration: 200
         state: "off"
@@ -90,8 +91,12 @@ RowLayout {
 
     AdaptedText {
         id: txt
+        visible: false
+    }
+    AdaptedText {
         text: _text
         verticalAlignment: Text.AlignVCenter
-        Layout.preferredHeight: 1.5 * implicitHeight
+        Layout.fillWidth: true
+        wrapMode: Text.WordWrap
     }
 }

@@ -8,15 +8,15 @@ DictionaryModel::DictionaryModel(VocabularyModel *a_sourceModel, QObject *parent
      m_searchResultIndexes = new QList<QModelIndex>;
 }
 
-void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int language)
+void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int a_language, bool a_findUmlauts)
 {
-    m_searchPattern = new QRegularExpression(a_searchPattern, QRegularExpression::CaseInsensitiveOption);
+    m_searchPattern = new QRegularExpression(findUmlauts(a_searchPattern, a_findUmlauts), QRegularExpression::CaseInsensitiveOption);
     beginResetModel();
     m_searchResultIndexes->clear();
     endResetModel();
     if (m_searchPattern->pattern().isEmpty()) return;
     QList<QModelIndex> *searchResultIndexes = new QList<QModelIndex>;
-    if(language == 4)//alle Sprachen
+    if(a_language == 4)//alle Sprachen
     {
         for(int row = 0; row < m_sourceModel->rowCount(); ++row)
         {
@@ -44,7 +44,7 @@ void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int languag
     {
         for(int row = 0; row < m_sourceModel->rowCount(); ++row)
         {
-            QModelIndex index = m_sourceModel->index(row, language);
+            QModelIndex index = m_sourceModel->index(row, a_language);
             if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
             {
                 searchResultIndexes->append(index);
@@ -103,9 +103,9 @@ QVariant DictionaryModel::data(const QModelIndex & index, int role) const
     }
 }
 
-void DictionaryModel::search(QVariant v_searchPattern, QVariant v_language)
+void DictionaryModel::search(QVariant v_searchPattern, QVariant v_language, QVariant v_findUmlauts)
 {
-    fillWithSearchResults(v_searchPattern.toString(), v_language.toInt());
+    fillWithSearchResults(v_searchPattern.toString(), v_language.toInt(), v_findUmlauts.toBool());
 }
 
 QHash<int, QByteArray> DictionaryModel::roleNames() const {
@@ -118,4 +118,25 @@ QHash<int, QByteArray> DictionaryModel::roleNames() const {
     roles[ResultWordRole      ] = "ResultWord";
     roles[ResultLanguageRole  ] = "ResultLanguage";
     return roles;
+}
+
+/**
+ * @brief MainWindow::findUmlauts sorgt dafür, dass zum Beispiel beim Suchen von groesse auch Größe gefunden wird
+ * @param regex QString: der anzupassende String
+ * @param replace bool: aktiviert oder deaktiviert die Funktion (ob sie die regex verändert oder nicht)
+ * @return
+ */
+QString DictionaryModel::findUmlauts(QString regex, bool replace)
+{
+    if(replace)
+    {
+        regex = regex.toLower();
+        regex.replace(QRegularExpression("([aou]e)"), "\\1{0,1}");//wenn das e als Umlaut-e gemeint war, auch nach gar kein e Suchen (vorderer Buchstabe wird nachher durch Umlaut erstetzt)
+        regex.replace(QRegularExpression("aa"), "a{1,2}");
+        regex.replace(QRegularExpression("ss"), "(ss|ß)");//bei ss auch ß finden
+        regex.replace(QRegularExpression("a"), "[aäåæ]");
+        regex.replace(QRegularExpression("o"), "[oöø]");
+        regex.replace(QRegularExpression("u"), "[uü]");
+    }
+    return regex;
 }

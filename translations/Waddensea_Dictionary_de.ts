@@ -4,53 +4,48 @@
 <context>
     <name>AppWindow</name>
     <message>
-        <location filename="../AppWindow.qml" line="42"/>
+        <location filename="../AppWindow.qml" line="43"/>
         <source>Waddensea wordlist</source>
         <translation>Wattenmeer Wörterliste</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="43"/>
+        <location filename="../AppWindow.qml" line="44"/>
         <source>Waddensea dictionary</source>
         <translation>Wattenmeer Wörterbuch</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="206"/>
-        <location filename="../AppWindow.qml" line="752"/>
+        <location filename="../AppWindow.qml" line="207"/>
+        <location filename="../AppWindow.qml" line="751"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="221"/>
+        <location filename="../AppWindow.qml" line="222"/>
         <source>Layout size</source>
         <translation>Layout Größe</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="266"/>
+        <location filename="../AppWindow.qml" line="267"/>
         <source>Dictionary Search</source>
-        <translation type="unfinished"></translation>
+        <translation>Suche im Wörterbuch</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="270"/>
-        <source>use regular expressions</source>
-        <translation type="unfinished"></translation>
+        <location filename="../AppWindow.qml" line="272"/>
+        <source>find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)</source>
+        <translation>Finde æ, ø, å, ä, ö, ü, ß, wenn nach a, o, u oder ss gesucht wurde (mowe findet Möwe, weiss findet weiß)</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="274"/>
-        <source>find æøåäöü when searching aou (mowe finds Möwe)</source>
-        <translation type="unfinished"></translation>
+        <location filename="../AppWindow.qml" line="278"/>
+        <source>show flags when searching all languages at the same time (might make search slower)</source>
+        <translation>Zeige Flaggen an, wenn in allen Sprachen gleichzeitig gesucht wird (kann Suche langsamer machen)</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="279"/>
-        <source>show flags in all-language mode</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../AppWindow.qml" line="461"/>
+        <location filename="../AppWindow.qml" line="460"/>
         <source>Search</source>
         <translation>Suchen</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="655"/>
+        <location filename="../AppWindow.qml" line="654"/>
         <source>No matches found!</source>
         <translation>Keine passenden Einträge gefunden!</translation>
     </message>

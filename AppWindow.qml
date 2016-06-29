@@ -24,7 +24,8 @@ ColumnLayout{
     Settings {
         id: settings
         property alias sized: sizeSlider.value
-        property alias flags_in_list: flags_in_all_language.checked
+        property alias flags_in_all_language_mode: swFlags_in_all_language_mode.checked
+        property alias findUmlauts: swUmlauts.checked
         property alias x: window.x
         property alias y: window.y
         property alias width: root.width
@@ -219,6 +220,8 @@ ColumnLayout{
 
             AdaptedText {
                 text: qsTr("Layout size")
+                font.pointSize: 1.2 * fontHeight.font.pointSize
+                font.bold: true
             }
 
 
@@ -264,19 +267,19 @@ ColumnLayout{
 
             AdaptedText {
                 text: qsTr("Dictionary Search")
+                font.pointSize: 1.2 * fontHeight.font.pointSize
+                font.bold: true
             }
 
             SettingSwitch {
-                _text: qsTr("use regular expressions")
+                id: swUmlauts
+                _text: qsTr("find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)")
+                checked: true
             }
 
             SettingSwitch {
-                _text: qsTr("find æøåäöü when searching aou (mowe finds Möwe)")
-            }
-
-            SettingSwitch {
-                id: flags_in_all_language
-                _text: qsTr("show flags in all-language mode")
+                id: swFlags_in_all_language_mode
+                _text: qsTr("show flags when searching all languages at the same time (might make search slower)")
                 checked: true
             }
 
@@ -454,7 +457,7 @@ ColumnLayout{
                             activeFocusOnTab: true
                             font: fontHeight.font
 
-                            signal textChanged(var text, var language)
+                            signal textChanged(var text, var language, var findUmlauts)
 
                             AdaptedText {
                                 anchors.fill: parent
@@ -465,7 +468,7 @@ ColumnLayout{
                             }
 
                             function performSearch() {
-                                searchField.textChanged(searchField.text, language)
+                                searchField.textChanged(searchField.text, language, settings.findUmlauts)
                                 if(length > 0)
                                 {
                                     noSearchResults.visible = lvDictionary.count === 0
@@ -537,7 +540,7 @@ ColumnLayout{
                             anchors.fill: parent
                             anchors.margins: globalMargin / 2
                             AdaptedImage {
-                                visible: language === 4 && settings.flags_in_list
+                                visible: language === 4 && settings.flags_in_all_language_mode
                                 Layout.preferredHeight: 3 * globalMargin
                                 Layout.preferredWidth: height / 3 * 5
                                 source: switch(ResultLanguage) {
@@ -568,7 +571,7 @@ ColumnLayout{
                             }
 
                             AdaptedText {
-                                visible: language === 4 && !settings.flags_in_list
+                                visible: language === 4 && !settings.flags_in_all_language_mode
                                 Layout.preferredHeight: 3 * globalMargin
                                 Layout.preferredWidth: 4 * globalMargin
                                 font.pixelSize: 3 * globalMargin
