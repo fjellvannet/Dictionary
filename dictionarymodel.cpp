@@ -10,6 +10,8 @@ DictionaryModel::DictionaryModel(VocabularyModel *a_sourceModel, QObject *parent
 
 void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int a_language, bool a_findUmlauts)
 {
+    unsigned int limitSearchResults = 100; /*beschreibt, wie viele Ergebnisse maximal angezeigt werden
+    ~0; schreibt den Maximalwert in den unsigned int (0 wird bitweise zu nur Einsen umgedreht) und steht dabei für die Anzeige aller möglichen Ergebnisse*/
     m_searchPattern = new QRegularExpression(findUmlauts(a_searchPattern, a_findUmlauts), QRegularExpression::CaseInsensitiveOption);
     beginResetModel();
     m_searchResultIndexes->clear();
@@ -38,6 +40,7 @@ void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int a_langu
                     searchResultIndexes->append(index);
                 }
             }
+            if(searchResultIndexes->count() >= limitSearchResults) break;
         }
     }
     else
@@ -57,6 +60,7 @@ void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int a_langu
                     searchResultIndexes->append(index);
                 }
             }
+            if(searchResultIndexes->count() >= limitSearchResults) break;
         }
     }
     if(searchResultIndexes->count() > 0)
