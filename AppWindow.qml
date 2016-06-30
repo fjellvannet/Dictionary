@@ -189,9 +189,8 @@ ColumnLayout{
                 onClicked: {
                     if(language === 4){
                         language = 0;
-                        languageButton.sortBy(language);
                     }
-
+                    languageButton.sortBy(language);
                     root.state = "vocabularyList"
                 }
             }

@@ -40,7 +40,7 @@ void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int a_langu
                     searchResultIndexes->append(index);
                 }
             }
-            if(searchResultIndexes->count() >= limitSearchResults) break;
+            if((unsigned) searchResultIndexes->count() >= limitSearchResults) break;
         }
     }
     else
@@ -60,7 +60,7 @@ void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int a_langu
                     searchResultIndexes->append(index);
                 }
             }
-            if(searchResultIndexes->count() >= limitSearchResults) break;
+            if((unsigned) searchResultIndexes->count() >= limitSearchResults) break;
         }
     }
     if(searchResultIndexes->count() > 0)
