@@ -8,7 +8,6 @@ RowLayout {
     property string _text
     property bool checked: false
     spacing: globalMargin
-    anchors.left: parent.left; anchors.right: parent.right
 
     Rectangle {
         id: background

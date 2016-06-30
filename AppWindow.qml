@@ -220,21 +220,21 @@ ColumnLayout{
 
             AdaptedText {
                 text: qsTr("Layout size")
-                font.pointSize: 1.2 * fontHeight.font.pointSize
+                font.pixelSize: 1.2 * fontHeight.font.pixelSize
                 font.bold: true
             }
 
 
             Slider {
                 id: sizeSlider
-                maximumValue: 40
+                maximumValue: 60
                 minimumValue: 5
                 stepSize: 0.5
                 Layout.preferredWidth: parent.width
                 Text{
                     id: fontSize
                 }
-                value: fontSize.font.pointSize
+                value: fontSize.font.pixelSize
 
                 style: SliderStyle{
                     handle: Rectangle {
@@ -267,7 +267,7 @@ ColumnLayout{
 
             AdaptedText {
                 text: qsTr("Dictionary Search")
-                font.pointSize: 1.2 * fontHeight.font.pointSize
+                font.pixelSize: 1.2 * fontHeight.font.pixelSize
                 font.bold: true
             }
 
@@ -341,7 +341,7 @@ ColumnLayout{
                         font.bold: true
                         height: parent.height
                         verticalAlignment: Text.AlignVCenter
-                        font.pointSize: 1.5 * fontHeight.font.pointSize
+                        font.pixelSize: 1.5 * fontHeight.font.pixelSize
                         color: "white"
                     }
                 }
@@ -403,7 +403,7 @@ ColumnLayout{
                     anchors.centerIn: parent
                     text: parent.currentSection
                     color: "white"
-                    font.pointSize: 3 * fontHeight.font.pointSize
+                    font.pixelSize: 3 * fontHeight.font.pixelSize
                 }
 
                 Keys.onReleased: {
