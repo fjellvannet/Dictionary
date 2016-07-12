@@ -473,7 +473,8 @@ ColumnLayout{
                                     noSearchResults.visible = lvDictionary.count === 0
                                     if(!noSearchResults.visible)
                                     {
-                                        if(!fontHeight.ios && searchField.activeFocus) lvDictionary.forceActiveFocus()
+                                        console.log("ios", languageButton.ios ? "true" : "false")
+                                        if(!languageButton.ios && searchField.activeFocus) lvDictionary.forceActiveFocus()
                                         lvDictionary.currentIndex = 0
                                     }
                                 }
