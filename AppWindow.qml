@@ -684,8 +684,8 @@ ColumnLayout{
             Item {
                 id: resultWidget
                 property ListView resultListView: lvVocabulary
-                property int fromLanguage: language === 4 && lvDictionary.count > 0 ? (dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex, 6), 6) === 4 ? appLanguage : dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex === -1 ? 0 : resultListView.currentIndex, 6), 6)) : language
-
+                property int fromLanguage: language === 4 && lvDictionary.count > 0 ? (dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex, 6), 6) === 4 ?
+                    appLanguage : dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex === -1 ? 0 : resultListView.currentIndex, 6), 6)) : language
                 Layout.preferredHeight: resultView.height
                 Layout.preferredWidth: resultView.width
                 Layout.minimumWidth: parent.width / 4

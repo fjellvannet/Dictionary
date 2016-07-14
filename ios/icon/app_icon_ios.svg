@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="250"
-   height="250"
-   viewBox="0 0 250 250"
+   width="330"
+   height="330"
+   viewBox="0 0 330 330"
    id="svg4342"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="Icon.svg">
+   sodipodi:docname="app_icon_ios.svg">
   <defs
      id="defs4344" />
   <sodipodi:namedview
@@ -23,20 +23,24 @@
      pagecolor="#ffffff"
      bordercolor="#666666"
      borderopacity="1.0"
-     inkscape:pageopacity="0.0"
+     inkscape:pageopacity="1"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="-1.5891362"
-     inkscape:cy="7.291869"
+     inkscape:cx="-93.374851"
+     inkscape:cy="45.863338"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
      inkscape:window-width="1920"
-     inkscape:window-height="929"
+     inkscape:window-height="1031"
      inkscape:window-x="0"
      inkscape:window-y="25"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     fit-margin-top="40"
+     fit-margin-left="40"
+     fit-margin-bottom="40"
+     fit-margin-right="40" />
   <metadata
      id="metadata4347">
     <rdf:RDF>
@@ -45,7 +49,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -53,7 +57,14 @@
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-802.36216)">
+     transform="translate(40,-762.3622)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1"
+       id="rect4162"
+       width="330"
+       height="330"
+       x="-40"
+       y="762.36218" />
     <path
        style="fill:#001dff;fill-opacity:0.66666667;fill-rule:nonzero;stroke:none;stroke-width:73.02999878;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        d="M 130.03185,802.3622 A 119.96649,115.92617 0 0 0 10.066617,918.28713 119.96649,115.92617 0 0 0 37.29487,991.70444 L 0,1052.3622 79.235646,1023.1565 A 119.96649,115.92617 0 0 0 130.03185,1034.2123 119.96649,115.92617 0 0 0 250,918.28713 119.96649,115.92617 0 0 0 130.03185,802.3622 Z"
@@ -211,5 +222,12 @@
          d="m 27.098089,-0.11456648 0,11.99999648 -26.99999956,0 0,6 26.99999956,0 0,12 6,0 0,-12 27,0 0,-6 -27,0 0,-11.99999648 -6,0 z"
          style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:Sans;-inkscape-font-specification:Sans;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#cf142b;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:6;marker:none;enable-background:accumulate" />
     </g>
+    <rect
+       style="fill:#ffffff;fill-opacity:1"
+       id="rect4160"
+       width="173.57143"
+       height="179.28572"
+       x="-483.57144"
+       y="827.36218" />
   </g>
 </svg>

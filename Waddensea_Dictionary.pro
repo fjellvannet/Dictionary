@@ -39,6 +39,7 @@ DISTFILES += \
     translations/Waddensea_Dictionary_nl.ts \
     icon/Waddensea_Dictionary.rc
 
+
 windows {
     DISTFILES += \
         icon/app_icon.ico
@@ -60,6 +61,7 @@ ios {
     RESOURCES += images_ios.qrc
 
     DISTFILES += \
+        ios/LaunchScreen.xib \
         ios/translations/HowToInXCode.rtf \
         ios/translations/Info.plist \
         ios/translations/da.lproj/InfoPlist.strings \
@@ -91,7 +93,9 @@ ios {
         ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-Small@3x.png
 
     assets_catalogs.files = $$files($$PWD/ios/icon/*.xcassets)
-    QMAKE_BUNDLE_DATA += assets_catalogs
+    app_launch_images.files = $$PWD/ios/LaunchScreen.xib $$PWD/ios/images/app_icon.png
+    QMAKE_BUNDLE_DATA += assets_catalogs \
+        app_launch_images
 }
 
 android {
