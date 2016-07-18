@@ -40,8 +40,8 @@ ColumnLayout{
     property int language: appLanguage
 
 
-    property string waddensea_wordlist: qsTr("Waddensea wordlist")
-    property string waddensea_dictionary: qsTr("Waddensea dictionary")
+    property string wadden_sea_wordlist: qsTr("Wadden Sea wordlist")
+    property string wadden_sea_dictionary: qsTr("Wadden Sea dictionary")
 
     function nextLanguage() {
         if(language < 3) language++;
@@ -185,7 +185,7 @@ ColumnLayout{
             spacing: globalMargin
 
             HomeScreenButton{
-                textLabel: waddensea_wordlist
+                textLabel: wadden_sea_wordlist
                 onClicked: {
                     if(language === 4){
                         language = 0;
@@ -196,7 +196,7 @@ ColumnLayout{
             }
 
             HomeScreenButton{
-                textLabel: waddensea_dictionary
+                textLabel: wadden_sea_dictionary
                 onClicked: {
                     root.state = "dictionary"
                 }
@@ -208,6 +208,8 @@ ColumnLayout{
                     root.state = "settings"
                 }
             }
+
+
         }
 
         ColumnLayout {
@@ -762,7 +764,7 @@ ColumnLayout{
             name: "vocabularyList"
             extend: "settings"
             PropertyChanges { target: appIcon; visible: false }
-            PropertyChanges { target: activityTitle; text: waddensea_wordlist }
+            PropertyChanges { target: activityTitle; text: wadden_sea_wordlist }
             PropertyChanges { target: settingsWindow; visible: false }
             PropertyChanges { target: languageButton; visible: true }
             PropertyChanges { target: gridLayout; visible: true }
@@ -772,7 +774,7 @@ ColumnLayout{
         State {
             name: "dictionary"
             extend: "vocabularyList"
-            PropertyChanges { target: activityTitle; text: waddensea_dictionary }
+            PropertyChanges { target: activityTitle; text: wadden_sea_dictionary }
             PropertyChanges { target: lvVocabulary; visible: false; focus: false; model: ""}
             PropertyChanges { target: dictionaryWidget; visible: true }
             PropertyChanges { target: resultWidget; resultListView: lvDictionary }

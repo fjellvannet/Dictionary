@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     //QLocale::setDefault(QLocale(QLocale::Danish, QLocale::Denmark));
     QTranslator translator;
     int appLanguage = 1;//default - English UK
-    if (translator.load(QLocale(), "translations/Waddensea_Dictionary", "_", ":/translations", ".qm"))
+    if (translator.load(QLocale(), "translations/Wadden_Sea_Dictionary", "_", ":/translations", ".qm"))
     {
         app.installTranslator(&translator);
         switch(QLocale().language())
@@ -37,10 +37,10 @@ int main(int argc, char *argv[])
             ;//nur um Compiler-Warnungen zu unterdrücken, kann durch das vorangegangene if nicht auftreten
         }
     }
-    app.setApplicationName(QCoreApplication::tr("Waddensea Dictionary"));
+    app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));
 
     VocabularyModel model;
-    model.fillModelFromCsv(":/database/waddensea_vocabulary.csv");
+    model.fillModelFromCsv(":/database/Wadden_Sea_vocabulary.csv");
     VocabularyListModel listModel;
     listModel.setSourceModel(&model);
     DictionaryModel dictionaryModel(&model);
