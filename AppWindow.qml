@@ -54,6 +54,7 @@ ColumnLayout{
         Layout.fillWidth: true
         Layout.preferredHeight: globalMargin *(highDpi ? 6 : 11)
         color: medium_blue
+        z: 1
 
         RowLayout {
             anchors.fill: parent
@@ -197,105 +198,134 @@ ColumnLayout{
 
             HomeScreenButton{
                 textLabel: wadden_sea_dictionary
-                onClicked: {
-                    root.state = "dictionary"
-                }
+                onClicked: root.state = "dictionary"
             }
 
             HomeScreenButton{
-                textLabel: qsTr("Settings")
-                onClicked: {
-                    root.state = "settings"
-                }
+                textLabel: qsTr("Settings & Impressum")
+                onClicked: root.state = "settings"
             }
-
-
         }
 
-        ColumnLayout {
+        Flickable {
             id: settingsWindow
-            visible: false
             anchors.fill: parent
             anchors.margins: globalMargin
-            spacing: globalMargin
+            contentWidth: settingsColumn.width; contentHeight: settingsColumn.height
+            clip: false
+            boundsBehavior: Flickable.StopAtBounds
+            flickableDirection: Flickable.VerticalFlick
+            visible: false
 
-            AdaptedText {
-                text: qsTr("Layout size")
-                font.pixelSize: 1.2 * fontHeight.font.pixelSize
-                font.bold: true
-            }
+            ColumnLayout {
+                id: settingsColumn
+                width: settingsWindow.width
+                spacing: globalMargin
 
-
-            Slider {
-                id: sizeSlider
-                maximumValue: 60
-                minimumValue: 5
-                stepSize: 0.5
-                Layout.preferredWidth: parent.width
-                Text{
-                    id: fontSize
+                AdaptedText {
+                    text: qsTr("Layout size")
+                    font.pixelSize: 1.2 * fontHeight.font.pixelSize
+                    font.bold: true
                 }
-                value: fontSize.font.pixelSize
 
-                style: SliderStyle{
-                    handle: Rectangle {
-                        color: sizeSlider.activeFocus ? dark_blue : "gray"
-                        height: 2.5 * globalMargin
-                        width: height
-                        radius: height / 2
+                Slider {
+                    id: sizeSlider
+                    maximumValue: 60
+                    minimumValue: 5
+                    stepSize: 0.5
+                    Layout.preferredWidth: parent.width
+                    Text{
+                        id: fontSize
                     }
+                    value: fontSize.font.pixelSize
 
-                    groove: Rectangle {
-                        height: globalMargin
-                        width: parent.width
-                        color: "lightgray"
-                        radius: height / 2
-                        Rectangle {
-                            height: parent.height
-                            width: styleData.handlePosition
-                            radius: parent.radius
-                            color: medium_blue
+                    style: SliderStyle{
+                        handle: Rectangle {
+                            color: sizeSlider.activeFocus ? dark_blue : "gray"
+                            height: 2.5 * globalMargin
+                            width: height
+                            radius: height / 2
+                        }
+
+                        groove: Rectangle {
+                            height: globalMargin
+                            width: parent.width
+                            color: "lightgray"
+                            radius: height / 2
+                            Rectangle {
+                                height: parent.height
+                                width: styleData.handlePosition
+                                radius: parent.radius
+                                color: medium_blue
+                            }
                         }
                     }
                 }
-            }
 
-            Rectangle {
-                color: "black"
-                Layout.fillWidth: true
-                Layout.preferredHeight: 2 * globalBorder
-            }
+                Rectangle {
+                    color: "black"
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 2 * globalBorder
+                }
 
-            AdaptedText {
-                text: qsTr("Dictionary Search")
-                font.pixelSize: 1.2 * fontHeight.font.pixelSize
-                font.bold: true
-            }
+                AdaptedText {
+                    text: qsTr("Dictionary Search")
+                    Layout.preferredWidth: parent.width
+                    font.pixelSize: 1.2 * fontHeight.font.pixelSize
+                    font.bold: true
+                }
 
-            SettingSwitch {
-                id: swUmlauts
-                _text: qsTr("find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)")
-                checked: true
-            }
+                SettingSwitch {
+                    id: swUmlauts
+                    Layout.preferredWidth: parent.width
+                    _text: qsTr("find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)")
+                    checked: true
+                }
 
-            SettingSwitch {
-                id: swFlags_in_all_language_mode
-                _text: qsTr("show flags when searching all languages at the same time (might make search slower)")
-                checked: true
-            }
+                SettingSwitch {
+                    id: swFlags_in_all_language_mode
+                    Layout.preferredWidth: parent.width
+                    _text: qsTr("show flags when searching all languages at the same time (might make search slower)")
+                    checked: true
+                }
 
-            Item {
-                Layout.fillHeight: true
-            }
+                Rectangle {
+                    color: "black"
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 2 * globalBorder
+                }
 
-            Keys.onReleased: {
-                if(event.key === Qt.Key_Back) {
-                    event.accepted = true
-                    root.state = ""
+                AdaptedText {
+                    Layout.preferredWidth: parent.width
+                    wrapMode: Text.WordWrap
+                    text:
+                        "<h3>Impressum</h3><p>Dieses Wörterbuch habe ich als Winterprojekt während
+                        meines Freiwilligen Ökologischen Jahres 2015/16 beim
+                        Vadehavscentret in Vester Vedsted, Dänemark, programmiert. Dazu habe ich die
+                        Open-Source-Version von Qt 5.7 verwendet.</p>
+                        <p>Für Anregungen und Fehlerberichte bin ich (Lukas
+                        Neuenschwander) unter <a href=\"mailto:lukas.neu24@gmail.com\">lukas.neu24@gmail.com</a>
+                        zu erreichen. Hier könnt ihr mir auch schreiben, falls euch
+                        auffällt, dass noch Wörter in der Datenbank fehlen, die ihr
+                        gerne hinzugefügt haben möchtet.</p>
+                        <p>Die Daten für diese App sind dem \"IWSS Wadden Sea
+                        Dictionary\" (Link:
+                        <a href=\"http://www.iwss.org/fileadmin/uploads/network-download/Education__Support/IWSS_Dictionary_2009.pdf\"
+                        >http://www.iwss.org/fileadmin/uploads/network-download/Education__Support/IWSS_Dictionary_2009.pdf</a>
+                        ) entnommen, mit freundlicher Genehmigung der International Wadden Sea School
+                        <a href=\"http://www.iwss.org/\">www.iwss.org</a>.
+                        </p>"
+                    onLinkActivated: Qt.openUrlExternally(link)
+                }
+
+                Keys.onReleased: {
+                    if(event.key === Qt.Key_Back) {
+                        event.accepted = true
+                        root.state = ""
+                    }
                 }
             }
         }
-
 
         GridLayout {
             id: gridLayout
@@ -765,7 +795,7 @@ ColumnLayout{
             extend: "settings"
             PropertyChanges { target: appIcon; visible: false }
             PropertyChanges { target: activityTitle; text: wadden_sea_wordlist }
-            PropertyChanges { target: settingsWindow; visible: false }
+            PropertyChanges { target: settingsWindow; visible: false; focus: false }
             PropertyChanges { target: languageButton; visible: true }
             PropertyChanges { target: gridLayout; visible: true }
             PropertyChanges { target: lvVocabulary; focus: true; visible: true; model: vocabularyModel}

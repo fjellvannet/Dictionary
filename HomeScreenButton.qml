@@ -12,6 +12,7 @@ Button {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             color: "white"
+            wrapMode: Text.WordWrap
         }
 
         background: Rectangle {
