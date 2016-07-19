@@ -179,50 +179,52 @@ ColumnLayout{
         Layout.fillWidth: true
         Layout.fillHeight: true
         color: light_blue
-        Column {
-            id: home //um den Grundzustand wiederherzustellen: root.state = ""
-            anchors.fill: parent
-            anchors.margins: globalMargin
-            spacing: globalMargin
-
-            HomeScreenButton{
-                textLabel: wadden_sea_wordlist
-                onClicked: {
-                    if(language === 4){
-                        language = 0;
-                    }
-                    languageButton.sortBy(language);
-                    root.state = "vocabularyList"
-                }
-            }
-
-            HomeScreenButton{
-                textLabel: wadden_sea_dictionary
-                onClicked: root.state = "dictionary"
-            }
-
-            HomeScreenButton{
-                textLabel: qsTr("Settings & Impressum")
-                onClicked: root.state = "settings"
-            }
-        }
 
         Flickable {
             id: settingsWindow
             anchors.fill: parent
             anchors.margins: globalMargin
-            contentWidth: settingsColumn.width; contentHeight: settingsColumn.height
+            contentWidth: home.visible ? home.width : settingsColumn.width
+            contentHeight: home.visible ? home.height : settingsColumn.height
             clip: false
             boundsBehavior: Flickable.StopAtBounds
             flickableDirection: Flickable.VerticalFlick
-            visible: false
+
+            Column {
+                id: home //um den Grundzustand wiederherzustellen: root.state = ""
+                width: settingsWindow.width
+                spacing: globalMargin
+
+                HomeScreenButton{
+                    textLabel: wadden_sea_wordlist
+                    onClicked: {
+                        if(language === 4){
+                            language = 0;
+                        }
+                        languageButton.sortBy(language);
+                        root.state = "vocabularyList"
+                    }
+                }
+
+                HomeScreenButton{
+                    textLabel: wadden_sea_dictionary
+                    onClicked: root.state = "dictionary"
+                }
+
+                HomeScreenButton{
+                    textLabel: qsTr("Settings & Impressum")
+                    onClicked: root.state = "settings"
+                }
+            }
 
             ColumnLayout {
                 id: settingsColumn
                 width: settingsWindow.width
                 spacing: globalMargin
+                visible: false
 
                 AdaptedText {
+                    Layout.fillWidth: true
                     text: qsTr("Layout size")
                     font.pixelSize: 1.2 * fontHeight.font.pixelSize
                     font.bold: true
@@ -233,7 +235,7 @@ ColumnLayout{
                     maximumValue: 60
                     minimumValue: 5
                     stepSize: 0.5
-                    Layout.preferredWidth: parent.width
+                    Layout.fillWidth: true
                     Text{
                         id: fontSize
                     }
@@ -269,22 +271,22 @@ ColumnLayout{
                 }
 
                 AdaptedText {
-                    text: qsTr("Dictionary Search")
-                    Layout.preferredWidth: parent.width
+                    text:  qsTr("Dictionary Search")
+                    Layout.fillWidth: true
                     font.pixelSize: 1.2 * fontHeight.font.pixelSize
                     font.bold: true
                 }
 
                 SettingSwitch {
                     id: swUmlauts
-                    Layout.preferredWidth: parent.width
+                    Layout.fillWidth: true
                     _text: qsTr("find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)")
                     checked: true
                 }
 
                 SettingSwitch {
                     id: swFlags_in_all_language_mode
-                    Layout.preferredWidth: parent.width
+                    Layout.fillWidth: true
                     _text: qsTr("show flags when searching all languages at the same time (might make search slower)")
                     checked: true
                 }
@@ -296,7 +298,7 @@ ColumnLayout{
                 }
 
                 AdaptedText {
-                    Layout.preferredWidth: parent.width
+                    Layout.fillWidth: true
                     wrapMode: Text.WordWrap
                     text:
                         "<h3>Impressum</h3><p>Dieses Wörterbuch habe ich als Winterprojekt während
@@ -317,12 +319,12 @@ ColumnLayout{
                         </p>"
                     onLinkActivated: Qt.openUrlExternally(link)
                 }
+            }
 
-                Keys.onReleased: {
-                    if(event.key === Qt.Key_Back) {
-                        event.accepted = true
-                        root.state = ""
-                    }
+            Keys.onReleased: {
+                if(event.key === Qt.Key_Back) {
+                    event.accepted = true
+                    root.state = ""
                 }
             }
         }
@@ -782,12 +784,18 @@ ColumnLayout{
 
     states: [
         State {
+            name: ""
+            PropertyChanges { target: settingsWindow; contentY: 0}
+        },
+
+        State {
             name: "settings"
             PropertyChanges { target: backArrow; visible: true }
             PropertyChanges { target: activityTitle; text: qsTr("Settings") }
             PropertyChanges { target: home; visible: false }
             PropertyChanges { target: root; focus: false }
-            PropertyChanges { target: settingsWindow; visible: true; focus: true }
+            PropertyChanges { target: settingsColumn; visible: true; focus: true }
+            PropertyChanges { target: settingsWindow; contentY: 0}
         },
 
         State {
