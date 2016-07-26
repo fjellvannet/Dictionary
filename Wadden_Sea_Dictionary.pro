@@ -29,22 +29,21 @@ QML_IMPORT_PATH =
 include(deployment.pri)
 
 TRANSLATIONS += \
-    translations\Wadden_Sea_Dictionary_da.ts \
-    translations\Wadden Sea_Dictionary_de.ts \
-    translations\Wadden Sea_Dictionary_nl.ts
+    translations/Wadden_Sea_Dictionary_da.ts \
+    translations/Wadden_Sea_Dictionary_de.ts \
+    translations/Wadden_Sea_Dictionary_nl.ts
 
 DISTFILES += \
     translations/Wadden_Sea_Dictionary_da.ts \
     translations/Wadden_Sea_Dictionary_de.ts \
     translations/Wadden_Sea_Dictionary_nl.ts
 
-
 windows {
     DISTFILES += \
         icon/app_icon.ico \
         icon/Wadden_Sea_Dictionary.rc
 
-    RC_FILE = icon\Wadden_Sea_Dictionary.rc
+    RC_FILE = icon/Wadden_Sea_Dictionary.rc
 }
 
 windows || osx {

@@ -301,22 +301,19 @@ ColumnLayout{
                     Layout.fillWidth: true
                     wrapMode: Text.WordWrap
                     text:
-                        "<h3>Impressum</h3><p>Dieses Wörterbuch habe ich als Winterprojekt während
-                        meines Freiwilligen Ökologischen Jahres 2015/16 beim
-                        Vadehavscentret in Vester Vedsted, Dänemark, programmiert. Dazu habe ich die
-                        Open-Source-Version von Qt 5.7 verwendet.</p>
-                        <p>Für Anregungen und Fehlerberichte bin ich (Lukas
-                        Neuenschwander) unter <a href=\"mailto:lukas.neu24@gmail.com\">lukas.neu24@gmail.com</a>
-                        zu erreichen. Hier könnt ihr mir auch schreiben, falls euch
-                        auffällt, dass noch Wörter in der Datenbank fehlen, die ihr
-                        gerne hinzugefügt haben möchtet.</p>
-                        <p>Die Daten für diese App sind dem \"IWSS Wadden Sea
-                        Dictionary\" (Link:
-                        <a href=\"http://www.iwss.org/fileadmin/uploads/network-download/Education__Support/IWSS_Dictionary_2009.pdf\"
-                        >http://www.iwss.org/fileadmin/uploads/network-download/Education__Support/IWSS_Dictionary_2009.pdf</a>
-                        ) entnommen, mit freundlicher Genehmigung der International Wadden Sea School
-                        <a href=\"http://www.iwss.org/\">www.iwss.org</a>.
-                        </p>"
+                        qsTr("<h3>Impressum</h3><p>During my Voluntary ecological year (FÖJ, Germany) 2015/16 \
+                        at the Wadden Sea Centre, in Vester Vedsted, Denmark, I have programmed this dictionary. \
+                        For that, I used Qt 5.7-Open-Source.</p>\
+                        <p>For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%1). Here \
+                        you can also suggest missing words that you would like to have added to the dictionary.</p>\
+                        <p>The data for this app is taken from the \”IWSS Wadden Sea Dictionary\” (%2) - with the \
+                        permission from the \”International Wadden Sea School\” (%3).</p>")
+
+                        .arg("<a href=\"mailto:lukas.neu24@gmail.com\">lukas.neu24@gmail.com</a>")
+                        .arg("<a href=\"http://www.iwss.org/fileadmin/uploads/network-download/Education_\
+                        _Support/IWSS_Dictionary_2009.pdf\">http://www.iwss.org/fileadmin/uploads/network\
+                        -download/Education__Support/IWSS_Dictionary_2009.pdf</a>")
+                        .arg("<a href=\"http://www.iwss.org/\">www.iwss.org</a>")
                     onLinkActivated: Qt.openUrlExternally(link)
                 }
             }
@@ -786,6 +783,7 @@ ColumnLayout{
         State {
             name: ""
             PropertyChanges { target: settingsWindow; contentY: 0}
+            PropertyChanges { target: root; focus: true }
         },
 
         State {
