@@ -280,14 +280,14 @@ ColumnLayout{
                 SettingSwitch {
                     id: swUmlauts
                     Layout.fillWidth: true
-                    _text: qsTr("find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)")
+                    _text: qsTr("Find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)")
                     checked: true
                 }
 
                 SettingSwitch {
                     id: swFlags_in_all_language_mode
                     Layout.fillWidth: true
-                    _text: qsTr("show flags when searching all languages at the same time (might make search slower)")
+                    _text: qsTr("Show flags when searching all languages at the same time (might make search slower)")
                     checked: true
                 }
 

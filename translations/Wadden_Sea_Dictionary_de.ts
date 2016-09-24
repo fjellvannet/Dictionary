@@ -14,6 +14,16 @@
         <translation>Wattenmeer Wörterbuch</translation>
     </message>
     <message>
+        <location filename="../AppWindow.qml" line="283"/>
+        <source>Find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)</source>
+        <translation>Finde æ, ø, å, ä, ö, ü, ß, wenn nach a, o, u oder ss gesucht wurde (mowe findet Möwe, weiss findet weiß)</translation>
+    </message>
+    <message>
+        <location filename="../AppWindow.qml" line="290"/>
+        <source>Show flags when searching all languages at the same time (might make search slower)</source>
+        <translation>Zeige Flaggen an, wenn in allen Sprachen gleichzeitig gesucht wird (kann Suche langsamer machen)</translation>
+    </message>
+    <message>
         <location filename="../AppWindow.qml" line="792"/>
         <source>Settings</source>
         <translation>Einstellungen</translation>
@@ -32,16 +42,6 @@
         <location filename="../AppWindow.qml" line="274"/>
         <source>Dictionary Search</source>
         <translation>Suche im Wörterbuch</translation>
-    </message>
-    <message>
-        <location filename="../AppWindow.qml" line="283"/>
-        <source>find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)</source>
-        <translation>Finde æ, ø, å, ä, ö, ü, ß, wenn nach a, o, u oder ss gesucht wurde (mowe findet Möwe, weiss findet weiß)</translation>
-    </message>
-    <message>
-        <location filename="../AppWindow.qml" line="290"/>
-        <source>show flags when searching all languages at the same time (might make search slower)</source>
-        <translation>Zeige Flaggen an, wenn in allen Sprachen gleichzeitig gesucht wird (kann Suche langsamer machen)</translation>
     </message>
     <message>
         <location filename="../AppWindow.qml" line="304"/>

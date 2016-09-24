@@ -6,22 +6,32 @@
     <message>
         <location filename="../AppWindow.qml" line="43"/>
         <source>Wadden Sea wordlist</source>
-        <translation>vadehavsordliste</translation>
+        <translation>Vadehavsordliste</translation>
     </message>
     <message>
         <location filename="../AppWindow.qml" line="44"/>
         <source>Wadden Sea dictionary</source>
-        <translation>vadehavsordbog</translation>
+        <translation>Vadehavsordbog</translation>
+    </message>
+    <message>
+        <location filename="../AppWindow.qml" line="283"/>
+        <source>Find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)</source>
+        <translation>Find æ, ø, å, ä, ö, ü, ß når du søger a, o, u or ss (mage finder også måge, weiss finder weiß</translation>
+    </message>
+    <message>
+        <location filename="../AppWindow.qml" line="290"/>
+        <source>Show flags when searching all languages at the same time (might make search slower)</source>
+        <translation>Vis flagene, når du søger i alle sprog samtidig (kan gøre appen langsommere</translation>
     </message>
     <message>
         <location filename="../AppWindow.qml" line="792"/>
         <source>Settings</source>
-        <translation>indstillinger</translation>
+        <translation>Indstillinger</translation>
     </message>
     <message>
         <location filename="../AppWindow.qml" line="228"/>
         <source>Layout size</source>
-        <translation>layout størrelse</translation>
+        <translation>Layout størrelse</translation>
     </message>
     <message>
         <location filename="../AppWindow.qml" line="215"/>
@@ -32,16 +42,6 @@
         <location filename="../AppWindow.qml" line="274"/>
         <source>Dictionary Search</source>
         <translation>Søg i ordbogen</translation>
-    </message>
-    <message>
-        <location filename="../AppWindow.qml" line="283"/>
-        <source>find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)</source>
-        <translation>find æ, ø, å, ä, ö, ü, ß når du søger a, o, u or ss (mage finder også måge, weiss finder weiß)</translation>
-    </message>
-    <message>
-        <location filename="../AppWindow.qml" line="290"/>
-        <source>show flags when searching all languages at the same time (might make search slower)</source>
-        <translation>vis flagene, når du søger i alle sprog samtidig (kan gøre appen langsommere)</translation>
     </message>
     <message>
         <location filename="../AppWindow.qml" line="304"/>
