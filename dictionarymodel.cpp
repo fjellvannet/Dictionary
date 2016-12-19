@@ -8,7 +8,7 @@ DictionaryModel::DictionaryModel(VocabularyModel *a_sourceModel, QObject *parent
      m_searchResultIndexes = new QList<QModelIndex>;
 }
 
-void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int a_language, bool a_findUmlauts)
+void DictionaryModel::fillWithSearchResults(QString a_searchPattern, bool a_findUmlauts)
 {
     unsigned int limitSearchResults = 100; /*beschreibt, wie viele Ergebnisse maximal angezeigt werden
     ~0; schreibt den Maximalwert in den unsigned int (0 wird bitweise zu nur Einsen umgedreht) und steht dabei für die Anzeige aller möglichen Ergebnisse*/
@@ -18,31 +18,53 @@ void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int a_langu
     endResetModel();
     if (m_searchPattern->pattern().isEmpty()) return;
     QList<QModelIndex> *searchResultIndexes = new QList<QModelIndex>;
-    if(a_language == 4)//alle Sprachen
+    for(int row = 0; row < m_sourceModel->rowCount(); ++row)
     {
-        for(int row = 0; row < m_sourceModel->rowCount(); ++row)
+        bool exists = false;//um zu umgehen, dass das Wort mehrmals auftaucht, wegen einem Treffer im lat. Namen
+        for(int column = 0; column <= 3; ++column)
         {
-            bool exists = false;//um zu umgehen, dass das Wort mehrmals auftaucht, wegen einem Treffer im lat. Namen
-            for(int column = 0; column <= 3; ++column)
+            QModelIndex index = m_sourceModel->index(row, column);
+            if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
             {
-                QModelIndex index = m_sourceModel->index(row, column);
-                if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
-                {
-                    searchResultIndexes->append(index);
-                    exists = true;
-                }
+                searchResultIndexes->append(index);
+                exists = true;
             }
-            if(!exists)
-            {
-                QModelIndex index = m_sourceModel->index(row, 4);
-                if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
-                {
-                    searchResultIndexes->append(index);
-                }
-            }
-            if((unsigned) searchResultIndexes->count() >= limitSearchResults) break;
         }
+        if(!exists)
+        {
+            QModelIndex index = m_sourceModel->index(row, 4);
+            if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
+            {
+                searchResultIndexes->append(index);
+            }
+        }
+        if((unsigned) searchResultIndexes->count() >= limitSearchResults) break;
     }
+    /*if(a_language == 4)//Suche in allen Sprachen
+    {*/
+    for(int row = 0; row < m_sourceModel->rowCount(); ++row)
+    {
+        bool exists = false;//um zu umgehen, dass das Wort mehrmals auftaucht, wegen einem Treffer im lat. Namen
+        for(int column = 0; column <= 3; ++column)
+        {
+            QModelIndex index = m_sourceModel->index(row, column);
+            if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
+            {
+                searchResultIndexes->append(index);
+                exists = true;
+            }
+        }
+        if(!exists)
+        {
+            QModelIndex index = m_sourceModel->index(row, 4);
+            if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
+            {
+                searchResultIndexes->append(index);
+            }
+        }
+        if((unsigned) searchResultIndexes->count() >= limitSearchResults) break;
+    }
+    /*} Wenn in nur einer Sprache gesucht werden soll
     else
     {
         for(int row = 0; row < m_sourceModel->rowCount(); ++row)
@@ -62,7 +84,7 @@ void DictionaryModel::fillWithSearchResults(QString a_searchPattern, int a_langu
             }
             if((unsigned) searchResultIndexes->count() >= limitSearchResults) break;
         }
-    }
+    }*/
     if(searchResultIndexes->count() > 0)
     {
         beginInsertRows(QModelIndex(), 0, searchResultIndexes->count() - 1);
@@ -107,9 +129,9 @@ QVariant DictionaryModel::data(const QModelIndex & index, int role) const
     }
 }
 
-void DictionaryModel::search(QVariant v_searchPattern, QVariant v_language, QVariant v_findUmlauts)
+void DictionaryModel::search(QVariant v_searchPattern, QVariant v_findUmlauts)
 {
-    fillWithSearchResults(v_searchPattern.toString(), v_language.toInt(), v_findUmlauts.toBool());
+    fillWithSearchResults(v_searchPattern.toString(), v_findUmlauts.toBool());
 }
 
 QHash<int, QByteArray> DictionaryModel::roleNames() const {

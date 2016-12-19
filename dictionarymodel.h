@@ -20,14 +20,14 @@ public:
     };
 
     DictionaryModel(VocabularyModel *a_sourceModel, QObject *parent = 0);
-    void fillWithSearchResults(QString a_searchPattern, int a_language, bool a_findUmlauts);
+    void fillWithSearchResults(QString a_searchPattern, bool a_findUmlauts);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role = -1) const;
 
 public slots:
-    void search(QVariant v_searchPattern, QVariant v_language, QVariant v_findUmlauts);
+    void search(QVariant v_searchPattern, QVariant v_findUmlauts);
 
 protected:
     QHash<int, QByteArray> roleNames() const;

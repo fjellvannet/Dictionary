@@ -1,8 +1,8 @@
-import QtQuick 2.5
+import QtQuick 2.7
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
-import QtQuick.Layouts 1.2
-import QtQuick.Window 2.0
+import QtQuick.Layouts 1.3
+import QtQuick.Window 2.2
 import Qt.labs.settings 1.0
 
 ColumnLayout{
@@ -181,47 +181,28 @@ ColumnLayout{
         color: light_blue
 
         Flickable {
+            visible: false
             id: settingsWindow
             anchors.fill: parent
             anchors.margins: globalMargin
-            contentWidth: home.visible ? home.width : settingsColumn.width
-            contentHeight: home.visible ? home.height : settingsColumn.height
+            contentWidth: settingsColumn.width
+            contentHeight: settingsColumn.height
             clip: false
             boundsBehavior: Flickable.StopAtBounds
             flickableDirection: Flickable.VerticalFlick
 
-            Column {
-                id: home //um den Grundzustand wiederherzustellen: root.state = ""
-                width: settingsWindow.width
-                spacing: globalMargin
-
-                HomeScreenButton{
-                    textLabel: wadden_sea_wordlist
-                    onClicked: {
-                        if(language === 4){
-                            language = 0;
-                        }
-                        languageButton.sortBy(language);
-                        root.state = "vocabularyList"
-                    }
-                }
-
-                HomeScreenButton{
-                    textLabel: wadden_sea_dictionary
-                    onClicked: root.state = "dictionary"
-                }
-
-                HomeScreenButton{
-                    textLabel: qsTr("Settings & Impressum")
-                    onClicked: root.state = "settings"
-                }
-            }
+//                    onClicked: {
+//                        if(language === 4){
+//                            language = 0;
+//                        }
+//                        languageButton.sortBy(language);
+//                        root.state = "vocabularyList"
+//                    }
 
             ColumnLayout {
                 id: settingsColumn
                 width: settingsWindow.width
                 spacing: globalMargin
-                visible: false
 
                 AdaptedText {
                     Layout.fillWidth: true
@@ -328,7 +309,6 @@ ColumnLayout{
 
         GridLayout {
             id: gridLayout
-            visible: false
             anchors.fill: parent
             flow:  width > height ? GridLayout.LeftToRight : GridLayout.TopToBottom
             rowSpacing: 0
@@ -342,6 +322,8 @@ ColumnLayout{
                 flickDeceleration: maximumFlickVelocity / 2
                 clip: true
                 activeFocusOnTab: true
+                model: vocabularyModel
+                visible: false
 
                 section.labelPositioning: ViewSection.CurrentLabelAtStart | ViewSection.InlineLabels
                 section.property: switch (language) {
@@ -448,7 +430,7 @@ ColumnLayout{
                 id: dictionaryWidget
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                visible: false
+                visible: true
                 spacing: 0
 
                 Rectangle { //Suchfeld
@@ -487,7 +469,7 @@ ColumnLayout{
                             activeFocusOnTab: true
                             font: fontHeight.font
 
-                            signal textChanged(var text, var language, var findUmlauts)
+                            signal textChanged(var text, var findUmlauts)
 
                             AdaptedText {
                                 anchors.fill: parent
@@ -498,7 +480,7 @@ ColumnLayout{
                             }
 
                             function performSearch() {
-                                searchField.textChanged(searchField.text, language, settings.findUmlauts)
+                                searchField.textChanged(searchField.text, settings.findUmlauts)
                                 if(length > 0)
                                 {
                                     noSearchResults.visible = lvDictionary.count === 0
@@ -571,7 +553,7 @@ ColumnLayout{
                             anchors.fill: parent
                             anchors.margins: globalMargin / 2
                             AdaptedImage {
-                                visible: language === 4 && settings.flags_in_all_language_mode
+                                visible: settings.flags_in_all_language_mode
                                 Layout.preferredHeight: 3 * globalMargin
                                 Layout.preferredWidth: height / 3 * 5
                                 source: switch(ResultLanguage) {
@@ -602,7 +584,7 @@ ColumnLayout{
                             }
 
                             AdaptedText {
-                                visible: language === 4 && !settings.flags_in_all_language_mode
+                                visible: !settings.flags_in_all_language_mode
                                 Layout.preferredHeight: 3 * globalMargin
                                 Layout.preferredWidth: 4 * globalMargin
                                 font.pixelSize: 3 * globalMargin
@@ -714,8 +696,8 @@ ColumnLayout{
 
             Item {
                 id: resultWidget
-                property ListView resultListView: lvVocabulary
-                property int fromLanguage: language === 4 && lvDictionary.count > 0 ? (dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex, 6), 6) === 4 ?
+                property ListView resultListView: lvDictionary//lvVocabulary
+                property int fromLanguage: lvDictionary.count > 0 ? (dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex, 6), 6) === 4 ?
                     appLanguage : dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex === -1 ? 0 : resultListView.currentIndex, 6), 6)) : language
                 Layout.preferredHeight: resultView.height
                 Layout.preferredWidth: resultView.width
@@ -804,7 +786,7 @@ ColumnLayout{
             PropertyChanges { target: settingsWindow; visible: false; focus: false }
             PropertyChanges { target: languageButton; visible: true }
             PropertyChanges { target: gridLayout; visible: true }
-            PropertyChanges { target: lvVocabulary; focus: true; visible: true; model: vocabularyModel}
+            PropertyChanges { target: lvVocabulary; focus: true; visible: true}
         },
 
         State {
