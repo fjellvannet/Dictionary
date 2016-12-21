@@ -10,7 +10,6 @@
         <file alias="union_jack">images/union_jack.svg</file>
         <file alias="danish_flag">images/danish_flag.svg</file>
         <file alias="netherlands_flag">images/netherlands_flag.svg</file>
-        <file alias="all_languages">images/all_languages.svg</file>
     </qresource>
     <qresource prefix="/qml">
         <file>AdaptedImage.qml</file>

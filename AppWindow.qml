@@ -9,7 +9,6 @@ ColumnLayout{
     id: root
     anchors.fill: parent
     spacing: 0
-    focus: true
 
     property color light_blue: "#41b6e6"
     property color medium_blue: "#00629b"
@@ -48,6 +47,10 @@ ColumnLayout{
         else if(language === 4 && root.state === "dictionary") language = 0;
         else if (language === 3 && root.state === "vocabularyList") language = 0;
         else if (language === 3 && root.state === "dictionary") language = 4;
+    }
+
+    Component.onCompleted: {
+        lvVocabulary.updateView()
     }
 
     Rectangle{//Menubar
@@ -129,21 +132,9 @@ ColumnLayout{
                     anchors.fill: parent
                     activeFocusOnTab: true
                     onClicked: {
-                        if(root.state == "vocabularyList")
-                        {
-                            lvVocabulary.visible = false
-                            nextLanguage()
-                            languageButton.sortBy(language)
-                            lvVocabulary.positionViewAtEnd()
-                            lvVocabulary.positionViewAtBeginning()
-                            lvVocabulary.currentIndex = 0
-                            lvVocabulary.visible = true
-                        }
-                        if(root.state == "dictionary")
-                        {
-                            nextLanguage()
-                            searchField.performSearch()
-                        }
+                        lvVocabulary.visible = false
+                        nextLanguage()
+                        lvVocabulary.updateView()
                     }
 
                     style: ButtonStyle {
@@ -323,7 +314,15 @@ ColumnLayout{
                 clip: true
                 activeFocusOnTab: true
                 model: vocabularyModel
-                visible: false
+
+                function updateView(){
+                    visible = false
+                    languageButton.sortBy(language)
+                    positionViewAtEnd()
+                    positionViewAtBeginning()
+                    currentIndex = 0
+                    visible = true
+                }
 
                 section.labelPositioning: ViewSection.CurrentLabelAtStart | ViewSection.InlineLabels
                 section.property: switch (language) {
@@ -430,7 +429,7 @@ ColumnLayout{
                 id: dictionaryWidget
                 Layout.fillHeight: true
                 Layout.fillWidth: true
-                visible: true
+                visible: false
                 spacing: 0
 
                 Rectangle { //Suchfeld
@@ -696,7 +695,7 @@ ColumnLayout{
 
             Item {
                 id: resultWidget
-                property ListView resultListView: lvDictionary//lvVocabulary
+                property ListView resultListView: /*lvDictionary*/lvVocabulary
                 property int fromLanguage: lvDictionary.count > 0 ? (dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex, 6), 6) === 4 ?
                     appLanguage : dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex === -1 ? 0 : resultListView.currentIndex, 6), 6)) : language
                 Layout.preferredHeight: resultView.height
@@ -763,16 +762,9 @@ ColumnLayout{
 
     states: [
         State {
-            name: ""
-            PropertyChanges { target: settingsWindow; contentY: 0}
-            PropertyChanges { target: root; focus: true }
-        },
-
-        State {
             name: "settings"
             PropertyChanges { target: backArrow; visible: true }
             PropertyChanges { target: activityTitle; text: qsTr("Settings") }
-            PropertyChanges { target: home; visible: false }
             PropertyChanges { target: root; focus: false }
             PropertyChanges { target: settingsColumn; visible: true; focus: true }
             PropertyChanges { target: settingsWindow; contentY: 0}

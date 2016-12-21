@@ -44,7 +44,6 @@ int main(int argc, char *argv[])
     VocabularyListModel listModel;
     listModel.setSourceModel(&model);
     DictionaryModel dictionaryModel(&model);
-    listModel.sortBy(appLanguage);
 
     QQuickView view;
     view.setResizeMode(QQuickView::SizeRootObjectToView);
