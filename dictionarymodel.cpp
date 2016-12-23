@@ -18,28 +18,6 @@ void DictionaryModel::fillWithSearchResults(QString a_searchPattern, bool a_find
     endResetModel();
     if (m_searchPattern->pattern().isEmpty()) return;
     QList<QModelIndex> *searchResultIndexes = new QList<QModelIndex>;
-    for(int row = 0; row < m_sourceModel->rowCount(); ++row)
-    {
-        bool exists = false;//um zu umgehen, dass das Wort mehrmals auftaucht, wegen einem Treffer im lat. Namen
-        for(int column = 0; column <= 3; ++column)
-        {
-            QModelIndex index = m_sourceModel->index(row, column);
-            if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
-            {
-                searchResultIndexes->append(index);
-                exists = true;
-            }
-        }
-        if(!exists)
-        {
-            QModelIndex index = m_sourceModel->index(row, 4);
-            if(m_searchPattern->match(m_sourceModel->data(index).toString()).hasMatch())
-            {
-                searchResultIndexes->append(index);
-            }
-        }
-        if((unsigned) searchResultIndexes->count() >= limitSearchResults) break;
-    }
     /*if(a_language == 4)//Suche in allen Sprachen
     {*/
     for(int row = 0; row < m_sourceModel->rowCount(); ++row)
