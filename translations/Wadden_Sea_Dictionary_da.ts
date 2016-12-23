@@ -4,47 +4,51 @@
 <context>
     <name>AppWindow</name>
     <message>
-        <location filename="../AppWindow.qml" line="43"/>
+        <location filename="../AppWindow.qml" line="45"/>
         <source>Wadden Sea wordlist</source>
         <translation>Vadehavsordliste</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="44"/>
+        <location filename="../AppWindow.qml" line="46"/>
         <source>Wadden Sea dictionary</source>
         <translation>Vadehavsordbog</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="283"/>
+        <location filename="../AppWindow.qml" line="228"/>
         <source>Find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)</source>
         <translation>Find æ, ø, å, ä, ö, ü, ß når du søger a, o, u or ss (mage finder også måge, weiss finder weiß</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="290"/>
+        <location filename="../AppWindow.qml" line="241"/>
         <source>Show flags when searching all languages at the same time (might make search slower)</source>
         <translation>Vis flagene, når du søger i alle sprog samtidig (kan gøre appen langsommere</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="792"/>
+        <location filename="../AppWindow.qml" line="758"/>
         <source>Settings</source>
         <translation>Indstillinger</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="228"/>
+        <location filename="../AppWindow.qml" line="185"/>
         <source>Layout size</source>
         <translation>Layout størrelse</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="215"/>
         <source>Settings &amp; Impressum</source>
-        <translation>Indstillinger &amp; Kolofon</translation>
+        <translation type="vanished">Indstillinger &amp; Kolofon</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="274"/>
+        <location filename="../AppWindow.qml" line="205"/>
+        <source>Default</source>
+        <translation>Standard</translation>
+    </message>
+    <message>
+        <location filename="../AppWindow.qml" line="220"/>
         <source>Dictionary Search</source>
         <translation>Søg i ordbogen</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="304"/>
+        <location filename="../AppWindow.qml" line="262"/>
         <source>&lt;h3&gt;Impressum&lt;/h3&gt;&lt;p&gt;During my Voluntary ecological year (FÖJ, Germany) 2015/16                         at the Wadden Sea Centre, in Vester Vedsted, Denmark, I have programmed this dictionary.                         For that, I used Qt 5.7-Open-Source.&lt;/p&gt;                        &lt;p&gt;For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%1). Here                         you can also suggest missing words that you would like to have added to the dictionary.&lt;/p&gt;                        &lt;p&gt;The data for this app is taken from the ”IWSS Wadden Sea Dictionary” (%2) - with the                         permission from the ”International Wadden Sea School” (%3).&lt;/p&gt;</source>
         <translation>&lt;h3&gt;Kolofon&lt;/h3&gt;&lt;p&gt;Jeg har programmeret denne ordbog i løbet af min FÖJ (frivilligt økologisk år) 2015/16 på 
 Vadehavscentret i Vester Vedsted, sydvest for Ribe. Dertil har jeg brugt Qt 5.7 Open-Source.&lt;/p&gt;
@@ -55,12 +59,12 @@ nogle ord i databasen, som I gerne vil have tilføjet.&lt;/p&gt;
 Sea School (%3).&lt;/p&gt;</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="494"/>
+        <location filename="../AppWindow.qml" line="464"/>
         <source>Search</source>
         <translation>Søg</translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="689"/>
+        <location filename="../AppWindow.qml" line="660"/>
         <source>No matches found!</source>
         <translation>Ingen passende indskrivninger fundet!</translation>
     </message>
@@ -68,7 +72,7 @@ Sea School (%3).&lt;/p&gt;</translation>
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../main.cpp" line="40"/>
+        <location filename="../main.cpp" line="41"/>
         <source>Wadden Sea Dictionary</source>
         <translation>Vadehavsordbog</translation>
     </message>

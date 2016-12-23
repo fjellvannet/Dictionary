@@ -17,7 +17,7 @@ ColumnLayout{
     property color medium_blue: "#00629b"
     property color dark_blue: "#00313c"
     property double rootSize: settings.sized
-    state: settings.vocabularyList ? "vocabularyList" : "dictionary"
+    state: "settings"/*settings.vocabularyList ? "vocabularyList" : "dictionary"*/
     AdaptedText {
         id: fontHeight
         visible: false
@@ -39,7 +39,7 @@ ColumnLayout{
     property int globalMargin: fontHeight.height / 2
     property int globalBorder: globalMargin / 10 > 1 ? globalMargin / 10 : 1
     property bool highDpi: Math.max(Screen.height, Screen.width) / globalMargin < 100
-    property bool vocabularyList: false
+    property bool vocabularyList: true
     property int language: appLanguage
 
     property string wadden_sea_wordlist: qsTr("Wadden Sea wordlist")
@@ -52,9 +52,6 @@ ColumnLayout{
         else if (language === 3 && root.state === "dictionary") language = 4;
     }
 
-    Component.onCompleted: {
-        if(root.state === "vocabularyList") lvVocabulary.updateView()
-    }
     Rectangle{//Menubar
         Layout.fillWidth: true
         Layout.preferredHeight: globalMargin *(highDpi ? 6 : 11)
@@ -175,6 +172,7 @@ ColumnLayout{
             clip: false
             boundsBehavior: Flickable.StopAtBounds
             flickableDirection: Flickable.VerticalFlick
+            ScrollBar.vertical: ScrollBar {}
             visible: false
 
             ColumnLayout {
@@ -188,18 +186,29 @@ ColumnLayout{
                     font.pixelSize: 1.2 * fontHeight.font.pixelSize
                     font.bold: true
                 }
-
-                Slider {
-                    id: sizeSlider
-                    from: 5
-                    to: 60
-                    stepSize: 0.5
+                RowLayout {
                     Layout.fillWidth: true
-                    Text{
-                        id: fontSize
+                    Slider {
+                        id: sizeSlider
+                        from: 5
+                        to: 60
+                        stepSize: 0.5
+                        Layout.fillWidth: true
+                        Text{
+                            id: fontSize
+                        }
+                        value: fontSize.font.pixelSize
                     }
-                    value: fontSize.font.pixelSize
+                    Button {
+                        onClicked: sizeSlider.value = fontSize.font.pixelSize
+                        contentItem: AdaptedText{
+                            text: qsTr("Default")
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                        }
+                    }
                 }
+
 
                 Rectangle {
                     color: "black"
@@ -291,6 +300,7 @@ ColumnLayout{
                 flickDeceleration: maximumFlickVelocity / 2
                 clip: true
                 activeFocusOnTab: true
+                ScrollBar.vertical: ScrollBar {}
 
                 model: vocabularyModel
 
@@ -371,7 +381,7 @@ ColumnLayout{
 
                     states: State {
                         when: wordDelegate.ListView.isCurrentItem
-                        PropertyChanges { target: wordDelegate; color: "blue"; z: 4 }
+                        PropertyChanges { target: wordDelegate; color: Material.accent; z: 4 }
                     }
                 }
 
@@ -380,7 +390,7 @@ ColumnLayout{
                     visible: sectionLetter.visible
                     height: 2 * sectionLetter.height
                     width: height
-                    color: "blue"
+                    color: Material.accent
                     opacity: 0.5
                     anchors.centerIn: parent
                     radius: height / 6
@@ -519,6 +529,7 @@ ColumnLayout{
                     clip: true
                     maximumFlickVelocity: globalMargin * 1000
                     flickDeceleration: maximumFlickVelocity / 2
+                    ScrollBar.vertical: ScrollBar {}
 
                     model: dictionaryModel
 
@@ -624,7 +635,7 @@ ColumnLayout{
 
                         states: State {
                             when: dictionaryDelegate.ListView.isCurrentItem
-                            PropertyChanges { target: dictionaryDelegate; color: "blue"; z: 4 }
+                            PropertyChanges { target: dictionaryDelegate; color: Material.accent; z: 4 }
                         }
                     }
 
@@ -691,6 +702,7 @@ ColumnLayout{
                     contentWidth: resultView.width; contentHeight: resultView.height
                     clip: true
                     boundsBehavior: Flickable.StopAtBounds
+                    ScrollBar.horizontal: ScrollBar {}
                     Item {
                         id: resultView
                         height: resultColumn.implicitHeight + 2 * resultColumn.anchors.margins
@@ -754,6 +766,9 @@ ColumnLayout{
             PropertyChanges { target: languageButton; visible: true }
             PropertyChanges { target: lvVocabulary; focus: true; visible: true/*; model: vocabularyModel */}
             PropertyChanges { target: settings; vocabularyList: true }
+            StateChangeScript {
+                script: lvVocabulary.updateView()
+            }
         },
 
         State {
