@@ -14,7 +14,7 @@ ColumnLayout{
     property color medium_blue: "#00629b"
     property color dark_blue: "#00313c"
     property double rootSize: settings.sized
-
+    //state: settings.vocabularyList ? "vocabularyList" : "dictionary"
     AdaptedText {
         id: fontHeight
         visible: false
@@ -30,14 +30,14 @@ ColumnLayout{
         property alias width: root.width
         property alias height: root.height
         property alias language: root.language
+        property alias vocabularyList: root.vocabularyList
     }
 
     property int globalMargin: fontHeight.height / 2
     property int globalBorder: globalMargin / 10 > 1 ? globalMargin / 10 : 1
     property bool highDpi: Math.max(Screen.height, Screen.width) / globalMargin < 100
-
+    property bool vocabularyList: false
     property int language: appLanguage
-
 
     property string wadden_sea_wordlist: qsTr("Wadden Sea wordlist")
     property string wadden_sea_dictionary: qsTr("Wadden Sea dictionary")
@@ -50,9 +50,8 @@ ColumnLayout{
     }
 
     Component.onCompleted: {
-        lvVocabulary.updateView()
+        if(root.state === "vocabularyList") lvVocabulary.updateView()
     }
-
     Rectangle{//Menubar
         Layout.fillWidth: true
         Layout.preferredHeight: globalMargin *(highDpi ? 6 : 11)
@@ -63,7 +62,7 @@ ColumnLayout{
             anchors.fill: parent
             anchors.margins: parent.height / 8
             spacing: parent.height / 8
-
+            visible: false
             Button {
                 id: backArrow
                 visible: false
@@ -88,7 +87,7 @@ ColumnLayout{
                 }
 
                 onClicked: {
-                    root.state = ""
+                    root.state = settings.vocabularyList ? "vocabularyList" : "dictionary"
                 }
             }
 
@@ -102,6 +101,7 @@ ColumnLayout{
                 font.bold: true
                 color: "white"
                 text: appName
+                visible: false
             }
 
             AdaptedImage {
@@ -119,8 +119,6 @@ ColumnLayout{
                             return "qrc:/images/flags/netherlands_flag"
                         case 3:
                             return "qrc:/images/flags/danish_flag"
-                        case 4:
-                            return "qrc:/images/flags/all_languages"
                         case undefined:
                             return ""
                         }
@@ -172,7 +170,6 @@ ColumnLayout{
         color: light_blue
 
         Flickable {
-            visible: false
             id: settingsWindow
             anchors.fill: parent
             anchors.margins: globalMargin
@@ -181,6 +178,7 @@ ColumnLayout{
             clip: false
             boundsBehavior: Flickable.StopAtBounds
             flickableDirection: Flickable.VerticalFlick
+            visible: false
 
 //                    onClicked: {
 //                        if(language === 4){
@@ -307,12 +305,14 @@ ColumnLayout{
 
             ListView {
                 id: lvVocabulary
+                visible: false
                 Layout.fillHeight: true
                 Layout.fillWidth: true
                 maximumFlickVelocity: globalMargin * 1000
                 flickDeceleration: maximumFlickVelocity / 2
                 clip: true
                 activeFocusOnTab: true
+
                 model: vocabularyModel
 
                 function updateView(){
@@ -708,6 +708,7 @@ ColumnLayout{
                 visible: resultListView.count > 0
 
                 Flickable {
+                    visible: false
                     anchors.fill: parent
                     contentWidth: resultView.width; contentHeight: resultView.height
                     clip: true
@@ -765,29 +766,24 @@ ColumnLayout{
             name: "settings"
             PropertyChanges { target: backArrow; visible: true }
             PropertyChanges { target: activityTitle; text: qsTr("Settings") }
-            PropertyChanges { target: root; focus: false }
-            PropertyChanges { target: settingsColumn; visible: true; focus: true }
-            PropertyChanges { target: settingsWindow; contentY: 0}
+            PropertyChanges { target: settingsWindow; contentY: 0; visible: true; focus: true }
+            PropertyChanges { target: gridLayout; visible: false }
         },
 
         State {
             name: "vocabularyList"
-            extend: "settings"
-            PropertyChanges { target: appIcon; visible: false }
             PropertyChanges { target: activityTitle; text: wadden_sea_wordlist }
-            PropertyChanges { target: settingsWindow; visible: false; focus: false }
             PropertyChanges { target: languageButton; visible: true }
-            PropertyChanges { target: gridLayout; visible: true }
-            PropertyChanges { target: lvVocabulary; focus: true; visible: true}
+            PropertyChanges { target: lvVocabulary; focus: true; visible: true/*; model: vocabularyModel */}
+            PropertyChanges { target: settings; vocabularyList: true }
         },
 
         State {
             name: "dictionary"
-            extend: "vocabularyList"
             PropertyChanges { target: activityTitle; text: wadden_sea_dictionary }
-            PropertyChanges { target: lvVocabulary; visible: false; focus: false; model: ""}
-            PropertyChanges { target: dictionaryWidget; visible: true }
+            PropertyChanges { target: dictionaryWidget; visible: true; focus: true }
             PropertyChanges { target: resultWidget; resultListView: lvDictionary }
+            PropertyChanges { target: settings; vocabularyList: false }
         }
     ]
 }

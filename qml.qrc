@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/qml">
         <file>AppWindow.qml</file>
-        <file>HomeScreenButton.qml</file>
         <file>ResultRow.qml</file>
         <file>AdaptedText.qml</file>
         <file>SettingSwitch.qml</file>
