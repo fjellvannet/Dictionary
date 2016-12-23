@@ -2,17 +2,18 @@
 #include "vocabularylistmodel.h"
 #include "dictionarymodel.h"
 
-#include <QApplication>
 #include <QTranslator>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QQuickView>
 #include <QQuickItem>
 #include <QDebug>
+#include <QGuiApplication>
+#include <QQuickStyle>
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
+    QGuiApplication app(argc, argv);
 
     //QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
     //QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
@@ -52,6 +53,7 @@ int main(int argc, char *argv[])
     view.setTitle(app.applicationName());
     view.setIcon(QIcon("D:/Dokumente/Qt/Workspace/IWSS_Waddensea_Dictionary/icon/app_icon.ico"));
     QQmlContext *ctxt = view.rootContext();
+    QQuickStyle::setStyle("Material");
 
     ctxt->setContextProperty("vocabularyModel", &listModel);
     ctxt->setContextProperty("dictionaryModel", &dictionaryModel);

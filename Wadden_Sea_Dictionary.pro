@@ -1,7 +1,8 @@
 TEMPLATE = app
 
-QT += core qml quick widgets svg
+QT += core qml quick widgets svg quickcontrols2
 CONFIG += qml_debug c++11
+QT_QUICK_CONTROLS_STYLE=material
 
 SOURCES += main.cpp \
     vocabularymodel.cpp \

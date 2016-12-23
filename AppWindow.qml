@@ -1,6 +1,6 @@
 import QtQuick 2.7
-import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles 1.4
+import QtQuick.Controls 2.0
+import QtQuick.Controls.Material 2.0
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.2
 import Qt.labs.settings 1.0
@@ -10,11 +10,14 @@ ColumnLayout{
     anchors.fill: parent
     spacing: 0
 
+    Material.theme: Material.Light
+    Material.accent: Material.Red
+
     property color light_blue: "#41b6e6"
     property color medium_blue: "#00629b"
     property color dark_blue: "#00313c"
     property double rootSize: settings.sized
-    //state: settings.vocabularyList ? "vocabularyList" : "dictionary"
+    state: settings.vocabularyList ? "vocabularyList" : "dictionary"
     AdaptedText {
         id: fontHeight
         visible: false
@@ -62,7 +65,6 @@ ColumnLayout{
             anchors.fill: parent
             anchors.margins: parent.height / 8
             spacing: parent.height / 8
-            visible: false
             Button {
                 id: backArrow
                 visible: false
@@ -78,12 +80,10 @@ ColumnLayout{
                     source: "qrc:/images/icons/arrow"
                 }
 
-                style: ButtonStyle {
-                    background: Rectangle{
-                        color: "#00000000"
-                        border.color: "#888"
-                        border.width: backArrow.activeFocus ? 2 * globalBorder : 0
-                    }
+                background: Rectangle{
+                    color: "#00000000"
+                    border.color: "#888"
+                    border.width: backArrow.activeFocus ? 2 * globalBorder : 0
                 }
 
                 onClicked: {
@@ -101,7 +101,6 @@ ColumnLayout{
                 font.bold: true
                 color: "white"
                 text: appName
-                visible: false
             }
 
             AdaptedImage {
@@ -135,12 +134,10 @@ ColumnLayout{
                         lvVocabulary.updateView()
                     }
 
-                    style: ButtonStyle {
-                        background: Rectangle{
-                            color: "#00000000"
-                            border.color: "#888"
-                            border.width: languageBtn.activeFocus ? 2 * globalBorder : 0
-                        }
+                    background: Rectangle{
+                        color: "#00000000"
+                        border.color: "#888"
+                        border.width: languageBtn.activeFocus ? 2 * globalBorder : 0
                     }
 
                     Keys.onReleased: {
@@ -180,14 +177,6 @@ ColumnLayout{
             flickableDirection: Flickable.VerticalFlick
             visible: false
 
-//                    onClicked: {
-//                        if(language === 4){
-//                            language = 0;
-//                        }
-//                        languageButton.sortBy(language);
-//                        root.state = "vocabularyList"
-//                    }
-
             ColumnLayout {
                 id: settingsColumn
                 width: settingsWindow.width
@@ -202,36 +191,14 @@ ColumnLayout{
 
                 Slider {
                     id: sizeSlider
-                    maximumValue: 60
-                    minimumValue: 5
+                    from: 5
+                    to: 60
                     stepSize: 0.5
                     Layout.fillWidth: true
                     Text{
                         id: fontSize
                     }
                     value: fontSize.font.pixelSize
-
-                    style: SliderStyle{
-                        handle: Rectangle {
-                            color: sizeSlider.activeFocus ? dark_blue : "gray"
-                            height: 2.5 * globalMargin
-                            width: height
-                            radius: height / 2
-                        }
-
-                        groove: Rectangle {
-                            height: globalMargin
-                            width: parent.width
-                            color: "lightgray"
-                            radius: height / 2
-                            Rectangle {
-                                height: parent.height
-                                width: styleData.handlePosition
-                                radius: parent.radius
-                                color: medium_blue
-                            }
-                        }
-                    }
                 }
 
                 Rectangle {
@@ -247,18 +214,30 @@ ColumnLayout{
                     font.bold: true
                 }
 
-                SettingSwitch {
+                Switch {
                     id: swUmlauts
-                    Layout.fillWidth: true
-                    _text: qsTr("Find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)")
+                    text: qsTr("Find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)")
                     checked: true
+                    Layout.fillWidth: true
+                    contentItem: AdaptedText {
+                        text: parent.text
+                        wrapMode: Text.WordWrap
+                        verticalAlignment: Text.AlignVCenter
+                        leftPadding: parent.indicator.width + parent.spacing
+                    }
                 }
 
-                SettingSwitch {
+                Switch {
                     id: swFlags_in_all_language_mode
-                    Layout.fillWidth: true
-                    _text: qsTr("Show flags when searching all languages at the same time (might make search slower)")
+                    text: qsTr("Show flags when searching all languages at the same time (might make search slower)")
                     checked: true
+                    Layout.fillWidth: true
+                    contentItem: AdaptedText {
+                        text: parent.text
+                        wrapMode: Text.WordWrap
+                        verticalAlignment: Text.AlignVCenter
+                        leftPadding: parent.indicator.width + parent.spacing
+                    }
                 }
 
                 Rectangle {
@@ -708,7 +687,6 @@ ColumnLayout{
                 visible: resultListView.count > 0
 
                 Flickable {
-                    visible: false
                     anchors.fill: parent
                     contentWidth: resultView.width; contentHeight: resultView.height
                     clip: true
