@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
+import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.2
 import Qt.labs.settings 1.0
@@ -9,7 +10,7 @@ Item {
     anchors.fill: parent
 
     Material.theme: Material.Light
-    Material.accent: Material.Red
+    Material.accent: Material.Blue
 
     property color light_blue: "#41b6e6"
     property color medium_blue: "#00629b"
@@ -36,7 +37,7 @@ Item {
     property int globalMargin: fontHeight.height / 2
     property int globalBorder: globalMargin / 10 > 1 ? globalMargin / 10 : 1
     property bool highDpi: Math.max(Screen.height, Screen.width) / globalMargin < 100
-    property bool vocabularyList: true
+    property bool vocabularyList: false
     property int language: appLanguage
 
     property string wadden_sea_wordlist: qsTr("Wadden Sea wordlist")
@@ -54,12 +55,14 @@ Item {
         opacity: 0.3
     }
 
+    Component.onCompleted: if(settings.vocabularyList) lvVocabulary.updateView()
+
     ColumnLayout{
         id: mainlayout
         anchors.fill: parent
         spacing: 0
         z: parent.z + 1
-        state: "settings"/*settings.vocabularyList ? "vocabularyList" : "dictionary"*/
+        state: settings.vocabularyList ? "vocabularyList" : "dictionary"
 
         Item{//Menubar
             Layout.fillWidth: true
@@ -71,28 +74,84 @@ Item {
                 anchors.margins: parent.height / 8
                 spacing: parent.height / 8
                 Button {
-                    id: backArrow
-                    visible: false
+                    id: stateButton
                     Layout.fillHeight: true
                     Layout.preferredWidth: height
-                    activeFocusOnTab: true
+                    property string source: "qrc:/images/icons/arrow"
 
-                    AdaptedImage {
+                    background: Image {
                         anchors.centerIn: parent
-                        id: backButton
-                        height: parent.height / 1.35
-                        width: height
-                        source: "qrc:/images/icons/arrow"
+                        height: parent.parent.height / 1.35
+                        sourceSize.height: height
+                        source: parent.source
                     }
 
-                    background: Rectangle{
-                        color: "#00000000"
-                        border.color: "#888"
-                        border.width: backArrow.activeFocus ? 2 * globalBorder : 0
+                    ColorOverlay {
+                        id: olBackButton
+                        anchors.fill: parent.background
+                        source: parent.background
+                        color: Material.accent
+                    }
+                    ColorOverlay {
+                        anchors.fill: parent.background
+                        source: olBackButton
+                        color: "black"
+                        opacity: 0.15
+                        visible: stateButton.activeFocus
                     }
 
                     onClicked: {
+                        if(mainlayout.state !== "settings")
+                        {
+                            settings.vocabularyList = !settings.vocabularyList
+                        }
                         mainlayout.state = settings.vocabularyList ? "vocabularyList" : "dictionary"
+                    }
+                }
+
+                Button {
+                    visible: false
+                    id: languageButton
+                    objectName: "LanguageButton"
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: height / 3 * 5
+                    background: AdaptedImage {
+                        anchors.fill: parent
+                        source: switch(language) {
+                                case 0:
+                                    return "qrc:/images/flags/german_flag"
+                                case 1:
+                                    return "qrc:/images/flags/union_jack"
+                                case 2:
+                                    return "qrc:/images/flags/netherlands_flag"
+                                case 3:
+                                    return "qrc:/images/flags/danish_flag"
+                                case undefined:
+                                    return ""
+                                }
+                    }
+                    ColorOverlay {
+                        anchors.fill: parent
+                        source: parent.background
+                        color: "black"
+                        opacity: 0.15
+                        visible: languageButton.activeFocus
+                    }
+
+                    signal sortBy(var role)
+
+                    onClicked: {
+                        lvVocabulary.visible = false
+                        nextLanguage()
+                        lvVocabulary.updateView()
+                    }
+
+                    Keys.onReleased: {
+                        if(event.key === Qt.Key_Back)
+                        {
+                            event.accepted = true
+                            mainlayout.state = settings.vocabularyList ? "vocabularyList" : "dictionary"
+                        }
                     }
                 }
 
@@ -107,59 +166,34 @@ Item {
                     text: appName
                 }
 
-                AdaptedImage {
-                    visible: false
-                    id: languageButton
-                    objectName: "LanguageButton"
-                    Layout.fillHeight: true
-                    Layout.preferredWidth: height / 3 * 5
-                    source: switch(language) {
-                            case 0:
-                                return "qrc:/images/flags/german_flag"
-                            case 1:
-                                return "qrc:/images/flags/union_jack"
-                            case 2:
-                                return "qrc:/images/flags/netherlands_flag"
-                            case 3:
-                                return "qrc:/images/flags/danish_flag"
-                            case undefined:
-                                return ""
-                            }
-
-                    signal sortBy(var role)
-
-                    Button {
-                        id: languageBtn
-                        anchors.fill: parent
-                        activeFocusOnTab: true
-                        onClicked: {
-                            lvVocabulary.visible = false
-                            nextLanguage()
-                            lvVocabulary.updateView()
-                        }
-
-                        background: Rectangle{
-                            color: "#00000000"
-                            border.color: "#888"
-                            border.width: languageBtn.activeFocus ? 2 * globalBorder : 0
-                        }
-
-                        Keys.onReleased: {
-                            if(event.key === Qt.Key_Back)
-                            {
-                                event.accepted = true
-                                mainlayout.state = settings.vocabularyList ? "vocabularyList" : "dictionary"
-                            }
-                        }
-
-                    }
-                }
-
-                AdaptedImage {
-                    id: appIcon
+                Button {
+                    id: settingsButton
                     Layout.fillHeight: true
                     Layout.preferredWidth: height
-                    source: "qrc:/images/icons/app_icon"
+
+                    background: AdaptedImage {
+                        anchors.centerIn: parent
+                        height: parent.parent.height / 1.35
+                        width: height
+                        source: "qrc:/images/icons/settings"
+                    }
+                    ColorOverlay {
+                        id: olSettingsButton
+                        anchors.fill: parent.background
+                        source: parent.background
+                        color: Material.accent
+                    }
+                    ColorOverlay {
+                        anchors.fill: parent.background
+                        source: olSettingsButton
+                        color: "black"
+                        opacity: 0.15
+                        visible: settingsButton.activeFocus
+                    }
+
+                    onClicked: {
+                        mainlayout.state = mainlayout.state === "settings" ? (settings.vocabularyList ? "vocabularyList" : "dictionary") : "settings"
+                    }
                 }
             }
         }
@@ -179,7 +213,8 @@ Item {
             Flickable {
                 id: settingsWindow
                 anchors.fill: parent
-                anchors.margins: globalMargin
+                anchors.leftMargin: globalMargin
+                anchors.rightMargin: globalMargin
                 contentWidth: settingsColumn.width
                 contentHeight: settingsColumn.height
                 clip: true
@@ -192,6 +227,7 @@ Item {
                     id: settingsColumn
                     width: settingsWindow.width
                     spacing: globalMargin
+                    Item{Layout.fillWidth: true}
 
                     AdaptedText {
                         Layout.fillWidth: true
@@ -219,6 +255,7 @@ Item {
                                 verticalAlignment: Text.AlignVCenter
                                 horizontalAlignment: Text.AlignHCenter
                             }
+                            Material.background: Material.accent
                         }
                     }
 
@@ -271,22 +308,30 @@ Item {
                     AdaptedText {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
+                        textFormat: Text.RichText
                         text:
                             qsTr("<h3>Impressum</h3><p>During my Voluntary ecological year (FÖJ, Germany) 2015/16 \
                             at the Wadden Sea Centre, in Vester Vedsted, Denmark, I have programmed this dictionary. \
                             For that, I used Qt 5.7-Open-Source.</p>\
                             <p>For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%1). Here \
                             you can also suggest missing words that you would like to have added to the dictionary.</p>\
-                            <p>The data for this app is taken from the \”IWSS Wadden Sea Dictionary\” (%2) - with the \
-                            permission from the \”International Wadden Sea School\” (%3).</p>")
+                            <p>The data for this app is taken from the \"IWSS Wadden Sea Dictionary\" (%2) - with the \
+                            permission from the \"International Wadden Sea School\" (%3).</p>
+                            <p>Icon for settings made by %4, icon for downarrow mady by %5. Both come from %6, licensed by %7.</p>
+                            <p>Background image taken by Lukas Neuenschwander on the southern beach of Rømø, on March 12<sup>th</sup> 2016.</p>")
 
                             .arg("<a href=\"mailto:lukas.neu24@gmail.com\">lukas.neu24@gmail.com</a>")
                             .arg("<a href=\"http://www.iwss.org/fileadmin/uploads/network-download/Education_\
                             _Support/IWSS_Dictionary_2009.pdf\">http://www.iwss.org/fileadmin/uploads/network\
                             -download/Education__Support/IWSS_Dictionary_2009.pdf</a>")
                             .arg("<a href=\"http://www.iwss.org/\">www.iwss.org</a>")
+                            .arg("<a href=\"http://www.freepik.com\" title=\"Freepik\">Freepik</a>")
+                            .arg("<a href=\"http://www.flaticon.com/authors/dave-gandy\" title=\"Dave Gandy\">Dave Gandy</a>")
+                            .arg("<a href=\"http://www.flaticon.com\" title=\"Flaticon\">www.flaticon.com</a>")
+                            .arg("<a href=\"http://creativecommons.org/licenses/by/3.0/\" title=\"Creative Commons BY 3.0\" target=\"_blank\">CC 3.0 BY</a>")
                         onLinkActivated: Qt.openUrlExternally(link)
                     }
+                    Item{Layout.fillWidth: true}
                 }
 
                 Keys.onReleased: {
@@ -310,9 +355,9 @@ Item {
                     Layout.fillHeight: true
                     Layout.fillWidth: true
                     maximumFlickVelocity: globalMargin * 1000
+                    activeFocusOnTab: true
                     flickDeceleration: maximumFlickVelocity / 2
                     clip: true
-                    activeFocusOnTab: true
                     ScrollBar.vertical: ScrollBar {}
 
                     model: vocabularyModel
@@ -323,7 +368,9 @@ Item {
                         positionViewAtEnd()
                         positionViewAtBeginning()
                         currentIndex = 0
+                        resultColumn.updateText = !resultColumn.updateText//damit ResultWidget aktualisiert und ggf ausgeblendet wird
                         visible = true
+
                     }
 
                     section.labelPositioning: ViewSection.CurrentLabelAtStart | ViewSection.InlineLabels
@@ -390,12 +437,14 @@ Item {
 
                         MouseArea {
                             anchors.fill: parent
-                            onClicked: wordDelegate.ListView.view.currentIndex = index
+                            onClicked: {
+                                lvVocabulary.currentIndex = index
+                                lvVocabulary.forceActiveFocus()
+                            }
                         }
-
                         states: State {
                             when: wordDelegate.ListView.isCurrentItem
-                            PropertyChanges { target: wordDelegate; color: Material.accent; z: 4 }
+                            PropertyChanges { target: wordDelegate; color: lvVocabulary.activeFocus ? Material.accent : Material.color(Material.Grey); z: 4 }
                         }
                     }
 
@@ -419,13 +468,6 @@ Item {
                         color: "white"
                         font.pixelSize: 3 * fontHeight.font.pixelSize
                     }
-
-                    Keys.onReleased: {
-                        if(event.key === Qt.Key_Back) {
-                            event.accepted = true
-                            mainlayout.state = settings.vocabularyList ? "vocabularyList" : "dictionary"
-                        }
-                    }
                 }
 
                 ColumnLayout {
@@ -441,7 +483,7 @@ Item {
                         Layout.margins: globalMargin
 
                         border.width: 2 * globalBorder
-                        border.color: "#666666"
+                        border.color: Material.accent
                         radius: height / 4
                         color: "transparent"
                         RowLayout
@@ -450,13 +492,19 @@ Item {
                             anchors.margins: parent.height / 5
                             spacing: parent.height / 10
 
-                            AdaptedImage {
+                            Button {
+                                id: magnifying_glass
                                 Layout.fillHeight: true
                                 Layout.preferredWidth: height
-                                source: "qrc:/images/icons/magnifying_glass"
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: searchField.performSearch()
+                                activeFocusOnTab: false
+                                background: AdaptedImage {
+                                    source: "qrc:/images/icons/magnifying_glass"
+                                }
+                                onClicked: searchField.performSearch()
+                                ColorOverlay {
+                                    anchors.fill: parent.background
+                                    source: parent.background
+                                    color: Material.accent
                                 }
                             }
 
@@ -466,10 +514,10 @@ Item {
                                 Layout.fillWidth: true
                                 Layout.fillHeight: true
                                 Layout.rightMargin: 1
+                                activeFocusOnTab: true
                                 clip: true
                                 inputMethodHints: Qt.ImhNoPredictiveText
                                 verticalAlignment: Text.AlignVCenter
-                                activeFocusOnTab: true
                                 font: fontHeight.font
 
                                 signal textChanged(var text, var findUmlauts)
@@ -502,32 +550,28 @@ Item {
                                 onVisibleChanged: {
                                     if(visible) forceActiveFocus();
                                 }
-
-                                Keys.onReleased: {
-                                    if(event.key === Qt.Key_Back)
-                                    {
-                                        event.accepted = true
-                                        mainlayout.state = settings.vocabularyList ? "vocabularyList" : "dictionary"
-                                    }
-                                }
                             }
-
-                            AdaptedImage {
+                            Button {
                                 Layout.fillHeight: true
                                 Layout.preferredWidth: height
-                                source: "qrc:/images/icons/cross_searchfield"
                                 visible: searchField.length !== 0
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        searchField.text = ""
-                                        searchField.performSearch()
-                                        searchField.forceActiveFocus()
-                                    }
+                                activeFocusOnTab: false
+                                background: AdaptedImage {
+                                    source: "qrc:/images/icons/cross_searchfield"
+                                }
+                                onClicked: {
+                                    searchField.text = ""
+                                    searchField.performSearch()
+                                    searchField.forceActiveFocus()
+                                }
+                                ColorOverlay {
+                                    anchors.fill: parent.background
+                                    source: parent.background
+                                    color: Material.accent
                                 }
                             }
                         }
+
                     }
 
                     Rectangle {
@@ -545,7 +589,7 @@ Item {
                         maximumFlickVelocity: globalMargin * 1000
                         flickDeceleration: maximumFlickVelocity / 2
                         ScrollBar.vertical: ScrollBar {}
-
+                        activeFocusOnTab: count > 0
                         model: dictionaryModel
 
                         delegate: Rectangle {
@@ -651,16 +695,12 @@ Item {
 
                             states: State {
                                 when: dictionaryDelegate.ListView.isCurrentItem
-                                PropertyChanges { target: dictionaryDelegate; color: Material.accent; z: 4 }
+                                PropertyChanges { target: dictionaryDelegate; color: lvDictionary.activeFocus ? Material.accent : Material.color(Material.Grey); z: 4 }
                             }
                         }
 
                         Keys.onReleased: {
-                            if(event.key === Qt.Key_Back) {
-                                event.accepted = true
-                                mainlayout.state = settings.vocabularyList ? "vocabularyList" : "dictionary"
-                            }
-                            else if(event.key === Qt.Key_tab)
+                            if(event.key === Qt.Key_tab)
                             {
                                 nextItemInFocusChain()
                             }
@@ -691,8 +731,8 @@ Item {
 
                 Item {
                     id: resultWidget
-                    property ListView resultListView: /*lvDictionary*/lvVocabulary
-                    property int fromLanguage: lvDictionary.count > 0 ? (dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex, 6), 6) === 4 ?
+                    property ListView resultListView: lvVocabulary
+                    property int fromLanguage: lvDictionary.visible && lvDictionary.count > 0 ? (dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex, 6), 6) === 4 ?
                         appLanguage : dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex === -1 ? 0 : resultListView.currentIndex, 6), 6)) : language
                     Layout.preferredHeight: resultView.height
                     Layout.preferredWidth: resultView.width
@@ -760,10 +800,11 @@ Item {
         states: [
             State {
                 name: "settings"
-                PropertyChanges { target: backArrow; visible: true }
                 PropertyChanges { target: activityTitle; text: qsTr("Settings") }
                 PropertyChanges { target: settingsWindow; contentY: 0; visible: true; focus: true }
                 PropertyChanges { target: gridLayout; visible: false }
+                PropertyChanges { target: olSettingsButton; color: Material.accent }
+                PropertyChanges { target: stateButton; source: "qrc:/images/icons/arrow" }
             },
 
             State {
@@ -771,10 +812,8 @@ Item {
                 PropertyChanges { target: activityTitle; text: wadden_sea_wordlist }
                 PropertyChanges { target: languageButton; visible: true }
                 PropertyChanges { target: lvVocabulary; focus: true; visible: true/*; model: vocabularyModel */}
-                PropertyChanges { target: settings; vocabularyList: true }
-                StateChangeScript {
-                    script: lvVocabulary.updateView()
-                }
+                StateChangeScript { script: lvVocabulary.updateView() }
+                PropertyChanges { target: stateButton; source: "qrc:/images/icons/alphabetic" }
             },
 
             State {
@@ -782,7 +821,7 @@ Item {
                 PropertyChanges { target: activityTitle; text: wadden_sea_dictionary }
                 PropertyChanges { target: dictionaryWidget; visible: true; focus: true }
                 PropertyChanges { target: resultWidget; resultListView: lvDictionary }
-                PropertyChanges { target: settings; vocabularyList: false }
+                PropertyChanges { target: stateButton; source: "qrc:/images/icons/magnifying_glass" }
             }
         ]
     }

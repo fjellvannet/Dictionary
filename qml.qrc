@@ -3,6 +3,5 @@
         <file>AppWindow.qml</file>
         <file>ResultRow.qml</file>
         <file>AdaptedText.qml</file>
-        <file>SettingSwitch.qml</file>
     </qresource>
 </RCC>

@@ -15,7 +15,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="Kreuz (Suchfeld).svg">
+   sodipodi:docname="cross_searchfield.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="342.79123"
-     inkscape:cy="217.51115"
+     inkscape:cx="154.29123"
+     inkscape:cy="215.51115"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -35,8 +35,8 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:window-width="1366"
-     inkscape:window-height="714"
+     inkscape:window-width="958"
+     inkscape:window-height="918"
      inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="1" />
@@ -48,7 +48,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -59,7 +59,7 @@
      transform="translate(0,-602.36218)"
      style="display:inline">
     <rect
-       style="display:inline;fill:#666666;stroke:none"
+       style="display:inline;fill:#ffffff;stroke:none"
        id="rect4138"
        width="64.229248"
        height="385.37549"
@@ -68,7 +68,7 @@
        ry="0"
        transform="matrix(0.70710678,0.70710678,-0.70710678,0.70710678,0,2.6171875e-6)" />
     <rect
-       style="display:inline;fill:#666666;stroke:none"
+       style="display:inline;fill:#ffffff;stroke:none"
        id="rect4138-8"
        width="64.284058"
        height="385.70432"

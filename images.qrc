@@ -4,6 +4,8 @@
         <file alias="cross_searchfield">images/cross_searchfield.svg</file>
         <file alias="arrow">images/arrow.svg</file>
         <file alias="app_icon">images/app_icon.svg</file>
+        <file alias="settings">images/settings.svg</file>
+        <file alias="alphabetic">images/alphabetic.svg</file>
     </qresource>
     <qresource prefix="/images/flags">
         <file alias="german_flag">images/german_flag.svg</file>
