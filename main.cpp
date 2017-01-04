@@ -14,6 +14,7 @@
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
+    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     //QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
     //QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));

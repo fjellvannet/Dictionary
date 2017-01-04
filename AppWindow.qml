@@ -73,32 +73,11 @@ Item {
                 anchors.fill: parent
                 anchors.margins: parent.height / 8
                 spacing: parent.height / 8
-                Button {
+                IconButton {
                     id: stateButton
                     Layout.fillHeight: true
                     Layout.preferredWidth: height
-                    property string source: "qrc:/images/icons/arrow"
-
-                    background: Image {
-                        anchors.centerIn: parent
-                        height: parent.parent.height / 1.35
-                        sourceSize.height: height
-                        source: parent.source
-                    }
-
-                    ColorOverlay {
-                        id: olBackButton
-                        anchors.fill: parent.background
-                        source: parent.background
-                        color: Material.accent
-                    }
-                    ColorOverlay {
-                        anchors.fill: parent.background
-                        source: olBackButton
-                        color: "black"
-                        opacity: 0.15
-                        visible: stateButton.activeFocus
-                    }
+                    source: "qrc:/images/icons/arrow"
 
                     onClicked: {
                         if(mainlayout.state !== "settings")
@@ -166,31 +145,11 @@ Item {
                     text: appName
                 }
 
-                Button {
+                IconButton {
                     id: settingsButton
                     Layout.fillHeight: true
                     Layout.preferredWidth: height
-
-                    background: AdaptedImage {
-                        anchors.centerIn: parent
-                        height: parent.parent.height / 1.35
-                        width: height
-                        source: "qrc:/images/icons/settings"
-                    }
-                    ColorOverlay {
-                        id: olSettingsButton
-                        anchors.fill: parent.background
-                        source: parent.background
-                        color: Material.accent
-                    }
-                    ColorOverlay {
-                        anchors.fill: parent.background
-                        source: olSettingsButton
-                        color: "black"
-                        opacity: 0.15
-                        visible: settingsButton.activeFocus
-                    }
-
+                    source: "qrc:/images/icons/settings"
                     onClicked: {
                         mainlayout.state = mainlayout.state === "settings" ? (settings.vocabularyList ? "vocabularyList" : "dictionary") : "settings"
                     }
@@ -209,7 +168,7 @@ Item {
             id: window
             Layout.fillWidth: true
             Layout.fillHeight: true
-            z: parent.z+1
+
             Flickable {
                 id: settingsWindow
                 anchors.fill: parent
@@ -217,11 +176,11 @@ Item {
                 anchors.rightMargin: globalMargin
                 contentWidth: settingsColumn.width
                 contentHeight: settingsColumn.height
-                clip: true
                 boundsBehavior: Flickable.StopAtBounds
                 flickableDirection: Flickable.VerticalFlick
                 ScrollBar.vertical: ScrollBar {}
                 visible: false
+                clip: true
 
                 ColumnLayout {
                     id: settingsColumn
@@ -235,18 +194,65 @@ Item {
                         font.pixelSize: 1.2 * fontHeight.font.pixelSize
                         font.bold: true
                     }
+
                     RowLayout {
                         Layout.fillWidth: true
+                        spacing: 0
                         Slider {
                             id: sizeSlider
                             from: 5
                             to: 60
                             stepSize: 0.5
                             Layout.fillWidth: true
+                            implicitHeight: focus_indicator.height - 1.5 * globalMargin
                             Text{
+                                visible: false
                                 id: fontSize
                             }
                             value: fontSize.font.pixelSize
+                            handle: Rectangle {
+                                anchors.verticalCenter: parent.verticalCenter
+                                color: Material.accent
+                                height: 2.5 * globalMargin
+                                width: height
+                                radius: height / 2
+                                x: (focus_indicator.height - height)/2 + parent.visualPosition * (parent.background.width - parent.background.height)
+                            }
+
+                            Rectangle {
+                                id: focus_indicator
+                                visible: parent.activeFocus
+                                anchors.centerIn: parent.handle
+                                color: Material.accent
+                                opacity: 0.3
+                                height: 2 * parent.handle.height
+                                radius: height/2
+                                width: height
+                                z: parent.handle.z - 1
+                            }
+
+                            background: RowLayout {
+                                spacing: 0
+                                anchors.verticalCenter: parent.verticalCenter
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.leftMargin: (focus_indicator.height - height)/2; anchors.rightMargin: anchors.leftMargin
+                                height: globalMargin
+                                width: parent.width - 2 * x
+                                opacity: 0.5
+                                Rectangle {
+                                    Layout.fillHeight: true
+                                    Layout.preferredWidth: sizeSlider.visualPosition * parent.width
+                                    radius: height / 2
+                                    color: Material.accent
+                                }
+                                Rectangle {
+                                    Layout.fillHeight: true
+                                    Layout.fillWidth: true
+                                    radius: height / 2
+                                    color: Material.color(Material.Grey, Material.Shade700)
+                                }
+                            }
                         }
                         Button {
                             onClicked: sizeSlider.value = fontSize.font.pixelSize
@@ -273,30 +279,18 @@ Item {
                         font.bold: true
                     }
 
-                    Switch {
+                    SettingSwitch {
                         id: swUmlauts
                         text: qsTr("Find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)")
                         checked: true
                         Layout.fillWidth: true
-                        contentItem: AdaptedText {
-                            text: parent.text
-                            wrapMode: Text.WordWrap
-                            verticalAlignment: Text.AlignVCenter
-                            leftPadding: parent.indicator.width + parent.spacing
-                        }
                     }
 
-                    Switch {
+                    SettingSwitch {
                         id: swFlags_in_all_language_mode
                         text: qsTr("Show flags when searching all languages at the same time (might make search slower)")
                         checked: true
                         Layout.fillWidth: true
-                        contentItem: AdaptedText {
-                            text: parent.text
-                            wrapMode: Text.WordWrap
-                            verticalAlignment: Text.AlignVCenter
-                            leftPadding: parent.indicator.width + parent.spacing
-                        }
                     }
 
                     Rectangle {
@@ -803,7 +797,6 @@ Item {
                 PropertyChanges { target: activityTitle; text: qsTr("Settings") }
                 PropertyChanges { target: settingsWindow; contentY: 0; visible: true; focus: true }
                 PropertyChanges { target: gridLayout; visible: false }
-                PropertyChanges { target: olSettingsButton; color: Material.accent }
                 PropertyChanges { target: stateButton; source: "qrc:/images/icons/arrow" }
             },
 

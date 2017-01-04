@@ -3,6 +3,7 @@ TEMPLATE = app
 QT += core qml quick widgets svg quickcontrols2
 CONFIG += qml_debug c++11
 QT_QUICK_CONTROLS_STYLE=material
+QT_AUTO_SCREEN_SCALE_FACTOR=1
 
 SOURCES += main.cpp \
     vocabularymodel.cpp \
