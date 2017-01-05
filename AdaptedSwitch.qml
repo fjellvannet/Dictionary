@@ -1,8 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-import QtGraphicalEffects 1.0
-import QtQuick.Layouts 1.3
 Switch {
     implicitHeight: Math.max(focus_indicator.height-1.5 * globalMargin, contentItem.implicitHeight)
     background: Rectangle {
@@ -79,7 +77,6 @@ Switch {
             anchors.fill: parent
             drag.target: handle; drag.axis: Drag.XAxis; drag.minimumX: (focus_indicator.height - height)/2; drag.maximumX: background.width - (handle.height - background.height)/2
             onReleased: {
-                console.log(handle.x,drag.maximumX,drag.minimumX,(drag.maximumX - drag.minimumX))
                 if(!drag.active) {
                     checked = !checked
                 }

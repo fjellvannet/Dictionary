@@ -3,7 +3,8 @@
         <file>AppWindow.qml</file>
         <file>ResultRow.qml</file>
         <file>AdaptedText.qml</file>
-        <file>SettingSwitch.qml</file>
+        <file>AdaptedSwitch.qml</file>
         <file>IconButton.qml</file>
+        <file>AdaptedScrollBar.qml</file>
     </qresource>
 </RCC>

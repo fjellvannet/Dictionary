@@ -178,7 +178,7 @@ Item {
                 contentHeight: settingsColumn.height
                 boundsBehavior: Flickable.StopAtBounds
                 flickableDirection: Flickable.VerticalFlick
-                ScrollBar.vertical: ScrollBar {}
+                ScrollBar.vertical: AdaptedScrollBar {}
                 visible: false
                 clip: true
 
@@ -279,14 +279,14 @@ Item {
                         font.bold: true
                     }
 
-                    SettingSwitch {
+                    AdaptedSwitch {
                         id: swUmlauts
                         text: qsTr("Find æ, ø, å, ä, ö, ü, ß when searching a, o, u or ss (mowe finds Möwe, weiss finds weiß)")
                         checked: true
                         Layout.fillWidth: true
                     }
 
-                    SettingSwitch {
+                    AdaptedSwitch {
                         id: swFlags_in_all_language_mode
                         text: qsTr("Show flags when searching all languages at the same time (might make search slower)")
                         checked: true
@@ -352,7 +352,7 @@ Item {
                     activeFocusOnTab: true
                     flickDeceleration: maximumFlickVelocity / 2
                     clip: true
-                    ScrollBar.vertical: ScrollBar {}
+                    ScrollBar.vertical: AdaptedScrollBar {}
 
                     model: vocabularyModel
 
@@ -513,6 +513,7 @@ Item {
                                 inputMethodHints: Qt.ImhNoPredictiveText
                                 verticalAlignment: Text.AlignVCenter
                                 font: fontHeight.font
+                                selectByMouse: true
 
                                 signal textChanged(var text, var findUmlauts)
 
@@ -578,7 +579,7 @@ Item {
                         clip: true
                         maximumFlickVelocity: globalMargin * 1000
                         flickDeceleration: maximumFlickVelocity / 2
-                        ScrollBar.vertical: ScrollBar {}
+                        ScrollBar.vertical: AdaptedScrollBar {}
                         activeFocusOnTab: count > 0
                         model: dictionaryModel
 
@@ -739,8 +740,8 @@ Item {
                         contentWidth: resultView.width; contentHeight: resultView.height
                         clip: true
                         boundsBehavior: Flickable.StopAtBounds
-                        ScrollBar.horizontal: ScrollBar {}
-                        ScrollBar.vertical: ScrollBar {}
+                        ScrollBar.horizontal: AdaptedScrollBar {}
+                        ScrollBar.vertical: AdaptedScrollBar {}
                         Item {
                             id: resultView
                             height: resultColumn.implicitHeight + 2 * resultColumn.anchors.margins
