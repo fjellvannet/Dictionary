@@ -197,7 +197,7 @@ Item {
 
                     RowLayout {
                         Layout.fillWidth: true
-                        spacing: 0
+                        spacing: globalMargin
                         Slider {
                             id: sizeSlider
                             from: 5
@@ -254,6 +254,7 @@ Item {
                                 }
                             }
                         }
+
                         Button {
                             onClicked: sizeSlider.value = fontSize.font.pixelSize
                             contentItem: AdaptedText{
@@ -264,7 +265,6 @@ Item {
                             Material.background: Material.accent
                         }
                     }
-
 
                     Rectangle {
                         color: "black"
@@ -339,7 +339,7 @@ Item {
             GridLayout {
                 id: gridLayout
                 anchors.fill: parent
-                flow:  width > height ? GridLayout.LeftToRight : GridLayout.TopToBottom
+                flow:  height < 2 * resultView.height ? GridLayout.LeftToRight : GridLayout.TopToBottom
                 rowSpacing: 0
                 columnSpacing: 0
 
@@ -729,9 +729,10 @@ Item {
                     property int fromLanguage: lvDictionary.visible && lvDictionary.count > 0 ? (dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex, 6), 6) === 4 ?
                         appLanguage : dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex === -1 ? 0 : resultListView.currentIndex, 6), 6)) : language
                     Layout.preferredHeight: resultView.height
-                    Layout.preferredWidth: resultView.width
-                    Layout.minimumWidth: parent.width / 4
-                    Layout.maximumWidth: parent.width / 2
+//                    Layout.preferredWidth: resultView.width
+//                    Layout.minimumWidth: parent.width / 4
+//                    Layout.maximumWidth: parent.width / 2
+                    Layout.preferredWidth: parent.width / 2
                     Layout.fillHeight: true
                     Layout.fillWidth: false
 
@@ -743,6 +744,7 @@ Item {
                         clip: true
                         boundsBehavior: Flickable.StopAtBounds
                         ScrollBar.horizontal: ScrollBar {}
+                        ScrollBar.vertical: ScrollBar {}
                         Item {
                             id: resultView
                             height: resultColumn.implicitHeight + 2 * resultColumn.anchors.margins
