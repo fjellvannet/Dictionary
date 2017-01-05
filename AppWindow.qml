@@ -462,6 +462,10 @@ Item {
                         color: "white"
                         font.pixelSize: 3 * fontHeight.font.pixelSize
                     }
+                    Keys.onReleased: {
+                        if(event.key === Qt.Key_Home) { lvVocabulary.positionViewAtBeginning(); lvVocabulary.currentIndex = 0}
+                        else if(event.key === Qt.Key_End) { lvVocabulary.positionViewAtEnd(); lvVocabulary.currentIndex = lvVocabulary.count - 1}
+                    }
                 }
 
                 ColumnLayout {
@@ -691,16 +695,8 @@ Item {
                         }
 
                         Keys.onReleased: {
-                            if(event.key === Qt.Key_tab)
-                            {
-                                nextItemInFocusChain()
-                            }
-                            else if((event.key === Qt.Key_Tab) && (event.modifiers === Qt.ShiftModifier))
-                            {
-                                nextItemInFocusChain(false)
-                            }
-                        }
-
+                            if(event.key === Qt.Key_Home) { lvDictionary.positionViewAtBeginning(); lvDictionary.currentIndex = 0}
+                            else if(event.key === Qt.Key_End) lvDictionary.positionViewAtEnd(); lvDictionary.currentIndex = lvDictionary.count - 1}
                         AdaptedText {
                             id: noSearchResults
                             anchors.fill: parent
