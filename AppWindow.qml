@@ -114,7 +114,7 @@ Item {
                         source: parent.background
                         color: "black"
                         opacity: 0.15
-                        visible: languageButton.activeFocus
+                        visible: languageButton.visualFocus
                     }
 
                     signal sortBy(var role)
@@ -221,7 +221,7 @@ Item {
 
                             Rectangle {
                                 id: focus_indicator
-                                visible: parent.activeFocus
+                                visible: parent.visualFocus
                                 anchors.centerIn: parent.handle
                                 color: Material.accent
                                 opacity: 0.3
@@ -540,10 +540,6 @@ Item {
                                 }
 
                                 onEditingFinished: performSearch()
-
-                                onVisibleChanged: {
-                                    if(visible) forceActiveFocus();
-                                }
                             }
                             Button {
                                 Layout.fillHeight: true
@@ -807,8 +803,8 @@ Item {
                 PropertyChanges { target: activityTitle; text: wadden_sea_wordlist }
                 PropertyChanges { target: languageButton; visible: true }
                 PropertyChanges { target: lvVocabulary; focus: true; visible: true/*; model: vocabularyModel */}
-                StateChangeScript { script: lvVocabulary.updateView() }
-                PropertyChanges { target: stateButton; source: "qrc:/images/icons/alphabetic" }
+                PropertyChanges { target: stateButton; source: "qrc:/images/icons/magnifying_glass" }
+                StateChangeScript { script: { lvVocabulary.updateView(); lvVocabulary.forceActiveFocus() } }
             },
 
             State {
@@ -816,7 +812,8 @@ Item {
                 PropertyChanges { target: activityTitle; text: wadden_sea_dictionary }
                 PropertyChanges { target: dictionaryWidget; visible: true; focus: true }
                 PropertyChanges { target: resultWidget; resultListView: lvDictionary }
-                PropertyChanges { target: stateButton; source: "qrc:/images/icons/magnifying_glass" }
+                PropertyChanges { target: stateButton; source: "qrc:/images/icons/alphabetic" }
+                StateChangeScript { script: { searchField.forceActiveFocus() } }
             }
         ]
     }
