@@ -288,7 +288,7 @@ Item {
 
                     AdaptedSwitch {
                         id: swFlags_in_all_language_mode
-                        text: qsTr("Show flags when searching all languages at the same time (might make search slower)")
+                        text: qsTr("Show flags when searching all languages at the same time (might make search slower%1)").arg(/*"")//*/qsTr(", experimental"))
                         checked: true
                         Layout.fillWidth: true
                     }
@@ -310,8 +310,8 @@ Item {
                             <p>For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%1). Here \
                             you can also suggest missing words that you would like to have added to the dictionary.</p>\
                             <p>The data for this app is taken from the \"IWSS Wadden Sea Dictionary\" (%2) - with the \
-                            permission from the \"International Wadden Sea School\" (%3).</p>
-                            <p>Icon for settings made by %4, icon for downarrow mady by %5. Both come from %6, licensed by %7.</p>
+                            permission from the \"International Wadden Sea School\" (%3).</p>\
+                            <p>Icon for settings made by %4, icon for downarrow mady by %5. Both come from %6, licensed by %7.</p>\
                             <p>Background image taken by Lukas Neuenschwander on the southern beach of Rømø, on March 12<sup>th</sup> 2016.</p>")
 
                             .arg("<a href=\"mailto:lukas.neu24@gmail.com\">lukas.neu24@gmail.com</a>")
@@ -696,7 +696,9 @@ Item {
 
                         Keys.onReleased: {
                             if(event.key === Qt.Key_Home) { lvDictionary.positionViewAtBeginning(); lvDictionary.currentIndex = 0}
-                            else if(event.key === Qt.Key_End) lvDictionary.positionViewAtEnd(); lvDictionary.currentIndex = lvDictionary.count - 1}
+                            else if(event.key === Qt.Key_End) { lvDictionary.positionViewAtEnd(); lvDictionary.currentIndex = lvDictionary.count - 1}
+                        }
+
                         AdaptedText {
                             id: noSearchResults
                             anchors.fill: parent
