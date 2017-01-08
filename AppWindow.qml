@@ -286,7 +286,7 @@ Item {
 
                     AdaptedSwitch {
                         id: swFlags_in_all_language_mode
-                        text: qsTr("Show flags when searching all languages at the same time (might make search slower%1)").arg(/*"")//*/qsTr(", experimental"))
+                        text: qsTr("Show flags in dictionary search results (might make search slower%1)").arg(/*"")//*/qsTr(", experimental"))
                         checked: true
                         Layout.fillWidth: true
                     }
@@ -437,7 +437,7 @@ Item {
                         }
                         states: State {
                             when: wordDelegate.ListView.isCurrentItem
-                            PropertyChanges { target: wordDelegate; color: lvVocabulary.activeFocus ? Material.accent : Material.color(Material.Grey); z: 4 }
+                            PropertyChanges { target: wordDelegate; color: languageButton.background.ios || lvVocabulary.activeFocus ? Material.accent : Material.color(Material.Grey); z: 4 }
                         }
                     }
 
@@ -535,8 +535,7 @@ Item {
                                         noSearchResults.visible = lvDictionary.count === 0
                                         if(!noSearchResults.visible)
                                         {
-                                            console.log("ios", languageButton.ios ? "true" : "false")
-                                            if(!languageButton.ios && searchField.activeFocus) lvDictionary.forceActiveFocus()
+                                            if(searchField.activeFocus) lvDictionary.forceActiveFocus()
                                             lvDictionary.currentIndex = 0
                                         }
                                     }
@@ -689,7 +688,7 @@ Item {
 
                             states: State {
                                 when: dictionaryDelegate.ListView.isCurrentItem
-                                PropertyChanges { target: dictionaryDelegate; color: lvDictionary.activeFocus ? Material.accent : Material.color(Material.Grey); z: 4 }
+                                PropertyChanges { target: dictionaryDelegate; color: languageButton.background.ios || lvDictionary.activeFocus ? Material.accent : Material.color(Material.Grey); z: 4 }
                             }
                         }
 
