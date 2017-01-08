@@ -55,8 +55,6 @@ Item {
         opacity: 0.3
     }
 
-    Component.onCompleted: if(settings.vocabularyList) lvVocabulary.updateView()
-
     ColumnLayout{
         id: mainlayout
         anchors.fill: parent
@@ -344,6 +342,7 @@ Item {
                 columnSpacing: 0
 
                 ListView {
+                    objectName: "lvVocabulary"
                     id: lvVocabulary
                     visible: false
                     Layout.fillHeight: true

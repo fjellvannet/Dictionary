@@ -17,6 +17,6 @@
         <file>AdaptedImage.qml</file>
     </qresource>
     <qresource prefix="/images/background">
-        <file alias="background">images/20160312_160121.jpg</file>
+        <file alias="background">images/background.jpg</file>
     </qresource>
 </RCC>

@@ -8,7 +8,8 @@ QT_AUTO_SCREEN_SCALE_FACTOR=1
 SOURCES += main.cpp \
     vocabularymodel.cpp \
     vocabularylistmodel.cpp \
-    dictionarymodel.cpp
+    dictionarymodel.cpp \
+    myqquickview.cpp
 
 lupdate_only{
     SOURCES += \
@@ -18,7 +19,8 @@ lupdate_only{
 HEADERS += \
     vocabularymodel.h \
     vocabularylistmodel.h \
-    dictionarymodel.h
+    dictionarymodel.h \
+    myqquickview.h
 
 RESOURCES += qml.qrc \
     images.qrc \
