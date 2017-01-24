@@ -9,7 +9,7 @@ ScrollBar {
     visible: size < 1
     contentItem: Rectangle {
         implicitWidth: barwidth
-        implicitHeight: parent.height * parent.size
+        implicitHeight: parent.background.height * parent.size
         radius: width / 2
         opacity: 0
         color: pressed ? Material.color(Material.Grey, Material.Shade700) : Material.color(Material.Grey)
