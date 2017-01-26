@@ -24,6 +24,11 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
+        <location filename="../AppWindow.qml" line="305"/>
+        <source>&lt;h3&gt;Impressum&lt;/h3&gt;&lt;p&gt;During my Voluntary ecological year (FÖJ, Germany) 2015/16                             at the Wadden Sea Centre in Vester Vedsted, Denmark, I have programmed this dictionary.                             For that, I used %1.&lt;/p&gt;                            &lt;p&gt;For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%2). Here                             you can also suggest missing words that you would like to have added to the dictionary.&lt;/p&gt;                            &lt;p&gt;The data for this app is taken from the &quot;IWSS Wadden Sea Dictionary&quot; (%3) - with the                             permission from the &quot;International Wadden Sea School&quot; (%4).&lt;/p&gt;                            &lt;p&gt;Icon for settings made by %5, icon for downarrow mady by %6. Both come from %7, licensed by %8.&lt;/p&gt;                            &lt;p&gt;Background image taken by Lukas Neuenschwander on the southern beach of Rømø, on March 12&lt;sup&gt;th&lt;/sup&gt; 2016.&lt;/p&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <location filename="../AppWindow.qml" line="793"/>
         <source>Settings</source>
         <translation>Instellingen</translation>
@@ -50,11 +55,6 @@
     <message>
         <location filename="../AppWindow.qml" line="289"/>
         <source>, experimental</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../AppWindow.qml" line="305"/>
-        <source>&lt;h3&gt;Impressum&lt;/h3&gt;&lt;p&gt;During my Voluntary ecological year (FÖJ, Germany) 2015/16                             at the Wadden Sea Centre, in Vester Vedsted, Denmark, I have programmed this dictionary.                             For that, I used %1.&lt;/p&gt;                            &lt;p&gt;For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%2). Here                             you can also suggest missing words that you would like to have added to the dictionary.&lt;/p&gt;                            &lt;p&gt;The data for this app is taken from the &quot;IWSS Wadden Sea Dictionary&quot; (%3) - with the                             permission from the &quot;International Wadden Sea School&quot; (%4).&lt;/p&gt;                            &lt;p&gt;Icon for settings made by %5, icon for downarrow mady by %6. Both come from %7, licensed by %8.&lt;/p&gt;                            &lt;p&gt;Background image taken by Lukas Neuenschwander on the southern beach of Rømø, on March 12&lt;sup&gt;th&lt;/sup&gt; 2016.&lt;/p&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

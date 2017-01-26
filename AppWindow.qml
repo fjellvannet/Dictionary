@@ -303,7 +303,7 @@ Item {
                         textFormat: Text.RichText
                         text:
                             qsTr("<h3>Impressum</h3><p>During my Voluntary ecological year (FÖJ, Germany) 2015/16 \
-                            at the Wadden Sea Centre, in Vester Vedsted, Denmark, I have programmed this dictionary. \
+                            at the Wadden Sea Centre in Vester Vedsted, Denmark, I have programmed this dictionary. \
                             For that, I used %1.</p>\
                             <p>For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%2). Here \
                             you can also suggest missing words that you would like to have added to the dictionary.</p>\
