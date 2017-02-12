@@ -41,19 +41,21 @@
 #define VOCABULARYMODEL_H
 
 #include <QAbstractTableModel>
-#include <QStringList>
+#include <QVector>
+#include <QString>
 
-class WaddenseaWord : QStringList
+class WaddenseaWord
 {
 public:
     WaddenseaWord();
+    QVector<QString> m_word;
 
     /**
      * @brief word
      * @param role must be one of the VocabularyModel::LanguageRoles
      * @return
      */
-    QString word(int role);
+    QString word(int role) const;
 
     bool fillFromCsvLine(QString csvLine);
 };
@@ -85,7 +87,7 @@ protected:
     QHash<int, QByteArray> roleNames() const;
 
 private:
-    QList<WaddenseaWord> m_vocabulary;
+    QVector<WaddenseaWord> m_vocabulary;
 };
 
 #endif //VOCABULARYMODEL_H

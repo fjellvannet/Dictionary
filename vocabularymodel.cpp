@@ -48,32 +48,23 @@ WaddenseaWord::WaddenseaWord()
 {
 }
 
-QString WaddenseaWord::word(int role)
+QString WaddenseaWord::word(int role) const
 {
-    return at(role);
+    return role < m_word.length() ? m_word.at(role) : "";
 }
 
 bool WaddenseaWord::fillFromCsvLine(QString csvLine)
 {
-    QStringList wordInAllLanguages = csvLine.split("\";\"");
-    if(wordInAllLanguages.count() == 5)
+    m_word.clear();
+    QVector<QString> wordInAllLanguages = csvLine.split("\t").toVector();
+    if(wordInAllLanguages.length() == 5 || wordInAllLanguages.length() == 4)
     {
-        wordInAllLanguages[3] = wordInAllLanguages[3];
-        wordInAllLanguages[4] = wordInAllLanguages[4].remove(QRegExp("(\"?;*)$"));//die letzten " und gegebenenfalls folgende ; wegschneiden
+        m_word = wordInAllLanguages;
+        m_word.resize(m_word.length());
+        m_word.squeeze();
+        return true;
     }
-    else if(wordInAllLanguages.count() == 4)
-    {
-        wordInAllLanguages[3] = wordInAllLanguages[3].remove(QRegExp("(\"?;*)$")); //die letzten " und gegebenenfalls folgende ; wegschneiden
-        wordInAllLanguages.append("");
-    }
-    else
-    {
-        return false;
-    }
-    wordInAllLanguages[0] = wordInAllLanguages[0].mid(1); //vordersten " wegschneiden
-    clear();
-    append(wordInAllLanguages);
-    return true;
+    else return false;
 }
 
 VocabularyModel::VocabularyModel(QObject *parent)
@@ -88,7 +79,7 @@ bool VocabularyModel::fillModelFromCsv(QString csvPath)
     qDebug() << "csv Wörterbuchdatei " << (file.exists() ? "existiert" : "existiert nicht");
     QTextStream csvStream(&file);
     csvStream.setCodec(QTextCodec::codecForName("UTF-8"));//wichtig, die Datei muss mit UTF-8 codiert sein
-    QList<WaddenseaWord> vocabulary;
+    QVector<WaddenseaWord> vocabulary;
     qDebug() << csvStream.readLine(); //in der ersten Zeile stehen die Sprachennamen - die sollen nicht ins Model
     while(!csvStream.atEnd())
     {
@@ -105,6 +96,8 @@ bool VocabularyModel::fillModelFromCsv(QString csvPath)
     beginInsertRows(QModelIndex(), 0, vocabulary.count() - 1);
     m_vocabulary = vocabulary;
     endInsertRows();
+    m_vocabulary.resize(m_vocabulary.length());
+    m_vocabulary.squeeze();
     return true;
 }
 
