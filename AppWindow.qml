@@ -303,16 +303,17 @@ Item {
                         textFormat: Text.RichText
                         text:
                             qsTr("<h3>Impressum</h3><p>During my Voluntary ecological year (FÖJ, Germany) 2015/16 \
-                            at the Wadden Sea Centre, in Vester Vedsted, Denmark, I have programmed this dictionary. \
-                            For that, I used Qt 5.7-Open-Source.</p>\
-                            <p>For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%1). Here \
+                            at the Wadden Sea Centre in Vester Vedsted, Denmark, I have programmed this dictionary. \
+                            For that, I used %1.</p>\
+                            <p>For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%2). Here \
                             you can also suggest missing words that you would like to have added to the dictionary.</p>\
-                            <p>The data for this app is taken from the \"IWSS Wadden Sea Dictionary\" (%2) - with the \
-                            permission from the \"International Wadden Sea School\" (%3).</p>\
-                            <p>Icon for settings made by %4, icon for downarrow mady by %5. Both come from %6, licensed by %7.</p>\
+                            <p>The data for this app is taken from the \"IWSS Wadden Sea Dictionary\" (%3) - with the \
+                            permission from the \"International Wadden Sea School\" (%4).</p>\
+                            <p>Icon for settings made by %5, icon for downarrow mady by %6. Both come from %7, licensed by %8.</p>\
                             <p>Background image taken by Lukas Neuenschwander on the southern beach of Rømø, on March 12<sup>th</sup> 2016.</p>")
 
-                            .arg("<a href=\"mailto:lukas.neu24@gmail.com\">lukas.neu24@gmail.com</a>")
+                            .arg("Qt 5.8-Open-Source")
+                            .arg("<a href=\"mailto:fjellvannet@gmail.com\">fjellvannet@gmail.com</a>")
                             .arg("<a href=\"http://www.iwss.org/fileadmin/uploads/network-download/Education_\
                             _Support/IWSS_Dictionary_2009.pdf\">http://www.iwss.org/fileadmin/uploads/network\
                             -download/Education__Support/IWSS_Dictionary_2009.pdf</a>")

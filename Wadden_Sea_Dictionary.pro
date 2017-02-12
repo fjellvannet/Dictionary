@@ -40,7 +40,9 @@ TRANSLATIONS += \
 DISTFILES += \
     translations/Wadden_Sea_Dictionary_da.ts \
     translations/Wadden_Sea_Dictionary_de.ts \
-    translations/Wadden_Sea_Dictionary_nl.ts
+    translations/Wadden_Sea_Dictionary_nl.ts \
+    LICENSE.txt \
+    README.md
 
 windows {
     DISTFILES += \
