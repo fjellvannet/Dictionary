@@ -196,18 +196,33 @@ Item {
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: globalMargin
+
+                        Button {
+                            onClicked: sizeSlider.decrease()
+                            contentItem: AdaptedText{
+                                text: " - "
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+                            }
+                            Material.background: Material.accent
+                        }
+
                         Slider {
                             id: sizeSlider
-                            from: 5
-                            to: 60
-                            stepSize: 0.5
+                            from: fsize/2
+                            to: fsize*4
+                            stepSize:1
+                            property int fsize: fontSize.font.pixelSize
                             Layout.fillWidth: true
                             implicitHeight: focus_indicator.height - 1.5 * globalMargin
+
                             Text{
                                 visible: false
                                 id: fontSize
                             }
-                            value: fontSize.font.pixelSize
+
+                            value: fsize
+
                             handle: Rectangle {
                                 anchors.verticalCenter: parent.verticalCenter
                                 color: Material.accent
@@ -254,7 +269,17 @@ Item {
                         }
 
                         Button {
-                            onClicked: sizeSlider.value = fontSize.font.pixelSize
+                            onClicked: sizeSlider.increase()
+                            contentItem: AdaptedText{
+                                text: " + "
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignHCenter
+                            }
+                            Material.background: Material.accent
+                        }
+
+                        Button {
+                            onClicked: sizeSlider.value = sizeSlider.fsize
                             contentItem: AdaptedText{
                                 text: qsTr("Default")
                                 verticalAlignment: Text.AlignVCenter
@@ -529,14 +554,15 @@ Item {
                                     visible: !parent.focus && parent.length === 0
                                     verticalAlignment: Text.AlignVCenter
                                 }
-                                property double starttime
+                                //property double starttime
                                 function performSearch() {
-                                    starttime = new Date().getTime();
+                                    //starttime = new Date().getTime();
                                     if(text !== dbcurrentquery)//verhindert, dass der gleiche Begriff 2x gesucht wird
                                     {
                                         dbcurrentquery = text
                                         searchField.textChanged(searchField.text, settings.findUmlauts)
                                     }
+                                    //console.log("Die Suche & Anzeige von " + text + " dauerte " + (new Date().getTime() - starttime) + " ms")
                                     if(length > 0)
                                     {
                                         noSearchResults.visible = lvDictionary.count === 0
@@ -546,7 +572,6 @@ Item {
                                             lvDictionary.currentIndex = 0
                                         }
                                     }
-                                    console.log(new Date().getTime() - starttime + "ms")
                                     resultColumn.updateText = !resultColumn.updateText//damit ResultWidget aktualisiert und ggf ausgeblendet wird
                                 }
 
