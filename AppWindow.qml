@@ -520,6 +520,7 @@ Item {
                                 selectByMouse: true
 
                                 signal textChanged(var text, var findUmlauts)
+                                property string dbcurrentquery
 
                                 AdaptedText {
                                     anchors.fill: parent
@@ -528,9 +529,14 @@ Item {
                                     visible: !parent.focus && parent.length === 0
                                     verticalAlignment: Text.AlignVCenter
                                 }
-
+                                property double starttime
                                 function performSearch() {
-                                    searchField.textChanged(searchField.text, settings.findUmlauts)
+                                    starttime = new Date().getTime();
+                                    if(text !== dbcurrentquery)//verhindert, dass der gleiche Begriff 2x gesucht wird
+                                    {
+                                        dbcurrentquery = text
+                                        searchField.textChanged(searchField.text, settings.findUmlauts)
+                                    }
                                     if(length > 0)
                                     {
                                         noSearchResults.visible = lvDictionary.count === 0
@@ -540,6 +546,7 @@ Item {
                                             lvDictionary.currentIndex = 0
                                         }
                                     }
+                                    console.log(new Date().getTime() - starttime + "ms")
                                     resultColumn.updateText = !resultColumn.updateText//damit ResultWidget aktualisiert und ggf ausgeblendet wird
                                 }
 
@@ -721,7 +728,7 @@ Item {
                     id: resultWidget
                     property ListView resultListView: lvVocabulary
                     property int fromLanguage: lvDictionary.visible && lvDictionary.count > 0 ? (dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex, 6), 6) === 4 ?
-                        appLanguage : dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex === -1 ? 0 : resultListView.currentIndex, 6), 6)) : language
+                        language : dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex === -1 ? 0 : resultListView.currentIndex, 6), 6)) : language
                     Layout.preferredHeight: resultView.height
 //                    Layout.preferredWidth: resultView.width
 //                    Layout.minimumWidth: parent.width / 4
