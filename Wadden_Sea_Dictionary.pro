@@ -71,7 +71,6 @@ ios {
         ios/translations/Info.plist \
         ios/translations/da.lproj/InfoPlist.strings \
         ios/translations/de.lproj/InfoPlist.strings \
-        ios/translations/en.lproj/File.strings \
         ios/translations/en.lproj/InfoPlist.strings \
         ios/translations/nl.lproj/InfoPlist.strings \
         ios/icon/app_icon.xcassets/AppIcon.appiconset/Contents.json \
