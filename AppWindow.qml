@@ -312,7 +312,7 @@ Item {
                     AdaptedSwitch {
                         id: swFlags_in_all_language_mode
                         text: qsTr("Show flags in dictionary search results (might make search slower%1)").arg(/*"")//*/qsTr(", experimental"))
-                        checked: true
+                        checked: false
                         Layout.fillWidth: true
                     }
 
