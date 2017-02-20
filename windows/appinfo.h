@@ -1,6 +1,6 @@
-#include "appinfo_en.h"
+//#include "appinfo_en.h"
 //#include "appinfo_da.h"
-//#include "appinfo_de.h"
+#include "appinfo_de.h"
 //#include "appinfo_nl.h"
 
 #ifndef APPINFO_H
