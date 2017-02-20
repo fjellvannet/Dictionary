@@ -46,19 +46,24 @@ DISTFILES += \
 
 windows {
     DISTFILES += \
-        icon/app_icon.ico \
-        icon/Wadden_Sea_Dictionary.rc
+        windows/app_icon.ico \
+        windows/Wadden_Sea_Dictionary.rc\
+        windows/appinfo.h\
+        windows/appinfo_en.h\
+        windows/appinfo_de.h\
+        windows/appinfo_da.h\
+        windows/appinfo_nl.h
 
     RC_FILE = icon/Wadden_Sea_Dictionary.rc
 }
 
-windows || osx {
-    TARGET = "Wadden Sea Dictionary"
-}
+
+TARGET = "Wadden Sea Dictionary"
+VERSION = 1.0.0
 
 osx {
-    DISTFILES += icon/app_icon.icns
-    ICON = icon/app_icon.icns
+    DISTFILES += ios/icon/app_icon.icns
+    ICON = ios/icon/app_icon.icns
 }
 
 ios {
