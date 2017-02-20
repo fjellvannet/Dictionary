@@ -54,7 +54,7 @@ windows {
         windows/appinfo_da.h\
         windows/appinfo_nl.h
 
-    RC_FILE = icon/Wadden_Sea_Dictionary.rc
+    RC_FILE = windows/Wadden_Sea_Dictionary.rc
 }
 
 
