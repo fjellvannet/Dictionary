@@ -1,6 +1,7 @@
-//#include "appinfo_en.h"
+// Rebuild completely if you want to change the language, otherwise nothing will happen.
+#include "appinfo_en.h"
 //#include "appinfo_da.h"
-#include "appinfo_de.h"
+//#include "appinfo_de.h"
 //#include "appinfo_nl.h"
 
 #ifndef APPINFO_H
