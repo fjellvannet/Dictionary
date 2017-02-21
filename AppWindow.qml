@@ -311,8 +311,8 @@ Item {
 
                     AdaptedSwitch {
                         id: swFlags_in_all_language_mode
-                        text: qsTr("Show flags in dictionary search results (might make search slower%1)").arg(/*"")//*/qsTr(", experimental"))
-                        checked: false
+                        text: qsTr("Show flags in dictionary search results (might make search slower%1)").arg("")//qsTr(", experimental"))
+                        checked: true //in Android experimental einsetzen und die Standardeinstellung auf false
                         Layout.fillWidth: true
                     }
 
@@ -329,15 +329,16 @@ Item {
                         text:
                             qsTr("<h3>Impressum</h3><p>During my Voluntary ecological year (FÖJ, Germany) 2015/16 \
                             at the Wadden Sea Centre in Vester Vedsted, Denmark, I have programmed this dictionary. \
-                            For that, I used %1.</p>\
-                            <p>For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%2). Here \
+                            For that, I used %1. The sourcecode is available on %2.</p>\
+                            <p>For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%3). Here \
                             you can also suggest missing words that you would like to have added to the dictionary.</p>\
-                            <p>The data for this app is taken from the \"IWSS Wadden Sea Dictionary\" (%3) - with the \
-                            permission from the \"International Wadden Sea School\" (%4).</p>\
-                            <p>Icon for settings made by %5, icon for downarrow mady by %6. Both come from %7, licensed by %8.</p>\
+                            <p>The data for this app is taken from the \"IWSS Wadden Sea Dictionary\" (%4) - with the \
+                            permission from the \"International Wadden Sea School\" (%5).</p>\
+                            <p>Icon for settings made by %6, icon for downarrow mady by %7. Both come from %8, licensed by %9.</p>\
                             <p>Background image taken by Lukas Neuenschwander on the southern beach of Rømø, on March 12<sup>th</sup> 2016.</p>")
 
                             .arg("Qt 5.8-Open-Source")
+                            .arg("<a href=\"https://github.com/fjellvannet/Wadden-Sea-Dictionary\">www.github.com/fjellvannet/Wadden-Sea-Dictionary</a>")
                             .arg("<a href=\"mailto:fjellvannet@gmail.com\">fjellvannet@gmail.com</a>")
                             .arg("<a href=\"http://www.iwss.org/fileadmin/uploads/network-download/Education_\
                             _Support/IWSS_Dictionary_2009.pdf\">http://www.iwss.org/fileadmin/uploads/network\
