@@ -16,8 +16,14 @@ Item {
     property color medium_blue: "#00629b"
     property color dark_blue: "#00313c"
     property double rootSize: settings.sized
+
     AdaptedText {
         id: fontHeight
+        visible: false
+    }
+
+    Text {
+        id: defaultFontHeight
         visible: false
     }
 
@@ -209,17 +215,12 @@ Item {
 
                         Slider {
                             id: sizeSlider
-                            from: fsize/2
-                            to: fsize*4
+                            from: 5
+                            to: 100
                             stepSize:1
-                            property int fsize: fontSize.font.pixelSize
+                            property int fsize: defaultFontHeight.font.pixelSize
                             Layout.fillWidth: true
                             implicitHeight: focus_indicator.height - 1.5 * globalMargin
-
-                            Text{
-                                visible: false
-                                id: fontSize
-                            }
 
                             value: fsize
 
@@ -374,7 +375,7 @@ Item {
                     visible: false
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    maximumFlickVelocity: globalMargin * 1000
+                    maximumFlickVelocity: defaultFontHeight.height * 500
                     activeFocusOnTab: true
                     flickDeceleration: maximumFlickVelocity / 2
                     clip: true
@@ -412,7 +413,6 @@ Item {
                         color: dark_blue
                         width: window.width
                         height: 4 * globalMargin
-                        z:3
                         AdaptedText {
                             anchors.left: parent.left
                             anchors.leftMargin: globalMargin / 2
@@ -430,7 +430,6 @@ Item {
                         id: wordDelegate
                         width: lvVocabulary.width
                         height: Math.max(4 * globalMargin, word.implicitHeight + globalMargin)
-                        z: 2
                         color: "transparent"
                         AdaptedText {
                             id: word
@@ -464,7 +463,7 @@ Item {
                         }
                         states: State {
                             when: wordDelegate.ListView.isCurrentItem
-                            PropertyChanges { target: wordDelegate; color: languageButton.background.ios || lvVocabulary.activeFocus ? Material.accent : Material.color(Material.Grey); z: 4 }
+                            PropertyChanges { target: wordDelegate; color: languageButton.background.ios || lvVocabulary.activeFocus ? Material.accent : Material.color(Material.Grey)}
                         }
                     }
 
@@ -488,9 +487,19 @@ Item {
                         color: "white"
                         font.pixelSize: 3 * fontHeight.font.pixelSize
                     }
+
+                    MouseArea {//Stellt sicher, dass mit dem Mausrad nicht zu schnell gescrollt wird - wie schnell kann eingestellt werden
+                        anchors.fill: parent
+                        onWheel: parent.flick(0, wheel.angleDelta.y * defaultFontHeight.height / 1.5);/*Gegebenenfalls könnte man über eine Einstellung
+                             für diesen Wert nachdenken. So ist er jetzt aber genau an Windows angepasst, hoffe dass es in Mac auch läuft.*/
+                        scrollGestureEnabled: false
+                        propagateComposedEvents: true//damit die Klicks an die darunter liegenden MouseAreas weitergeleitet werden.
+                    }
+
                     Keys.onReleased: {
-                        if(event.key === Qt.Key_Home) { lvVocabulary.positionViewAtBeginning(); lvVocabulary.currentIndex = 0}
-                        else if(event.key === Qt.Key_End) { lvVocabulary.positionViewAtEnd(); lvVocabulary.currentIndex = lvVocabulary.count - 1}
+                        if(event.key === Qt.Key_Up || event.key === Qt.Key_Down) positionViewAtIndex(lvVocabulary.currentIndex, ListView.Center)
+                        else if(event.key === Qt.Key_Home) { lvVocabulary.currentIndex = 0; lvVocabulary.positionViewAtBeginning()}
+                        else if(event.key === Qt.Key_End) { lvVocabulary.currentIndex = lvVocabulary.count - 1; lvVocabulary.positionViewAtEnd()}
                     }
                 }
 
@@ -613,7 +622,7 @@ Item {
                         Layout.fillHeight: true
                         Layout.fillWidth: true
                         clip: true
-                        maximumFlickVelocity: globalMargin * 1000
+                        maximumFlickVelocity: defaultFontHeight.height * 500
                         flickDeceleration: maximumFlickVelocity / 2
                         ScrollBar.vertical: AdaptedScrollBar {}
                         activeFocusOnTab: count > 0
@@ -727,8 +736,17 @@ Item {
                         }
 
                         Keys.onReleased: {
-                            if(event.key === Qt.Key_Home) { lvDictionary.positionViewAtBeginning(); lvDictionary.currentIndex = 0}
-                            else if(event.key === Qt.Key_End) { lvDictionary.positionViewAtEnd(); lvDictionary.currentIndex = lvDictionary.count - 1}
+                            if(event.key === Qt.Key_Up || event.key === Qt.Key_Down) positionViewAtIndex(lvVocabulary.currentIndex, ListView.Center)
+                            else if(event.key === Qt.Key_Home) { lvVocabulary.currentIndex = 0; lvVocabulary.positionViewAtBeginning()}
+                            else if(event.key === Qt.Key_End) { lvVocabulary.currentIndex = lvVocabulary.count - 1; lvVocabulary.positionViewAtEnd()}
+                        }
+
+                        MouseArea {//Stellt sicher, dass mit dem Mausrad nicht zu schnell gescrollt wird - wie schnell kann eingestellt werden
+                            anchors.fill: parent
+                            onWheel: parent.flick(0, wheel.angleDelta.y * defaultFontHeight.height / 1.5);/*Gegebenenfalls könnte man über eine Einstellung
+                                 für diesen Wert nachdenken. So ist er jetzt aber genau an Windows angepasst, hoffe dass es in Mac auch läuft.*/
+                            scrollGestureEnabled: false
+                            propagateComposedEvents: true//damit die Klicks an die darunter liegenden MouseAreas weitergeleitet werden.
                         }
 
                         AdaptedText {

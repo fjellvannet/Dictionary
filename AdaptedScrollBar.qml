@@ -9,7 +9,9 @@ ScrollBar {
     visible: size < 1
     contentItem: Rectangle {
         implicitWidth: barwidth
-        implicitHeight: parent.background.height * parent.size
+        implicitHeight: barwidth /*das hier mag komisch aussehen - schließlich wære parent.height * parent.size hier viel sinniger. Es funktioniert
+        aber, und der Balken hat auch die gewünschte Länge parent.height*parent.size. Schreibt man aber stattdessen das, entsteht beim State Change für
+        vertical eine Binding Loop, warum auch immer. Der gewünschte Effekt wird also so erzielt.*/
         radius: width / 2
         opacity: 0
         color: pressed ? Material.color(Material.Grey, Material.Shade700) : Material.color(Material.Grey)
@@ -22,17 +24,9 @@ ScrollBar {
             from: "active"
             to: ""
             animations: SequentialAnimation {
-                PauseAnimation { duration: 2000 }
+                PauseAnimation { duration: 4000 }
                 NumberAnimation { target: contentItem; properties: "opacity"; duration: 1000}
             }
-        }
-    }
-    states: State {
-        when: orientation === Qt.Horizontal
-        PropertyChanges {
-            target: contentItem
-            implicitWidth: parent.width * size
-            implicitHeight: barwidth
         }
     }
 }
