@@ -42,7 +42,8 @@ DISTFILES += \
     translations/Wadden_Sea_Dictionary_de.ts \
     translations/Wadden_Sea_Dictionary_nl.ts \
     LICENSE.txt \
-    README.md
+    README.md \
+    windows/Wadden_Sea_Dictionary_Windows_release.cmd
 
 windows {
     DISTFILES += \
