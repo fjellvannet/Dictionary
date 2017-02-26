@@ -18,7 +18,8 @@ void MyQQuickView::loadGeometry()
 }
 
 void MyQQuickView::saveGeometry() {
-    if(windowState() == Qt::WindowNoState) m_settings->setValue("geometry",geometry());
+    if(windowState() == Qt::WindowNoState) m_settings->setValue("geometry", geometry());
+    m_settings->setValue("Window State", windowState());
 }
 
 void MyQQuickView::setSettings(QSettings *a_settings)

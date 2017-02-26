@@ -12,9 +12,7 @@ Item {
     Material.theme: Material.Light
     Material.accent: Material.Blue
 
-    property color light_blue: "#41b6e6"
-    property color medium_blue: "#00629b"
-    property color dark_blue: "#00313c"
+    property color dark_accent: Material.color(Material.BlueGrey, Material.Shade700)
     property double rootSize: settings.sized
 
     AdaptedText {
@@ -41,6 +39,7 @@ Item {
     }
 
     property int globalMargin: fontHeight.height / 2
+    property int globalFontPixelSize: fontHeight.font.pixelSize
     property int globalBorder: globalMargin / 10 > 1 ? globalMargin / 10 : 1
     property bool highDpi: Math.max(Screen.height, Screen.width) / globalMargin < 100
     property bool vocabularyList: false
@@ -146,7 +145,7 @@ Item {
                     horizontalAlignment: Text.AlignHCenter
                     font.pixelSize: parent.height / 2.5
                     font.bold: true
-                    text: appName
+                    text: Qt.application.name
                 }
 
                 IconButton {
@@ -176,9 +175,6 @@ Item {
             Flickable {
                 id: settingsWindow
                 anchors.fill: parent
-                anchors.leftMargin: globalMargin
-                anchors.rightMargin: globalMargin
-                contentWidth: settingsColumn.width
                 contentHeight: settingsColumn.height
                 boundsBehavior: Flickable.StopAtBounds
                 flickableDirection: Flickable.VerticalFlick
@@ -188,14 +184,16 @@ Item {
 
                 ColumnLayout {
                     id: settingsColumn
-                    width: settingsWindow.width
+                    x: globalMargin
+                    width: parent.width - 2*x
                     spacing: globalMargin
+
                     Item{Layout.fillWidth: true}
 
                     AdaptedText {
                         Layout.fillWidth: true
                         text: qsTr("Layout size")
-                        font.pixelSize: 1.2 * fontHeight.font.pixelSize
+                        font.pixelSize: 1.2 * globalFontPixelSize
                         font.bold: true
                     }
 
@@ -217,12 +215,11 @@ Item {
                             id: sizeSlider
                             from: 5
                             to: 100
-                            stepSize:1
-                            property int fsize: defaultFontHeight.font.pixelSize
+                            stepSize: 1
                             Layout.fillWidth: true
                             implicitHeight: focus_indicator.height - 1.5 * globalMargin
 
-                            value: fsize
+                            value: defaultFontHeight.font.pixelSize
 
                             handle: Rectangle {
                                 anchors.verticalCenter: parent.verticalCenter
@@ -280,7 +277,7 @@ Item {
                         }
 
                         Button {
-                            onClicked: sizeSlider.value = sizeSlider.fsize
+                            onClicked: sizeSlider.value = defaultFontHeight.font.pixelSize
                             contentItem: AdaptedText{
                                 text: qsTr("Default")
                                 verticalAlignment: Text.AlignVCenter
@@ -299,7 +296,7 @@ Item {
                     AdaptedText {
                         text:  qsTr("Dictionary Search")
                         Layout.fillWidth: true
-                        font.pixelSize: 1.2 * fontHeight.font.pixelSize
+                        font.pixelSize: 1.2 * globalFontPixelSize
                         font.bold: true
                     }
 
@@ -410,7 +407,7 @@ Item {
 
                     section.delegate: Rectangle {
                         id: sectionDelegate
-                        color: dark_blue
+                        color: dark_accent
                         width: window.width
                         height: 4 * globalMargin
                         AdaptedText {
@@ -421,7 +418,7 @@ Item {
                             font.bold: true
                             height: parent.height
                             verticalAlignment: Text.AlignVCenter
-                            font.pixelSize: 1.5 * fontHeight.font.pixelSize
+                            font.pixelSize: 1.5 * globalFontPixelSize
                             color: "white"
                         }
                     }
@@ -485,7 +482,7 @@ Item {
                         anchors.centerIn: parent
                         text: parent.currentSection
                         color: "white"
-                        font.pixelSize: 3 * fontHeight.font.pixelSize
+                        font.pixelSize: 3 * globalFontPixelSize
                     }
 
                     MouseArea {//Stellt sicher, dass mit dem Mausrad nicht zu schnell gescrollt wird - wie schnell kann eingestellt werden
@@ -497,9 +494,9 @@ Item {
                     }
 
                     Keys.onReleased: {
-                        if(event.key === Qt.Key_Up || event.key === Qt.Key_Down) positionViewAtIndex(lvVocabulary.currentIndex, ListView.Center)
-                        else if(event.key === Qt.Key_Home) { lvVocabulary.currentIndex = 0; lvVocabulary.positionViewAtBeginning()}
-                        else if(event.key === Qt.Key_End) { lvVocabulary.currentIndex = lvVocabulary.count - 1; lvVocabulary.positionViewAtEnd()}
+                        if(event.key === Qt.Key_Up || event.key === Qt.Key_Down) positionViewAtIndex(currentIndex, ListView.Center)
+                        else if(event.key === Qt.Key_Home) { currentIndex = 0; positionViewAtBeginning()}
+                        else if(event.key === Qt.Key_End) { currentIndex = count - 1; positionViewAtEnd()}
                     }
                 }
 
@@ -632,7 +629,6 @@ Item {
                             id: dictionaryDelegate
                             width: lvDictionary.width
                             height: Math.max(4 * globalMargin, dictionaryWord.implicitHeight + globalMargin)
-                            z: 2
                             color: "transparent"
                             RowLayout {
                                 anchors.fill: parent
@@ -673,7 +669,7 @@ Item {
                                     Layout.preferredHeight: 3 * globalMargin
                                     Layout.preferredWidth: 4 * globalMargin
                                     font.pixelSize: 3 * globalMargin
-                                    color: dark_blue
+                                    color: dark_accent
                                     verticalAlignment: Text.AlignVCenter
                                     text: switch(ResultLanguage) {
                                           case 0:
@@ -705,7 +701,6 @@ Item {
                                 AdaptedText {
                                     id: dictionaryWord
                                     Layout.fillWidth: true
-                                    Layout.fillHeight: true
                                     property string wordScientific: Scientific === "" ? "" : " (<i>" + Scientific + "</i>)"
                                     property string appLanguageScientific: switch (language === 4 ? appLanguage : language) {
                                                                            case 0:
@@ -736,9 +731,9 @@ Item {
                         }
 
                         Keys.onReleased: {
-                            if(event.key === Qt.Key_Up || event.key === Qt.Key_Down) positionViewAtIndex(lvVocabulary.currentIndex, ListView.Center)
-                            else if(event.key === Qt.Key_Home) { lvVocabulary.currentIndex = 0; lvVocabulary.positionViewAtBeginning()}
-                            else if(event.key === Qt.Key_End) { lvVocabulary.currentIndex = lvVocabulary.count - 1; lvVocabulary.positionViewAtEnd()}
+                            if(event.key === Qt.Key_Up || event.key === Qt.Key_Down) positionViewAtIndex(currentIndex, ListView.Center)
+                            else if(event.key === Qt.Key_Home) { currentIndex = 0; positionViewAtBeginning()}
+                            else if(event.key === Qt.Key_End) { currentIndex = count - 1; positionViewAtEnd()}
                         }
 
                         MouseArea {//Stellt sicher, dass mit dem Mausrad nicht zu schnell gescrollt wird - wie schnell kann eingestellt werden

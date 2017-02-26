@@ -39,18 +39,16 @@ int main(int argc, char *argv[])
             ;//nur um Compiler-Warnungen zu unterdrücken, kann durch das vorangegangene if nicht auftreten
         }
     }
+
     app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));
+    app.setOrganizationName("fjellvannet");
 
     VocabularyModel model;
     model.fillModelFromCsv(":/database/Wadden_Sea_vocabulary.csv");
     VocabularyListModel listModel;
     listModel.setSourceModel(&model);
     DictionaryModel dictionaryModel(&model);
-    QSettings settings;
     MyQQuickView view;
-    view.setSettings(&settings);
-    view.loadGeometry();
-    view.setResizeMode(QQuickView::SizeRootObjectToView);
     view.setTitle(app.applicationName());
     view.setIcon(QIcon("D:/Dokumente/Qt/Workspace/IWSS_Waddensea_Dictionary/icon/app_icon.ico"));
     QQmlContext *ctxt = view.rootContext();
@@ -58,7 +56,6 @@ int main(int argc, char *argv[])
 
     ctxt->setContextProperty("vocabularyModel", &listModel);
     ctxt->setContextProperty("dictionaryModel", &dictionaryModel);
-    ctxt->setContextProperty("appName", app.applicationName());
     ctxt->setContextProperty("appLanguage", appLanguage);
     view.setSource(QUrl("qrc:/qml/AppWindow.qml"));
     listModel.connect(view.rootObject()->findChild<QObject*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
@@ -67,11 +64,27 @@ int main(int argc, char *argv[])
     {
         QMetaObject::invokeMethod(view.rootObject()->findChild<QObject*>("lvVocabulary"), "updateView");
     }
-    view.show();
+
+    QSettings settings;//kjempeviktig, for at settings skal funke må både applicationName og Organizationname til appen være definert!
+    view.setSettings(&settings);
+    view.loadGeometry();
+    view.setResizeMode(QQuickView::SizeRootObjectToView);
+    /*Det er mulig å lagre enum-verdier som uint8 (for å lagre de). De kan så konverteres tilbake ved hjelp av denne static_cast (den tar bare imot uint8)*/
+    switch(static_cast<Qt::WindowState>((quint8)settings.value("Window State").toUInt()))
+    {
+        case Qt::WindowNoState :
+            view.show();
+            break;
+        case Qt::WindowMaximized :
+            view.showMaximized();
+            break;
+        case Qt::WindowMinimized :
+            view.show();
+            break;
+        case Qt::WindowFullScreen :
+            view.showFullScreen();
+            break;
+    }
+
     return app.exec();
 }
-
-void closing(){
-    qDebug() << "nix";
-}
-
