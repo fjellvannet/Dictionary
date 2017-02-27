@@ -57,10 +57,12 @@ bool WaddenseaWord::fillFromCsvLine(QString csvLine)
 {
     m_word.clear();
     QVector<QString> wordInAllLanguages = csvLine.split("\t").toVector();
+    //I denne QString-Listen, som konverteres til en vektor, har ingen av strengene en høyere kapasitet enn nødvendig. Derfor er det ikke
+    //nødvendig å kalle squeeze på hver eneste av strengene.
+
     if(wordInAllLanguages.length() == 5 || wordInAllLanguages.length() == 4)
     {
         m_word = wordInAllLanguages;
-        m_word.resize(m_word.length());
         m_word.squeeze();
         return true;
     }
@@ -93,11 +95,10 @@ bool VocabularyModel::fillModelFromCsv(QString csvPath)
             return false;
         }
     }
+    vocabulary.squeeze();//det er nok å squeeze her - m_vocabulary har da heller ikke preallokert for mye minne.
     beginInsertRows(QModelIndex(), 0, vocabulary.count() - 1);
     m_vocabulary = vocabulary;
     endInsertRows();
-    m_vocabulary.resize(m_vocabulary.length());
-    m_vocabulary.squeeze();
     return true;
 }
 
