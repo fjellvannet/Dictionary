@@ -78,11 +78,11 @@ int main(int argc, char *argv[])
         case Qt::WindowMaximized :
             view.showMaximized();
             break;
-        case Qt::WindowMinimized :
-            view.show();
-            break;
         case Qt::WindowFullScreen :
             view.showFullScreen();
+            break;
+        default:
+            view.show();
             break;
     }
 
