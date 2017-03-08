@@ -58,8 +58,9 @@ windows {
     RC_FILE = windows/Wadden_Sea_Dictionary.rc
 }
 
-
-TARGET = "Wadden Sea Dictionary"
+windows || osx {
+    TARGET = "Wadden Sea Dictionary"
+}
 VERSION = 1.0.1 #endre versjonen også i Android.Manifest og appinfo.h til Windows
 
 osx {

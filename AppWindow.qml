@@ -146,12 +146,15 @@ Item {
                     font.pixelSize: parent.height / 2.5
                     font.bold: true
                     text: Qt.application.name
+                    elide: Text.ElideMiddle
+                    opacity: truncated ? 0 : 1
                 }
 
                 IconButton {
                     id: settingsButton
                     Layout.fillHeight: true
                     Layout.preferredWidth: height
+                    Layout.alignment: Qt.AlignRight
                     source: "qrc:/images/icons/settings"
                     onClicked: {
                         mainlayout.state = mainlayout.state === "settings" ? (settings.vocabularyList ? "vocabularyList" : "dictionary") : "settings"
@@ -200,15 +203,21 @@ Item {
                     RowLayout {
                         Layout.fillWidth: true
                         spacing: globalMargin
+                        TextButton {
+                            onClicked: sizeSlider.value = defaultFontHeight.font.pixelSize
+                            text: qsTr("Default")
+                        }
+
+                        Item{height: 1}//Abstandhalter
 
                         TextButton {
                             onClicked: sizeSlider.decrease()
-                            text: "-"
+                            text: "–"
                         }
 
                         Slider {
                             id: sizeSlider
-                            from: 5
+                            from: 8
                             to: 100
                             stepSize: 1
                             Layout.fillWidth: true
@@ -264,11 +273,6 @@ Item {
                         TextButton {
                             onClicked: sizeSlider.increase()
                             text: "+"
-                        }
-
-                        TextButton {
-                            onClicked: sizeSlider.value = defaultFontHeight.font.pixelSize
-                            text: qsTr("Default")
                         }
                     }
 
