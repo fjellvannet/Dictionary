@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 import QtQuick.Controls.Material 2.0
 import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.3
@@ -201,14 +201,9 @@ Item {
                         Layout.fillWidth: true
                         spacing: globalMargin
 
-                        Button {
+                        TextButton {
                             onClicked: sizeSlider.decrease()
-                            contentItem: AdaptedText{
-                                text: " - "
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-                            Material.background: Material.accent
+                            text: "-"
                         }
 
                         Slider {
@@ -266,24 +261,14 @@ Item {
                             }
                         }
 
-                        Button {
+                        TextButton {
                             onClicked: sizeSlider.increase()
-                            contentItem: AdaptedText{
-                                text: " + "
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-                            Material.background: Material.accent
+                            text: "+"
                         }
 
-                        Button {
+                        TextButton {
                             onClicked: sizeSlider.value = defaultFontHeight.font.pixelSize
-                            contentItem: AdaptedText{
-                                text: qsTr("Default")
-                                verticalAlignment: Text.AlignVCenter
-                                horizontalAlignment: Text.AlignHCenter
-                            }
-                            Material.background: Material.accent
+                            text: qsTr("Default")
                         }
                     }
 

@@ -1,5 +1,5 @@
 import QtQuick 2.7
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.1
 import QtQuick.Controls.Material 2.0
 import QtGraphicalEffects 1.0
 
@@ -23,6 +23,6 @@ Button {
         source: olColor
         color: "black"
         opacity: 0.15
-        visible: parent.activeFocus
+        visible: parent.visualFocus
     }
 }

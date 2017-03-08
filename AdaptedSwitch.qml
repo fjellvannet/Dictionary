@@ -53,7 +53,7 @@ Switch {
 
     Rectangle {
         id: focus_indicator
-        visible: parent.activeFocus
+        visible: parent.visualFocus
         anchors.centerIn: handle
         color: background.color
         opacity: 0.3
