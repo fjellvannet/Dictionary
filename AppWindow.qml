@@ -217,8 +217,11 @@ Item {
 
                         Slider {
                             id: sizeSlider
-                            from: 8
-                            to: 100
+                            from: defaultFontHeight.font.pixelSize * Math.max(6/defaultFontHeight.font.pointSize, 0.5)//den minste verdien skal enten være 6 point eller halvparten av originalfonten (det som er størst av de)
+                            to: {
+                                if(root.height == 0) return 1000
+                                else return Math.max(Math.min(root.height, root.width / 2) / 17, from)
+                            }
                             stepSize: 1
                             Layout.fillWidth: true
                             implicitHeight: focus_indicator.height - 1.5 * globalMargin
@@ -253,7 +256,7 @@ Item {
                                 anchors.right: parent.right
                                 anchors.leftMargin: (focus_indicator.height - height)/2; anchors.rightMargin: anchors.leftMargin
                                 height: globalMargin
-                                width: parent.width - 2 * x
+                                width: parent.width - 2*x
                                 opacity: 0.5
                                 Rectangle {
                                     Layout.fillHeight: true
@@ -421,20 +424,17 @@ Item {
                             id: word
                             anchors.left: parent.left; anchors.right: parent.right
                             anchors.leftMargin: globalMargin / 2
-                            property string wordText: switch (language) {
-                                case 0:
-                                    return Deutsch
-                                case 1:
-                                    return English
-                                case 2:
-                                    return Nederlands
-                                case 3:
-                                    return Dansk
-                                default:
-                                    return ""
+                            text: {
+                                var s
+                                switch(language){
+                                    case 0: s = Deutsch; break
+                                    case 1: s = English; break
+                                    case 2: s = Nederlands; break
+                                    case 3: s = Dansk; break
+                                    case undefined: s = ""
+                                }
+                                return s + (Scientific === "" ? "" : " (<i>" + Scientific + "</i>)")
                             }
-                            property string wordScientific: Scientific === "" ? "" : " (<i>" + Scientific + "</i>)"
-                            text: wordText + wordScientific
                             height: parent.height
                             verticalAlignment: Text.AlignVCenter
                             wrapMode: Text.Wrap
@@ -617,16 +617,25 @@ Item {
                         delegate: Rectangle {
                             id: dictionaryDelegate
                             width: lvDictionary.width
-                            height: Math.max(4 * globalMargin, dictionaryWord.implicitHeight + globalMargin)
+                            height: rl.implicitHeight + globalMargin
                             color: "transparent"
                             RowLayout {
-                                anchors.fill: parent
+                                id: rl
                                 anchors.margins: globalMargin / 2
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.verticalCenter: parent.verticalCenter
+                                spacing: globalMargin / 2
+
                                 AdaptedImage {
                                     visible: settings.flags_in_all_language_mode
                                     Layout.preferredHeight: 3 * globalMargin
-                                    Layout.preferredWidth: height / 3 * 5
-                                    source: switch(ResultLanguage) {
+                                    Layout.preferredWidth: 5 * globalMargin
+                                    Layout.alignment: Qt.AlignVCenter
+                                    source: {
+                                        var a = ResultLanguage
+                                        if(a === 4) a = appLanguage
+                                        switch(a) {
                                             case 0:
                                                 return "qrc:/images/flags/german_flag"
                                             case 1:
@@ -635,75 +644,52 @@ Item {
                                                 return "qrc:/images/flags/netherlands_flag"
                                             case 3:
                                                 return "qrc:/images/flags/danish_flag"
-                                            case 4:
-                                                switch (language === 4 ? appLanguage : language) {
-                                                case 0:
-                                                    return "qrc:/images/flags/german_flag"
-                                                case 1:
-                                                    return "qrc:/images/flags/union_jack"
-                                                case 2:
-                                                    return "qrc:/images/flags/netherlands_flag"
-                                                case 3:
-                                                    return "qrc:/images/flags/danish_flag"
-                                                default:
-                                                    return ""
-                                                }
                                             default:
                                                 return ""
+                                        }
                                     }
                                 }
 
                                 AdaptedText {
                                     visible: !settings.flags_in_all_language_mode
-                                    Layout.preferredHeight: 3 * globalMargin
                                     Layout.preferredWidth: 4 * globalMargin
+                                    Layout.alignment: Qt.AlignVCenter
                                     font.pixelSize: 3 * globalMargin
                                     color: dark_accent
-                                    verticalAlignment: Text.AlignVCenter
-                                    text: switch(ResultLanguage) {
-                                          case 0:
-                                              return "DE"
-                                          case 1:
-                                              return "EN"
-                                          case 2:
-                                              return "NL"
-                                          case 3:
-                                              return "DK"
-                                          case 4:
-                                              switch (language === 4 ? appLanguage : language) {
-                                              case 0:
-                                                  return "DE"
-                                              case 1:
-                                                  return "EN"
-                                              case 2:
-                                                  return "NL"
-                                              case 3:
-                                                  return "DK"
-                                              default:
-                                                  return ""
-                                              }
-                                          default:
-                                              return ""
-                                   }
+                                    text:{
+                                        var a = ResultLanguage
+                                        if(a === 4) a = appLanguage
+                                        switch(a){
+                                            case 0:
+                                                return "DE"
+                                            case 1:
+                                                return "EN"
+                                            case 2:
+                                                return "NL"
+                                            case 3:
+                                                return "DK"
+                                            default:
+                                                return ""
+                                        }
+                                    }
                                 }
 
                                 AdaptedText {
-                                    id: dictionaryWord
                                     Layout.fillWidth: true
-                                    property string wordScientific: Scientific === "" ? "" : " (<i>" + Scientific + "</i>)"
-                                    property string appLanguageScientific: switch (language === 4 ? appLanguage : language) {
-                                                                           case 0:
-                                                                              return Deutsch
-                                                                           case 1:
-                                                                              return English
-                                                                           case 2:
-                                                                              return Nederlands
-                                                                           case 3:
-                                                                              return Dansk
+                                    text: {
+                                        var a = ResultLanguage
+                                        if(a === 4) a = appLanguage
+                                        var s = ""
+                                        switch(a){
+                                            case 0: s = Deutsch; break
+                                            case 1: s = English; break
+                                            case 2: s = Nederlands; break
+                                            case 3: s = Dansk; break
+                                            default: s = ""
+                                        }
+                                        return s + (Scientific === "" ? "" : " (<i>" + Scientific + "</i>)")
                                     }
-                                    text: (ResultLanguage === 4 ? appLanguageScientific : ResultWord) + wordScientific
-                                    height: parent.height
-                                    verticalAlignment: Text.AlignVCenter
+                                    Layout.alignment: Qt.AlignVCenter
                                     wrapMode: Text.Wrap
                                 }
                             }
@@ -755,8 +741,11 @@ Item {
                 Item {
                     id: resultWidget
                     property ListView resultListView: lvVocabulary
-                    property int fromLanguage: lvDictionary.visible && lvDictionary.count > 0 ? (dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex, 6), 6) === 4 ?
-                        language : dictionaryModel.data(dictionaryModel.index(resultListView.currentIndex === -1 ? 0 : resultListView.currentIndex, 6), 6)) : language
+                    property int fromLanguage: {
+                        if(lvDictionary.visible && lvDictionary.count > 0 && dictionaryModel.index(resultListView.currentIndex, 6) < 4)
+                            return dictionaryModel.data(resultListView.currentIndex, 6)
+                        else return language;
+                    }
                     Layout.preferredHeight: resultView.height
 //                    Layout.preferredWidth: resultView.width
 //                    Layout.minimumWidth: parent.width / 4
