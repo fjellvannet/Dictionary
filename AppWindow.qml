@@ -128,12 +128,9 @@ Item {
                         lvVocabulary.updateView()
                     }
 
-                    Keys.onReleased: {
-                        if(event.key === Qt.Key_Back)
-                        {
-                            event.accepted = true
-                            mainlayout.state = settings.vocabularyList ? "vocabularyList" : "dictionary"
-                        }
+                    Keys.onBackPressed: {
+                        event.accepted = true
+                        mainlayout.state = settings.vocabularyList ? "vocabularyList" : "dictionary"
                     }
                 }
 
@@ -282,7 +279,7 @@ Item {
                     Rectangle {
                         color: "black"
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 2 * globalBorder
+                        Layout.preferredHeight: globalBorder
                     }
 
                     AdaptedText {
@@ -309,7 +306,7 @@ Item {
                     Rectangle {
                         color: "black"
                         Layout.fillWidth: true
-                        Layout.preferredHeight: 2 * globalBorder
+                        Layout.preferredHeight: globalBorder
                     }
 
                     AdaptedText {
@@ -343,11 +340,9 @@ Item {
                     Item{Layout.fillWidth: true}
                 }
 
-                Keys.onReleased: {
-                    if(event.key === Qt.Key_Back) {
-                        event.accepted = true
-                        mainlayout.state = settings.vocabularylist ? "vocabularyList" : "dictionary"
-                    }
+                Keys.onBackPressed: {
+                    event.accepted = true
+                    mainlayout.state = settings.vocabularylist ? "vocabularyList" : "dictionary"
                 }
             }
 
@@ -559,16 +554,13 @@ Item {
                                     {
                                         dbcurrentquery = text
                                         searchField.textChanged(searchField.text, settings.findUmlauts)
+                                        lvDictionary.currentIndex = 0
                                     }
                                     //console.log("Die Suche & Anzeige von " + text + " dauerte " + (new Date().getTime() - starttime) + " ms")
                                     if(length > 0)
                                     {
                                         noSearchResults.visible = lvDictionary.count === 0
-                                        if(!noSearchResults.visible)
-                                        {
-                                            if(searchField.activeFocus) lvDictionary.forceActiveFocus()
-                                            lvDictionary.currentIndex = 0
-                                        }
+                                        if(!noSearchResults.visible) lvDictionary.forceActiveFocus()
                                     }
                                     resultColumn.updateText = !resultColumn.updateText//damit ResultWidget aktualisiert und ggf ausgeblendet wird
                                 }
@@ -599,10 +591,10 @@ Item {
                     }
 
                     Rectangle {
+                        id: seperatorLine
                         color: "black"
                         Layout.fillWidth: true
                         Layout.preferredHeight: globalBorder
-                        visible: seperatorLine.visible//lvDictionary.count > 0
                     }
 
                     ListView {
@@ -628,7 +620,6 @@ Item {
                                 anchors.margins: globalMargin / 2
                                 anchors.left: parent.left
                                 anchors.right: parent.right
-                                //anchors.verticalCenter: parent.verticalCenter
                                 spacing: globalMargin / 2
 
                                 AdaptedImage {
@@ -701,7 +692,10 @@ Item {
 
                             MouseArea {
                                 anchors.fill: parent
-                                onClicked: parent.ListView.view.currentIndex = index
+                                onClicked: {
+                                    lvDictionary.currentIndex = index
+                                    lvDictionary.forceActiveFocus()
+                                }
                             }
 
                             states: State {
@@ -736,7 +730,6 @@ Item {
                 }
 
                 Rectangle {
-                    id: seperatorLine
                     color: "black"
                     Layout.preferredHeight: globalBorder
                     Layout.fillWidth: true
@@ -840,6 +833,7 @@ Item {
                 PropertyChanges { target: dictionaryWidget; visible: true; focus: true }
                 PropertyChanges { target: resultWidget; resultListView: lvDictionary }
                 PropertyChanges { target: stateButton; source: "qrc:/images/icons/alphabetic" }
+                PropertyChanges { target: seperatorLine; visible: lvDictionary.contentHeight > lvDictionary.height }
                 StateChangeScript { script: { searchField.forceActiveFocus() } }
             }
         ]
