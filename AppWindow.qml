@@ -215,7 +215,7 @@ Window {
                             from: defaultFontHeight.font.pixelSize * Math.max(6/defaultFontHeight.font.pointSize, 0.5)//den minste verdien skal enten være 6 point eller halvparten av originalfonten (det som er størst av de)
                             to: {
                                 if(root.height == 0) return 1000
-                                else return Math.max(Math.min(root.height, root.width / 2) / 17, from)
+                                else return Math.max(Math.min(root.height, root.width) / 17, from)
                             }
                             stepSize: 1
                             Layout.fillWidth: true
@@ -347,7 +347,7 @@ Window {
             GridLayout {
                 id: gridLayout
                 anchors.fill: parent
-                flow:  height < 2 * resultView.height ? GridLayout.LeftToRight : GridLayout.TopToBottom
+                flow:  height < 1.8 * resultView.height ? GridLayout.LeftToRight : GridLayout.TopToBottom
                 rowSpacing: 0
                 columnSpacing: 0
 
@@ -361,6 +361,8 @@ Window {
                     activeFocusOnTab: true
                     flickDeceleration: maximumFlickVelocity / 2
                     clip: true
+                    boundsBehavior: ListView.StopAtBounds
+                    //snapMode: ListView.SnapToItem scrollen ist dann einfach nicht mehr smooth...
                     ScrollBar.vertical: AdaptedScrollBar {}
 
                     model: vocabularyModel
@@ -598,6 +600,8 @@ Window {
                         Layout.fillHeight: true
                         Layout.fillWidth: true
                         clip: true
+                        boundsBehavior: ListView.StopAtBounds
+                        //snapMode: ListView.SnapToItem funktioniert nicht gut, scrollen ist dann überhaupt nicht mehr smooth
                         maximumFlickVelocity: defaultFontHeight.height * 500
                         flickDeceleration: maximumFlickVelocity / 2
                         ScrollBar.vertical: AdaptedScrollBar {}
@@ -665,11 +669,12 @@ Window {
                                 }
 
                                 AdaptedText {
+                                    id: dictionaryWord
                                     Layout.fillWidth: true
                                     text: {
                                         var a = ResultLanguage
                                         if(a === 4) a = appLanguage
-                                        var s = ""
+                                        var s
                                         switch(a){
                                             case 0: s = Deutsch; break
                                             case 1: s = English; break
