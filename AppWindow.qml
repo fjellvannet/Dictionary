@@ -732,7 +732,7 @@ Window {
                     color: "black"
                     Layout.preferredHeight: globalBorder
                     Layout.fillWidth: true
-                    visible: gridLayout.flow === GridLayout.TopToBottom && seperatorLine.visible
+                    visible: gridLayout.flow === GridLayout.TopToBottom && resultWidget.resultListView.contentHeight > resultWidget.resultListView.height
                 }
 
                 Item {
