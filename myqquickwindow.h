@@ -1,19 +1,19 @@
-#ifndef MYQQUICKVIEW_H
-#define MYQQUICKVIEW_H
+#ifndef MYQQUICKWINDOW_H
+#define MYQQUICKWINDOW_H
 
-#include <QQuickView>
+#include <QQuickWindow>
 #include <QSettings>
 #include <QRect>
 #include <QDesktopWidget>
 #include <QApplication>
 
-
-class MyQQuickView : public QQuickView
+class MyQQuickWindow : public QQuickWindow
 {
     Q_OBJECT
+
 public:
     QSettings *m_settings;
-    MyQQuickView();
+    MyQQuickWindow();
     void loadGeometry();
     void setSettings(QSettings *settings);
 
@@ -21,4 +21,4 @@ public slots:
     void saveGeometry();
 };
 
-#endif // MYQQUICKVIEW_H
+#endif // MYQQUICKWINDOW_H

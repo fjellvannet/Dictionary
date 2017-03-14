@@ -1,9 +1,9 @@
 #include "vocabularylistmodel.h"
-#include <QDebug>
 
-VocabularyListModel::VocabularyListModel(QObject *parent)
+VocabularyListModel::VocabularyListModel(VocabularyModel *a_sourceModel, QObject *parent)
     : QSortFilterProxyModel(parent)
 {
+    setSourceModel(a_sourceModel);
 }
 
 void VocabularyListModel::sortBy(QVariant role)

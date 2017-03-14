@@ -1,14 +1,13 @@
 #ifndef VOCABULARYLISTMODEL_H
 #define VOCABULARYLISTMODEL_H
 #include <QSortFilterProxyModel>
-
-
+#include "vocabularymodel.h"
 
 class VocabularyListModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 public:
-    VocabularyListModel(QObject *parent = 0);
+    VocabularyListModel(VocabularyModel *a_sourceModel, QObject *parent = 0);
 public slots:
     void sortBy(QVariant role);
 protected:

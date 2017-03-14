@@ -1,13 +1,12 @@
-#include "myqquickview.h"
+#include "myqquickwindow.h"
 
-MyQQuickView::MyQQuickView()
+MyQQuickWindow::MyQQuickWindow()
 {
-    QObject::connect(this, SIGNAL(closing(QQuickCloseEvent*)), this, SLOT(saveGeometry()));
 }
 
-
-void MyQQuickView::loadGeometry()
+void MyQQuickWindow::loadGeometry()
 {
+    setWindowState(static_cast<Qt::WindowState>((quint8)m_settings->value("Window State").toUInt()));
     if(windowState() == Qt::WindowNoState)
     {
         QRect screen = QApplication::desktop()->screenGeometry(geometry().topLeft());
@@ -17,12 +16,12 @@ void MyQQuickView::loadGeometry()
     }
 }
 
-void MyQQuickView::saveGeometry() {
+void MyQQuickWindow::saveGeometry() {
     if(windowState() == Qt::WindowNoState) m_settings->setValue("geometry", geometry());
     m_settings->setValue("Window State", windowState());
 }
 
-void MyQQuickView::setSettings(QSettings *a_settings)
+void MyQQuickWindow::setSettings(QSettings *a_settings)
 {
     m_settings = a_settings;
 }

@@ -43,6 +43,10 @@
 #include <QAbstractTableModel>
 #include <QVector>
 #include <QString>
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+#include <QTextCodec>
 
 class WaddenseaWord
 {

@@ -39,11 +39,6 @@
 ****************************************************************************/
 #include "vocabularymodel.h"
 
-#include <QFile>
-#include <QTextStream>
-#include <QDebug>
-#include <QTextCodec>
-
 WaddenseaWord::WaddenseaWord()
 {
 }

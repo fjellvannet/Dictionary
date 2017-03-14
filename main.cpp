@@ -1,7 +1,8 @@
 #include "vocabularymodel.h"
 #include "vocabularylistmodel.h"
 #include "dictionarymodel.h"
-#include "myqquickview.h"
+#include "myqquickwindow.h"
+#include "closingobject.h"
 
 #include <QTranslator>
 #include <QQmlApplicationEngine>
@@ -11,6 +12,8 @@
 #include <QApplication>
 #include <QQuickStyle>
 #include <QSettings>
+#include <QDateTime>
+#include <QThread>
 
 int main(int argc, char *argv[])
 {
@@ -43,48 +46,44 @@ int main(int argc, char *argv[])
     app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));
     app.setOrganizationName("fjellvannet");
 
+    QQuickStyle::setStyle("Material");
+    QQmlEngine engine;
+    QObject::connect(&engine, SIGNAL(quit()), &app, SLOT(quit()));
+
+    QQmlComponent splash(&engine);
+    QQuickWindow::setDefaultAlphaBuffer(true);
+    splash.loadUrl(QUrl("qrc:/qml/Splash.qml"));
+    QQuickWindow *splashWindow = qobject_cast<QQuickWindow*>(splash.create());
+
     VocabularyModel model;
     model.fillModelFromCsv(":/database/Wadden_Sea_vocabulary.csv");
-    VocabularyListModel listModel;
-    listModel.setSourceModel(&model);
+    VocabularyListModel listModel(&model);
     DictionaryModel dictionaryModel(&model);
-    MyQQuickView view;
-    view.setTitle(app.applicationName());
-    view.setIcon(QIcon("D:/Dokumente/Qt/Workspace/IWSS_Waddensea_Dictionary/icon/app_icon.ico"));
-    QQmlContext *ctxt = view.rootContext();
-    QQuickStyle::setStyle("Material");
 
+    QQmlComponent appWindow(&engine);
+
+    QQmlContext *ctxt = engine.rootContext();
     ctxt->setContextProperty("vocabularyModel", &listModel);
     ctxt->setContextProperty("dictionaryModel", &dictionaryModel);
     ctxt->setContextProperty("appLanguage", appLanguage);
-    view.setSource(QUrl("qrc:/qml/AppWindow.qml"));
-    listModel.connect(view.rootObject()->findChild<QObject*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
-    dictionaryModel.connect(view.rootObject()->findChild<QObject*>("SearchField"), SIGNAL(textChanged(QVariant, QVariant)), SLOT(search(QVariant, QVariant)));
-    if(view.rootObject()->property("vocabularyList").toBool())//sicherstellen, dass updateView zu Anfang einmal ausgeführt wird, wenn vocabularyList der letzte State war
-    {
-        QMetaObject::invokeMethod(view.rootObject()->findChild<QObject*>("lvVocabulary"), "updateView");
-    }
+
+    appWindow.loadUrl(QUrl("qrc:/qml/AppWindow.qml"));
+    MyQQuickWindow *mainWindow = (MyQQuickWindow*)(qobject_cast<QQuickWindow*>(appWindow.create(ctxt)));
+    mainWindow->setIcon(QIcon("D:/Dokumente/Qt/Workspace/IWSS_Waddensea_Dictionary/icon/app_icon.ico"));
 
     QSettings settings;//kjempeviktig, for at settings skal funke må både applicationName og Organizationname til appen være definert!
-    view.setSettings(&settings);
-    view.loadGeometry();
-    view.setResizeMode(QQuickView::SizeRootObjectToView);
-    /*Det er mulig å lagre enum-verdier som uint8 (for å lagre de). De kan så konverteres tilbake ved hjelp av denne static_cast (den tar bare imot uint8)*/
-    switch(static_cast<Qt::WindowState>((quint8)settings.value("Window State").toUInt()))
-    {
-        case Qt::WindowNoState :
-            view.show();
-            break;
-        case Qt::WindowMaximized :
-            view.showMaximized();
-            break;
-        case Qt::WindowFullScreen :
-            view.showFullScreen();
-            break;
-        default:
-            view.show();
-            break;
-    }
+    mainWindow->setSettings(&settings);
+    mainWindow->loadGeometry();
+    ClosingObject obj;
+    obj.setWindow(mainWindow);
+    QObject::connect(mainWindow, SIGNAL(closing(QQuickCloseEvent*)),&obj, SLOT(closingToGeometry()));
 
+    listModel.connect(mainWindow->findChild<QObject*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
+    dictionaryModel.connect(mainWindow->findChild<QObject*>("SearchField"), SIGNAL(textChanged(QVariant, QVariant)), SLOT(search(QVariant, QVariant)));
+    if(mainWindow->property("vocabularyList").toBool())//sicherstellen, dass updateView zu Anfang einmal ausgeführt wird, wenn vocabularyList der letzte State war
+    {
+        QMetaObject::invokeMethod(mainWindow->findChild<QObject*>("lvVocabulary"), "updateView");
+    }
+    mainWindow->setProperty("visible", true);
     return app.exec();
 }

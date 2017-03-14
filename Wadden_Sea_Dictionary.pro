@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     vocabularymodel.cpp \
     vocabularylistmodel.cpp \
     dictionarymodel.cpp \
-    myqquickview.cpp
+    myqquickwindow.cpp \
+    closingobject.cpp
 
 lupdate_only{
     SOURCES += \
@@ -20,7 +21,8 @@ HEADERS += \
     vocabularymodel.h \
     vocabularylistmodel.h \
     dictionarymodel.h \
-    myqquickview.h
+    myqquickwindow.h \
+    closingobject.h
 
 RESOURCES += qml.qrc \
     images.qrc \
