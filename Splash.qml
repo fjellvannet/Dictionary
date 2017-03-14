@@ -42,58 +42,70 @@ import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Window 2.1
 import QtQuick.Controls.Material 2.1
+import QtGraphicalEffects 1.0
 
 Window {
     visible: true
 
     Material.theme: Material.Light
-    Material.accent: Material.Blue
+    Material.accent: Material.color(Material.Blue, Material.ShadeA700)
     y: (Screen.height - height) / 2
     x: (Screen.width - width) / 2
-    height: windowColumn.height
-    width: windowColumn.width
-    color: "white"
+    height: window.height
+    width: window.width
+    color: width == window.width ? "transparent" : window.color
     title: "Splash Window"
     flags: Qt.SplashScreen
-    modality: Qt.WindowModal
     property int basicUnit: splashImage.width / sizeConstant
     property int sizeConstant: 30
 
     Text {id: stdText}
+    Rectangle {
+        id: window
+        height: windowColumn.implicitHeight + 2*basicUnit
+        width: windowColumn.implicitWidth + 2*basicUnit
+        color: Material.color(Material.LightBlue, Material.Shade300)
+        border.width: {
+            if(false);//parent.height == height) return Math.max(basicUnit / 10, 1)
+            else return 0
+        }
+        radius: 3*basicUnit
+        Column{
+            id: windowColumn
+            anchors.fill: parent
+            anchors.margins: basicUnit
+            spacing: basicUnit
 
-    Column{
-        id: windowColumn
-        anchors.centerIn: parent
-        spacing: basicUnit
-        AdaptedImage {
-            id: splashImage
-            height: width
-            width: Math.min(Math.min(Screen.height, Screen.width)/2, sizeConstant*stdText.font.pixelSize)
-            source: "qrc:/images/icons/app_icon"
-            MouseArea {
-                anchors.fill: parent
-                onClicked: Qt.quit()
+            AdaptedImage {
+                id: splashImage
+                height: width
+                width: Math.min(Math.min(Screen.height, Screen.width)/2, sizeConstant*stdText.font.pixelSize)
+                source: "qrc:/images/icons/app_icon"
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked: Qt.quit()
+                }
             }
-        }
-        ProgressBar {
-            height: 2*basicUnit
-            background.height: height
-            contentItem.implicitHeight: height
-            width: parent.width
-            indeterminate: true
-        }
-        Text{
-            text: Qt.application.name
-            width: splashImage.width
-            font.bold: true
-            font.pixelSize: {
-                var patt = / /
-                if(patt.test(text)) return 4*basicUnit
-                else return 3*basicUnit
+            ProgressBar {
+                height: 2*basicUnit
+                background.height: height
+                contentItem.implicitHeight: height
+                width: parent.width
+                indeterminate: true
             }
-            maximumLineCount: 2
-            wrapMode: Text.WordWrap
-            horizontalAlignment: Text.AlignHCenter
+            Text{
+                text: Qt.application.name
+                width: splashImage.width
+                font.bold: true
+                font.pixelSize: {
+                    var patt = / /
+                    if(patt.test(text)) return 4*basicUnit
+                    else return 3*basicUnit
+                }
+                maximumLineCount: 2
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
+            }
         }
     }
 }

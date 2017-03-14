@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
     QQuickStyle::setStyle("Material");
     QQmlEngine engine;
     QObject::connect(&engine, SIGNAL(quit()), &app, SLOT(quit()));
-    //QQuickWindow::setDefaultAlphaBuffer(true);
+    QQuickWindow::setDefaultAlphaBuffer(true);
 
     QQmlComponent mainComp(&engine);
     mainComp.loadUrl(QUrl("qrc:/qml/Main.qml"));

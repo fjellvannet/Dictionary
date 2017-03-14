@@ -8,7 +8,7 @@ import Qt.labs.settings 1.0
 Window {
     id: root
     title: Qt.application.name
-    visible: false
+
     height: 10000//dette er nødvendig, fordi ellers gjenopprettes ikke innstillingen til sizeSlider
     width: 10000
 
@@ -573,8 +573,11 @@ Window {
                                 Layout.preferredWidth: height
                                 visible: searchField.length !== 0
                                 activeFocusOnTab: false
-                                contentItem: AdaptedImage {
-                                    width: parent.height * 2/3
+                                background: Item{}
+                                AdaptedImage {
+                                    anchors.centerIn: parent
+                                    id: ai
+                                    width: parent.height * 3/4
                                     height: width
                                     source: "qrc:/images/icons/cross_searchfield"
                                 }
@@ -584,8 +587,8 @@ Window {
                                     searchField.forceActiveFocus()
                                 }
                                 ColorOverlay {
-                                    anchors.fill: parent.contentItem
-                                    source: parent.contentItem
+                                    anchors.fill: ai
+                                    source: ai
                                     color: Material.accent
                                 }
                             }
