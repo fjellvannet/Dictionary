@@ -14,6 +14,7 @@
 #include <QSettings>
 #include <QDateTime>
 #include <QThread>
+#include <QQmlProperty>
 
 int main(int argc, char *argv[])
 {
@@ -49,27 +50,42 @@ int main(int argc, char *argv[])
     QQuickStyle::setStyle("Material");
     QQmlEngine engine;
     QObject::connect(&engine, SIGNAL(quit()), &app, SLOT(quit()));
+    //QQuickWindow::setDefaultAlphaBuffer(true);
 
-    QQmlComponent splash(&engine);
-    QQuickWindow::setDefaultAlphaBuffer(true);
-    splash.loadUrl(QUrl("qrc:/qml/Splash.qml"));
-    QQuickWindow *splashWindow = qobject_cast<QQuickWindow*>(splash.create());
+    QQmlComponent mainComp(&engine);
+    mainComp.loadUrl(QUrl("qrc:/qml/Main.qml"));
 
     VocabularyModel model;
-    model.fillModelFromCsv(":/database/Wadden_Sea_vocabulary.csv");
     VocabularyListModel listModel(&model);
     DictionaryModel dictionaryModel(&model);
-
-    QQmlComponent appWindow(&engine);
 
     QQmlContext *ctxt = engine.rootContext();
     ctxt->setContextProperty("vocabularyModel", &listModel);
     ctxt->setContextProperty("dictionaryModel", &dictionaryModel);
     ctxt->setContextProperty("appLanguage", appLanguage);
 
-    appWindow.loadUrl(QUrl("qrc:/qml/AppWindow.qml"));
-    MyQQuickWindow *mainWindow = (MyQQuickWindow*)(qobject_cast<QQuickWindow*>(appWindow.create(ctxt)));
-    mainWindow->setIcon(QIcon("D:/Dokumente/Qt/Workspace/IWSS_Waddensea_Dictionary/icon/app_icon.ico"));
+    QQuickItem *mainItem = qobject_cast<QQuickItem*>(mainComp.create(ctxt));
+    QQuickItem *mainLoader = mainItem->findChild<QQuickItem*>("mainLoader");
+    QEventLoop loadMainWindow;
+    loadMainWindow.connect(mainLoader, SIGNAL(loaded()), SLOT(quit()));
+    loadMainWindow.exec();
+
+    MyQQuickWindow *mainWindow = (MyQQuickWindow*)(qvariant_cast<QQuickWindow*>(mainLoader->property("item")));
+    //mainWindow->setX(0);
+    //mainWindow->loadGeometry();
+    //QObject *window = &(qvariant_cast<QObject>(mainLoader->property("item")));
+    //QObject viser = qvariant_cast<QObject>(mainItem->findChild<QObject*>("mainLoader")->property("item"));
+    //MyQQuickWindow *mainWindow = (MyQQuickWindow*)(qobject_cast<QQuickWindow*>(mainItem->findChild<QObject*>("mainLoader")->property("item")));
+
+
+
+    model.fillModelFromCsv(":/database/Wadden_Sea_vocabulary.csv");
+
+    //QQmlComponent appWindow(&engine);
+
+    //appWindow.loadUrl(QUrl("qrc:/qml/AppWindow.qml"));
+    //MyQQuickWindow *mainWindow = (MyQQuickWindow*)(qobject_cast<QQuickWindow*>(appWindow.create(ctxt)));
+    //mainWindow->setIcon(QIcon("D:/Dokumente/Qt/Workspace/IWSS_Waddensea_Dictionary/icon/app_icon.ico"));
 
     QSettings settings;//kjempeviktig, for at settings skal funke må både applicationName og Organizationname til appen være definert!
     mainWindow->setSettings(&settings);

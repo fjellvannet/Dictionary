@@ -38,26 +38,62 @@
 **
 ****************************************************************************/
 
-import QtQuick 2.0
+import QtQuick 2.7
+import QtQuick.Controls 2.1
 import QtQuick.Window 2.1
+import QtQuick.Controls.Material 2.1
 
 Window {
     visible: true
-    height: 500
-    width: 500
-    x: 500
-    y: 500
-    color: "transparent"
+
+    Material.theme: Material.Light
+    Material.accent: Material.Blue
+    y: (Screen.height - height) / 2
+    x: (Screen.width - width) / 2
+    height: windowColumn.height
+    width: windowColumn.width
+    color: "white"
     title: "Splash Window"
     flags: Qt.SplashScreen
-    AdaptedImage {
-        id: splashImage
-        height: 500
-        width: 500
-        source: "qrc:/images/icons/app_icon"
-        MouseArea {
-            anchors.fill: parent
-            onClicked: Qt.quit()
+    modality: Qt.WindowModal
+    property int basicUnit: splashImage.width / sizeConstant
+    property int sizeConstant: 30
+
+    Text {id: stdText}
+
+    Column{
+        id: windowColumn
+        anchors.centerIn: parent
+        spacing: basicUnit
+        AdaptedImage {
+            id: splashImage
+            height: width
+            width: Math.min(Math.min(Screen.height, Screen.width)/2, sizeConstant*stdText.font.pixelSize)
+            source: "qrc:/images/icons/app_icon"
+            MouseArea {
+                anchors.fill: parent
+                onClicked: Qt.quit()
+            }
+        }
+        ProgressBar {
+            height: 2*basicUnit
+            background.height: height
+            contentItem.implicitHeight: height
+            width: parent.width
+            indeterminate: true
+        }
+        Text{
+            text: Qt.application.name
+            width: splashImage.width
+            font.bold: true
+            font.pixelSize: {
+                var patt = / /
+                if(patt.test(text)) return 4*basicUnit
+                else return 3*basicUnit
+            }
+            maximumLineCount: 2
+            wrapMode: Text.WordWrap
+            horizontalAlignment: Text.AlignHCenter
         }
     }
 }
