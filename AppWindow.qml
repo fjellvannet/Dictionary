@@ -5,17 +5,11 @@ import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.2
 import Qt.labs.settings 1.0
-Window {
+Item {
     id: root
-    title: Qt.application.name
-
-    height: 10000//dette er nødvendig, fordi ellers gjenopprettes ikke innstillingen til sizeSlider
-    width: 10000
-
-    onClosing: Qt.quit();
 
     property color dark_accent: Material.color(Material.BlueGrey, Material.Shade700)
-    property double rootSize: settings.sized   
+    property double rootSize: settings.sized
 
     Material.theme: Material.Light
     Material.accent: Material.Blue

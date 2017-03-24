@@ -80,8 +80,8 @@ public:
         SecDanskRole
     };
 
-    VocabularyModel(QObject *parent = 0);
-    bool fillModelFromCsv(QString a_csvPath);
+    VocabularyModel(QFile *a_csv, QObject *parent = 0);
+    bool fillModelFromCsv(QFile *a_csv);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent) const;

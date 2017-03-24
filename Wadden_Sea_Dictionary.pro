@@ -9,20 +9,19 @@ SOURCES += main.cpp \
     vocabularymodel.cpp \
     vocabularylistmodel.cpp \
     dictionarymodel.cpp \
-    myqquickwindow.cpp \
-    closingobject.cpp
+    myqquickview.cpp
 
 lupdate_only{
     SOURCES += \
         AppWindow.qml
+    RESOURCES += splash.qrc
 }
 
 HEADERS += \
     vocabularymodel.h \
     vocabularylistmodel.h \
-    dictionarymodel.h \
-    myqquickwindow.h \
-    closingobject.h
+    myqquickview.h \
+    dictionarymodel.h
 
 RESOURCES += qml.qrc \
     images.qrc \

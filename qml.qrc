@@ -7,7 +7,7 @@
         <file>IconButton.qml</file>
         <file>AdaptedScrollBar.qml</file>
         <file>TextButton.qml</file>
-        <file>Splash.qml</file>
-        <file>Main.qml</file>
+    <!--<file>Splash.qml</file>
+        <file>Main.qml</file>-->
     </qresource>
 </RCC>
