@@ -7,7 +7,8 @@ import QtQuick.Window 2.2
 import Qt.labs.settings 1.0
 Item {
     id: root
-
+    height: Screen.height
+    width: Screen.width
     property color dark_accent: Material.color(Material.BlueGrey, Material.Shade700)
     property double rootSize: settings.sized
 

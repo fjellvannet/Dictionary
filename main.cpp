@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 //    view.setSource(QUrl("qrc:/qml/Main.qml"));//Um den SplashScreen wieder zu aktivieren, alle Kommentare in qml.qrc, dieser Datei und myqquickview.cpp entfernen, view.setSource mit AppWindow wieder auskommentieren.
 //    view.show();
 
-    VocabularyModel model(&QFile(":/database/Wadden_Sea_vocabulary.csv"));
+    VocabularyModel model(":/database/Wadden_Sea_vocabulary.csv");
     VocabularyListModel listModel(&model);
     DictionaryModel dictionaryModel(&model);
 

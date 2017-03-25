@@ -64,17 +64,18 @@ bool WaddenseaWord::fillFromCsvLine(QString csvLine)
     else return false;
 }
 
-VocabularyModel::VocabularyModel(QFile *a_csv, QObject *parent)
+VocabularyModel::VocabularyModel(QString a_csvPath, QObject *parent)
     : QAbstractTableModel(parent)
 {
-    fillModelFromCsv(a_csv);
+    fillModelFromCsv(a_csvPath);
 }
 
-bool VocabularyModel::fillModelFromCsv(QFile *a_csv)
+bool VocabularyModel::fillModelFromCsv(QString a_csvPath)
 {
-    a_csv->open(QIODevice::ReadOnly | QIODevice::Text);
-    qDebug() << "csv Wörterbuchdatei " << (a_csv->exists() ? "existiert" : "existiert nicht");
-    QTextStream csvStream(a_csv);
+    QFile csv(a_csvPath);
+    csv.open(QIODevice::ReadOnly | QIODevice::Text);
+    qDebug() << "csv Wörterbuchdatei " << (csv.exists() ? "existiert" : "existiert nicht");
+    QTextStream csvStream(&csv);
     csvStream.setCodec(QTextCodec::codecForName("UTF-8"));//wichtig, die Datei muss mit UTF-8 codiert sein
     QVector<WaddenseaWord> vocabulary;
     qDebug() << csvStream.readLine().replace("\t", " "); //in der ersten Zeile stehen die Sprachennamen - die sollen nicht ins Model
