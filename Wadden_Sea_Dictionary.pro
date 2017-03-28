@@ -62,7 +62,7 @@ windows {
 windows || osx {
     TARGET = "Wadden Sea Dictionary"
 }
-VERSION = 1.0.1 #endre versjonen også i Android.Manifest og appinfo.h til Windows
+VERSION = 1.0.2 #endre versjonen også i Android.Manifest og appinfo.h til Windows
 
 osx {
     DISTFILES += ios/icon/app_icon.icns
