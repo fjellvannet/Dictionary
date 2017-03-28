@@ -18,6 +18,9 @@
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+    app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));
+    app.setOrganizationName("fjellvannet");
+    app.setOrganizationDomain("https://github.com/fjellvannet/Wadden-Sea-Dictionary");
 
     //QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
     //QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
@@ -42,10 +45,6 @@ int main(int argc, char *argv[])
             ;//nur um Compiler-Warnungen zu unterdrücken, kann durch das vorangegangene if nicht auftreten
         }
     }
-
-    app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));
-    app.setOrganizationName("fjellvannet");
-    app.setOrganizationDomain("https://github.com/fjellvannet/Wadden-Sea-Dictionary");
 
     QQuickStyle::setStyle("Material");
     QQuickWindow::setDefaultAlphaBuffer(true);

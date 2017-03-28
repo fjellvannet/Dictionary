@@ -16,6 +16,6 @@
 #define VER_COMPANYNAME_STR         "fjellvannet"
 #define VER_LEGALTRADEMARKS1_STR    "All Rights Reserved"
 #define VER_LEGALTRADEMARKS2_STR    VER_LEGALTRADEMARKS1_STR
-#define VER_COMPANYDOMAIN_STR       "Wadden_Sea_Dictionary.com"
+#define VER_COMPANYDOMAIN_STR       "https://github.com/fjellvannet/Wadden-Sea-Dictionary"
 
 #endif // APPINFO_H
