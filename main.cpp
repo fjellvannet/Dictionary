@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 
     app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));
     app.setOrganizationName("fjellvannet");
+    app.setOrganizationDomain("https://github.com/fjellvannet/Wadden-Sea-Dictionary");
 
     QQuickStyle::setStyle("Material");
     QQuickWindow::setDefaultAlphaBuffer(true);
