@@ -5,16 +5,19 @@ Item {
     readonly property int antallSpraak: 3
     readonly property color dark_accent: Material.color(Material.BlueGrey, Material.Shade700)
     readonly property int materialAccent: Material.Blue
-    property string impressum: qsTr("<h3>Impressum</h3><p>During my Voluntary ecological year (FÖJ, Germany) 2015/16 \
+    property string impressum: qsTr("<h3>Impressum</h3><p>%1 %2</p> \
+                            <p>During my Voluntary ecological year (FÖJ, Germany) 2015/16 \
                             at the Wadden Sea Centre in Vester Vedsted, Denmark, I have programmed this dictionary. \
-                            For that, I used %1. The sourcecode is available on %2.</p>\
-                            <p>For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%3). Here \
+                            For that, I used %3. The sourcecode is available on %4.</p>\
+                            <p>For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%5). Here \
                             you can also suggest missing words that you would like to have added to the dictionary.</p>\
-                            <p>The data for this app is taken from the \"IWSS Wadden Sea Dictionary\" (%4) - with the \
-                            permission from the \"International Wadden Sea School\" (%5).</p>\
-                            <p>Icon for settings made by %6, icon for downarrow mady by %7. Both come from %8, licensed by %9.</p>\
+                            <p>The data for this app is taken from the \"IWSS Wadden Sea Dictionary\" (%6) - with the \
+                            permission from the \"International Wadden Sea School\" (%7).</p>\
+                            <p>Icon for settings made by %8, icon for downarrow mady by %9. Both come from %10, licensed by %11.</p>\
                             <p>Background image taken by Lukas Neuenschwander on the southern beach of Rømø, on March 12<sup>th</sup> 2016.</p>")
 
+                            .arg(Qt.application.name)
+                            .arg(version)
                             .arg("Qt 5.8-Open-Source")
                             .arg("<a href=\"https://github.com/fjellvannet/Wadden-Sea-Dictionary\">www.github.com/fjellvannet/Wadden-Sea-Dictionary</a>")
                             .arg("<a href=\"mailto:fjellvannet@gmail.com\">fjellvannet@gmail.com</a>")
