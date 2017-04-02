@@ -1,6 +1,10 @@
-#include "vocabularymodel.h"
-#include "vocabularylistmodel.h"
-#include "dictionarymodel.h"
+#if WADDEN_SEA_DICTIONARY
+#include "wadden_sea_dictionary/vocabularymodel.h"
+#include "wadden_sea_dictionary/vocabularylistmodel.h"
+#include "wadden_sea_dictionary/dictionarymodel.h"
+#endif
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
 #include "myqquickview.h"
 
 #include <QTranslator>
@@ -11,24 +15,27 @@
 #include <QApplication>
 #include <QQuickStyle>
 #include <QSettings>
-#include <QDateTime>
-#include <QThread>
 #include <QQmlProperty>
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+#if WADDEN_SEA_DICTIONARY
     app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));
-    app.setOrganizationName("fjellvannet");
+#endif
     app.setOrganizationDomain("https://github.com/fjellvannet/Wadden-Sea-Dictionary");
+    app.setOrganizationName("fjellvannet");
+    qDebug().noquote() << app.applicationName() << TOSTRING(VERSION_STR);
 
-    //QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
-    //QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
-    //QLocale::setDefault(QLocale(QLocale::Dutch, QLocale::Netherlands));
-    //QLocale::setDefault(QLocale(QLocale::Danish, QLocale::Denmark));
+//    QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
+//    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
+//    QLocale::setDefault(QLocale(QLocale::Dutch, QLocale::Netherlands));
+//    QLocale::setDefault(QLocale(QLocale::Danish, QLocale::Denmark));
+//    QLocale::setDefault(QLocale(QLocale::NorwegianBokmal, QLocale::Norway));
+//    QLocale::setDefault(QLocale(QLocale::NorwegianNynorsk, QLocale::Norway));
     QTranslator translator;
     int appLanguage = 1;//default - English UK
-    if (translator.load(QLocale(), "translations/Wadden_Sea_Dictionary", "_", ":/translations", ".qm"))
+    if (translator.load(QLocale(), "Dictionary", "_", ":/translations", ".qm"))
     {
         app.installTranslator(&translator);
         switch(QLocale().language())
@@ -36,11 +43,21 @@ int main(int argc, char *argv[])
         case QLocale::German:
             appLanguage = 0;
             break;
+#if WADDEN_SEA_DICTIONARY
         case QLocale::Dutch:
             appLanguage = 2;
             break;
         case QLocale::Danish:
             appLanguage = 3;
+            break;
+#else
+        case QLocale::NorwegianBokmal:
+            appLanguage = 2;
+            break;
+        case QLocale::NorwegianNynorsk:
+            appLanguage = 3;
+            break;
+#endif
         default:
             ;//nur um Compiler-Warnungen zu unterdrücken, kann durch das vorangegangene if nicht auftreten
         }
@@ -53,7 +70,7 @@ int main(int argc, char *argv[])
 //    view.setSource(QUrl("qrc:/qml/Main.qml"));//Um den SplashScreen wieder zu aktivieren, alle Kommentare in qml.qrc, dieser Datei und myqquickview.cpp entfernen, view.setSource mit AppWindow wieder auskommentieren.
 //    view.show();
 
-    VocabularyModel model(":/database/Wadden_Sea_vocabulary.csv");
+    VocabularyModel model;
     VocabularyListModel listModel(&model);
     DictionaryModel dictionaryModel(&model);
 

@@ -9,11 +9,13 @@ Item {
     id: root
     height: Screen.height
     width: Screen.width
-    property color dark_accent: Material.color(Material.BlueGrey, Material.Shade700)
+
+    Constants{id: constants}
+    property alias dark_accent: constants.dark_accent
     property double rootSize: settings.sized
 
     Material.theme: Material.Light
-    Material.accent: Material.Blue
+    Material.accent: constants.materialAccent
 
     AdaptedText {
         id: fontHeight
@@ -41,11 +43,8 @@ Item {
     property bool vocabularyList: false
     property int language: appLanguage
 
-    property string wadden_sea_wordlist: qsTr("Wadden Sea wordlist")
-    property string wadden_sea_dictionary: qsTr("Wadden Sea dictionary")
-
     function nextLanguage() {
-        if(language < 3) language++;
+        if(language < constants.antallSpraak) language++;
         else language = 0;
     }
 
@@ -93,30 +92,17 @@ Item {
                     objectName: "LanguageButton"
                     Layout.fillHeight: true
                     Layout.preferredWidth: height / 3 * 5
-                    background: AdaptedImage {
-                        anchors.fill: parent
-                        source: switch(language) {
-                                case 0:
-                                    return "qrc:/images/flags/german_flag"
-                                case 1:
-                                    return "qrc:/images/flags/union_jack"
-                                case 2:
-                                    return "qrc:/images/flags/netherlands_flag"
-                                case 3:
-                                    return "qrc:/images/flags/danish_flag"
-                                case undefined:
-                                    return ""
-                                }
-                    }
+
+                    signal sortBy(var role)
+
+                    background: FlagImage {anchors.fill: parent}
                     ColorOverlay {
                         anchors.fill: parent
                         source: parent.background
                         color: "black"
                         opacity: 0.15
-                        visible: languageButton.visualFocus
+                        visible: parent.visualFocus
                     }
-
-                    signal sortBy(var role)
 
                     onClicked: {
                         lvVocabulary.visible = false
@@ -309,28 +295,7 @@ Item {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
                         textFormat: Text.RichText
-                        text:
-                            qsTr("<h3>Impressum</h3><p>During my Voluntary ecological year (FÖJ, Germany) 2015/16 \
-                            at the Wadden Sea Centre in Vester Vedsted, Denmark, I have programmed this dictionary. \
-                            For that, I used %1. The sourcecode is available on %2.</p>\
-                            <p>For suggestions and error-reports, send me (Lukas Neuenschwander) an e-mail (%3). Here \
-                            you can also suggest missing words that you would like to have added to the dictionary.</p>\
-                            <p>The data for this app is taken from the \"IWSS Wadden Sea Dictionary\" (%4) - with the \
-                            permission from the \"International Wadden Sea School\" (%5).</p>\
-                            <p>Icon for settings made by %6, icon for downarrow mady by %7. Both come from %8, licensed by %9.</p>\
-                            <p>Background image taken by Lukas Neuenschwander on the southern beach of Rømø, on March 12<sup>th</sup> 2016.</p>")
-
-                            .arg("Qt 5.8-Open-Source")
-                            .arg("<a href=\"https://github.com/fjellvannet/Wadden-Sea-Dictionary\">www.github.com/fjellvannet/Wadden-Sea-Dictionary</a>")
-                            .arg("<a href=\"mailto:fjellvannet@gmail.com\">fjellvannet@gmail.com</a>")
-                            .arg("<a href=\"http://www.iwss.org/fileadmin/uploads/network-download/Education_\
-                            _Support/IWSS_Dictionary_2009.pdf\">http://www.iwss.org/fileadmin/uploads/network\
-                            -download/Education__Support/IWSS_Dictionary_2009.pdf</a>")
-                            .arg("<a href=\"http://www.iwss.org/\">www.iwss.org</a>")
-                            .arg("<a href=\"http://www.freepik.com\" title=\"Freepik\">Freepik</a>")
-                            .arg("<a href=\"http://www.flaticon.com/authors/dave-gandy\" title=\"Dave Gandy\">Dave Gandy</a>")
-                            .arg("<a href=\"http://www.flaticon.com\" title=\"Flaticon\">www.flaticon.com</a>")
-                            .arg("<a href=\"http://creativecommons.org/licenses/by/3.0/\" title=\"Creative Commons BY 3.0\" target=\"_blank\">CC 3.0 BY</a>")
+                        text: constants.impressum
                         onLinkActivated: Qt.openUrlExternally(link)
                     }
                     Item{Layout.fillWidth: true}
@@ -371,24 +336,13 @@ Item {
                         positionViewAtEnd()
                         positionViewAtBeginning()
                         currentIndex = 0
-                        resultColumn.updateText = !resultColumn.updateText//damit ResultWidget aktualisiert und ggf ausgeblendet wird
+                        resultView.updateText = !resultView.updateText//damit ResultWidget aktualisiert und ggf ausgeblendet wird
                         visible = true
 
                     }
 
                     section.labelPositioning: ViewSection.CurrentLabelAtStart | ViewSection.InlineLabels
-                    section.property: switch (language) {
-                        case 0:
-                            return "SecDeutsch"
-                        case 1:
-                            return "SecEnglish"
-                        case 2:
-                            return "SecNederlands"
-                        case 3:
-                            return "SecDansk"
-                        default:
-                            return ""
-                    }
+                    section.property: constants.sectionLetter
 
                     section.delegate: Rectangle {
                         id: sectionDelegate
@@ -558,7 +512,7 @@ Item {
                                         noSearchResults.visible = lvDictionary.count === 0
                                         if(!noSearchResults.visible) lvDictionary.forceActiveFocus()
                                     }
-                                    resultColumn.updateText = !resultColumn.updateText//damit ResultWidget aktualisiert und ggf ausgeblendet wird
+                                    resultView.updateText = !resultView.updateText//damit ResultWidget aktualisiert und ggf ausgeblendet wird
                                 }
 
                                 onEditingFinished: performSearch()
@@ -614,82 +568,13 @@ Item {
                         delegate: Rectangle {
                             id: dictionaryDelegate
                             width: lvDictionary.width
-                            height: Math.max(4*globalMargin, dictionaryWord.contentHeight + globalMargin)
+                            height: Math.max(4*globalMargin, rl.textHeight + globalMargin)
                             color: "transparent"
-                            RowLayout {
+
+                            DictionaryRow {
                                 id: rl
-                                y: globalMargin / 2
-                                anchors.margins: globalMargin / 2
                                 anchors.left: parent.left
                                 anchors.right: parent.right
-                                spacing: globalMargin / 2
-
-                                AdaptedImage {
-                                    visible: settings.flags_in_all_language_mode
-                                    Layout.preferredHeight: 3 * globalMargin
-                                    Layout.preferredWidth: 5 * globalMargin
-                                    Layout.alignment: Qt.AlignVCenter
-                                    source: {
-                                        var a = ResultLanguage
-                                        if(a === 4) a = appLanguage
-                                        switch(a) {
-                                            case 0:
-                                                return "qrc:/images/flags/german_flag"
-                                            case 1:
-                                                return "qrc:/images/flags/union_jack"
-                                            case 2:
-                                                return "qrc:/images/flags/netherlands_flag"
-                                            case 3:
-                                                return "qrc:/images/flags/danish_flag"
-                                            default:
-                                                return ""
-                                        }
-                                    }
-                                }
-
-                                AdaptedText {
-                                    visible: !settings.flags_in_all_language_mode
-                                    Layout.preferredWidth: 4 * globalMargin
-                                    Layout.alignment: Qt.AlignVCenter
-                                    font.pixelSize: 3 * globalMargin
-                                    color: dark_accent
-                                    text:{
-                                        var a = ResultLanguage
-                                        if(a === 4) a = appLanguage
-                                        switch(a){
-                                            case 0:
-                                                return "DE"
-                                            case 1:
-                                                return "EN"
-                                            case 2:
-                                                return "NL"
-                                            case 3:
-                                                return "DK"
-                                            default:
-                                                return ""
-                                        }
-                                    }
-                                }
-
-                                AdaptedText {
-                                    id: dictionaryWord
-                                    Layout.fillWidth: true
-                                    text: {
-                                        var a = ResultLanguage
-                                        if(a === 4) a = appLanguage
-                                        var s
-                                        switch(a){
-                                            case 0: s = Deutsch; break
-                                            case 1: s = English; break
-                                            case 2: s = Nederlands; break
-                                            case 3: s = Dansk; break
-                                            default: s = ""
-                                        }
-                                        return s + (Scientific === "" ? "" : " (<i>" + Scientific + "</i>)")
-                                    }
-                                    Layout.alignment: Qt.AlignVCenter
-                                    wrapMode: Text.Wrap
-                                }
                             }
 
                             MouseArea {
@@ -763,36 +648,9 @@ Item {
                         boundsBehavior: Flickable.StopAtBounds
                         ScrollBar.horizontal: AdaptedScrollBar {}
                         ScrollBar.vertical: AdaptedScrollBar {}
-                        Item {
+                        ResultView {
                             id: resultView
-                            height: resultColumn.implicitHeight + 2 * resultColumn.anchors.margins
-                            width: resultColumn.implicitWidth + 2 * resultColumn.anchors.margins
-                            Column {
-                                id: resultColumn
-                                anchors.fill: parent
-                                anchors.margins: 1.5 * globalMargin
-                                spacing: globalMargin
-                                property int row: resultWidget.resultListView.currentIndex
-                                property bool updateText
-                                ResultRow {
-                                    rowLanguage: resultWidget.fromLanguage
-                                    resize: highDpi ? 1.25 : 1.75
-                                    scientific: true
-                                    visible: true
-                                }
-                                ResultRow {
-                                    rowLanguage: 0
-                                }
-                                ResultRow {
-                                    rowLanguage: 1
-                                }
-                                ResultRow {
-                                    rowLanguage: 2
-                                }
-                                ResultRow {
-                                    rowLanguage: 3
-                                }
-                            }
+                            updateText: true
                         }
                     }
 
@@ -822,7 +680,7 @@ Item {
 
             State {
                 name: "vocabularyList"
-                PropertyChanges { target: activityTitle; text: wadden_sea_wordlist }
+                PropertyChanges { target: activityTitle; text: constants.wordlist}
                 PropertyChanges { target: languageButton; visible: true }
                 PropertyChanges { target: lvVocabulary; focus: true; visible: true/*; model: vocabularyModel */}
                 PropertyChanges { target: stateButton; source: "qrc:/images/icons/magnifying_glass" }
@@ -831,7 +689,7 @@ Item {
 
             State {
                 name: "dictionary"
-                PropertyChanges { target: activityTitle; text: wadden_sea_dictionary }
+                PropertyChanges { target: activityTitle; text: constants.dictionary }
                 PropertyChanges { target: dictionaryWidget; visible: true; focus: true }
                 PropertyChanges { target: resultWidget; resultListView: lvDictionary }
                 PropertyChanges { target: stateButton; source: "qrc:/images/icons/alphabetic" }

@@ -1,10 +1,1 @@
-<RCC>
-    <qresource prefix="/database">
-        <file>Wadden_Sea_vocabulary.csv</file>
-    </qresource>
-    <qresource prefix="/translations">
-        <file>translations/Wadden_Sea_Dictionary_de.qm</file>
-        <file>translations/Wadden_Sea_Dictionary_nl.qm</file>
-        <file>translations/Wadden_Sea_Dictionary_da.qm</file>
-    </qresource>
-</RCC>
+

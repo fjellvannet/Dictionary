@@ -12,3 +12,6 @@ unix:!android {
 
 export(INSTALLS)
 
+DISTFILES += \
+    $$PWD/wadden_sea_dictionary.pri
+

@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file alias="Constants.qml">wadden_sea_dictionary/Constants.qml</file>
+        <file alias="FlagImage.qml">wadden_sea_dictionary/FlagImage.qml</file>
+        <file alias="DictionaryRow.qml">wadden_sea_dictionary/DictionaryRow.qml</file>
+        <file alias="ResultView.qml">wadden_sea_dictionary/ResultView.qml</file>
+        <file alias="ResultRow.qml">wadden_sea_dictionary/ResultRow.qml</file>
+    </qresource>
+    <qresource prefix="/database">
+        <file alias="Wadden_Sea_vocabulary.csv">wadden_sea_dictionary/Wadden_Sea_vocabulary.csv</file>
+    </qresource>
+</RCC>

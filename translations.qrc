@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/translations">
+        <file alias="Dictionary_de.qm">translations/Dictionary_de.qm</file>
+        <file alias="Dictionary_nl.qm">translations/Dictionary_nl.qm</file>
+        <file alias="Dictionary_da.qm">translations/Dictionary_da.qm</file>
+    </qresource>
+</RCC>

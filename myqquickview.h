@@ -14,9 +14,8 @@ class MyQQuickView : public QQuickView
 private:
     Qt::WindowFlags defaultFlags;
 public:
-    QSettings *m_settings;
+    QSettings m_settings;
     MyQQuickView();
-    void setSettings(QSettings *settings);
 
 public slots:
     void loadGeometry();

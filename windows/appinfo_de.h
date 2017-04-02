@@ -1,10 +1,12 @@
 #ifndef APPINFO_DE_H
 #define APPINFO_DE_H
-
-#define VER_PRODUCTNAME_STR         "Wattenmeer Wörterbuch"
+#if WADDEN_SEA_DICTIONARY
+	#define VER_PRODUCTNAME_STR         "Wattenmeer Wörterbuch"
+#else
+	#define VER_PRODUCTNAME_STR			"Norwegisch-Deutsch Wörterbuch"
+#endif
 #define VER_FILEDESCRIPTION_STR		VER_PRODUCTNAME_STR
 #define VER_INTERNALNAME_STR        VER_PRODUCTNAME_STR
-#define VER_LEGALCOPYRIGHT_STR      "Copyright \xA9 2017 fjellvannet"
 #define VER_ORIGINALFILENAME_STR    VER_PRODUCTNAME_STR ".exe"
 #define VER_LANGUAGE_CODE           0x0407
 
