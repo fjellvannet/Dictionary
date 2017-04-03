@@ -626,11 +626,6 @@ Item {
                 Item {
                     id: resultWidget
                     property ListView resultListView: lvVocabulary
-                    property int fromLanguage: {
-                        if(lvDictionary.visible && lvDictionary.count > 0 && dictionaryModel.index(resultListView.currentIndex, 6) < 4)
-                            return dictionaryModel.data(resultListView.currentIndex, 6)
-                        else return language;
-                    }
                     Layout.preferredHeight: resultView.height
 //                    Layout.preferredWidth: resultView.width
 //                    Layout.minimumWidth: parent.width / 4
