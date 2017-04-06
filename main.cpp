@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     ctxt->setContextProperty("vocabularyModel", &listModel);
     ctxt->setContextProperty("dictionaryModel", &dictionaryModel);
     ctxt->setContextProperty("appLanguage", appLanguage);
-    ctxt->setContextProperty("app_version", TOSTRING(VERSION_STR));
+    ctxt->setContextProperty("app_version", TOSTRING(APP_VERSION_STR));
     ctxt->setContextProperty("qt_version", QT_VERSION_STR);
 
     view.setSource(QUrl("qrc:/qml/AppWindow.qml"));

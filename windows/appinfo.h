@@ -9,10 +9,10 @@
 #ifndef APPINFO_H
 #define APPINFO_H
 
-#define VER_FILEVERSION             VERSION_NR
+#define VER_FILEVERSION             APP_VERSION_NR
 #define STRINGIFY(x) #x //Diese Makrodefinition ist notwendig, da man sonst den #-Operator, der x in einen String mit \0 am Ende verwandelt nicht verwenden darf
 #define TOSTRING(x) STRINGIFY(x)
-#define VER_FILEVERSION_STR         TOSTRING(VERSION_STR)
+#define VER_FILEVERSION_STR         TOSTRING(APP_VERSION_STR)
 
 #define VER_PRODUCTVERSION          VER_FILEVERSION
 #define VER_PRODUCTVERSION_STR      VER_FILEVERSION_STR

@@ -1,7 +1,21 @@
 TEMPLATE = app
+include(deployment.pri) # Default rules for deployment.
 
 QT += core qml quick widgets svg quickcontrols2
 CONFIG += qml_debug c++11
+
+#Endring av denne variablen eller versjonsnummeret krever alltid, at appen rekompileres komplett.
+WADDEN_SEA_DICTIONARY=1 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert Deutsch-Norwegisch-Wörterbuch
+
+VER_MAJ = 1 #endre også versjonen i Android.manifest!
+VER_MIN = 0
+VER_PAT = 2
+VERSION = $$VER_MAJ"."$$VER_MIN"."$$VER_PAT
+
+DEFINES += WADDEN_SEA_DICTIONARY=$$WADDEN_SEA_DICTIONARY \
+    APP_VERSION_STR=$$VERSION \
+    APP_VERSION_NR=$$VER_MAJ,$$VER_MIN,$$VER_PAT
+
 QT_QUICK_CONTROLS_STYLE=material
 QT_AUTO_SCREEN_SCALE_FACTOR=1
 
@@ -33,19 +47,6 @@ DISTFILES += \
     translations/Dictionary_da.ts \
     translations/Dictionary_de.ts \
     translations/Dictionary_nl.ts \ 
-
-# Default rules for deployment.
-include(deployment.pri)
-
-VER_MAJ = 1 #endre også versjonen i Android.manifest!
-VER_MIN = 0
-VER_PAT = 2
-VERSION = $$VER_MAJ"."$$VER_MIN"."$$VER_PAT
-
-WADDEN_SEA_DICTIONARY=1#1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert Deutsch-Norwegisch-Wörterbuch
-DEFINES += WADDEN_SEA_DICTIONARY=$$WADDEN_SEA_DICTIONARY \
-    VERSION_STR=$$VERSION \
-    VERSION_NR=$$VER_MAJ,$$VER_MIN,$$VER_PAT
 
 windows {
     DISTFILES += \
