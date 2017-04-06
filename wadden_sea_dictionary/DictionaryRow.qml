@@ -7,11 +7,12 @@ RowLayout{
     y: globalMargin / 2
     anchors.margins: y
     spacing: y
+    property int baseHeight: 3*globalMargin
     property alias textHeight: dictionaryWord.contentHeight
 
     FlagImage {
         visible: settings.flags_in_all_language_mode
-        Layout.preferredHeight: 3 * globalMargin
+        Layout.preferredHeight: baseHeight
         Layout.preferredWidth: 5 * globalMargin
         Layout.alignment: Qt.AlignVCenter
         languageId: {
@@ -23,9 +24,11 @@ RowLayout{
 
     AdaptedText {
         visible: !settings.flags_in_all_language_mode
-        Layout.preferredWidth: 4 * globalMargin
+        Layout.preferredWidth: 4/3 * baseHeight
         Layout.alignment: Qt.AlignVCenter
-        font.pixelSize: 3 * globalMargin
+        font.pixelSize: baseHeight
+        Layout.preferredHeight: baseHeight
+        verticalAlignment: Text.AlignVCenter
         color: dark_accent
         text: {
             var a = ResultLanguage

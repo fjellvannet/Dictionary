@@ -10,7 +10,7 @@ Row {
     property bool updateText: parent.updateText
 
     spacing: globalMargin
-    visible: resultWidget.fromLanguage !== rowLanguage
+    visible: fromLanguage !== rowLanguage
 
     AdaptedImage {
         id: flag

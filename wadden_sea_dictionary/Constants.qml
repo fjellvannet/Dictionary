@@ -17,8 +17,8 @@ Item {
                             <p>Background image taken by Lukas Neuenschwander on the southern beach of Rømø, on March 12<sup>th</sup> 2016.</p>")
 
                             .arg(Qt.application.name)
-                            .arg(version)
-                            .arg("Qt 5.8-Open-Source")
+                            .arg(app_version)
+                            .arg("Qt " + qt_version + "-Open-Source")
                             .arg("<a href=\"https://github.com/fjellvannet/Wadden-Sea-Dictionary\">www.github.com/fjellvannet/Wadden-Sea-Dictionary</a>")
                             .arg("<a href=\"mailto:fjellvannet@gmail.com\">fjellvannet@gmail.com</a>")
                             .arg("<a href=\"http://www.iwss.org/fileadmin/uploads/network-download/Education_\
