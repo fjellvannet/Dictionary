@@ -19,7 +19,7 @@ Item {
                             .arg(Qt.application.name)
                             .arg(app_version)
                             .arg("Qt " + qt_version + "-Open-Source")
-                            .arg("<a href=\"https://github.com/fjellvannet/Wadden-Sea-Dictionary\">www.github.com/fjellvannet/Wadden-Sea-Dictionary</a>")
+                            .arg("<a href=\"" + Qt.application.domain + "\">" + Qt.application.domain + "</a>")
                             .arg("<a href=\"mailto:fjellvannet@gmail.com\">fjellvannet@gmail.com</a>")
                             .arg("<a href=\"http://www.iwss.org/fileadmin/uploads/network-download/Education_\
                             _Support/IWSS_Dictionary_2009.pdf\">http://www.iwss.org/fileadmin/uploads/network\

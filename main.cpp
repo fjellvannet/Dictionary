@@ -3,7 +3,7 @@
 #include "wadden_sea_dictionary/vocabularylistmodel.h"
 #include "wadden_sea_dictionary/dictionarymodel.h"
 #endif
-#define STRINGIFY(x) #x
+#define STRINGIFY(x) #x //Disse trengs for å kunne skrive ut App-versjonen i Kolofonen
 #define TOSTRING(x) STRINGIFY(x)
 #include "myqquickview.h"
 
@@ -21,11 +21,12 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 #if WADDEN_SEA_DICTIONARY
-    app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));
+    app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));//if you change it, remember to change appinfo.h (windows) accordingly
 #endif
-    app.setOrganizationDomain("https://github.com/fjellvannet/Wadden-Sea-Dictionary");
-    app.setOrganizationName("fjellvannet");
-    qDebug().noquote() << app.applicationName() << TOSTRING(VERSION_STR);
+    app.setOrganizationDomain("https://github.com/fjellvannet/Dictionary");//if you change it, remember to change appinfo.h (windows) accordingly
+    app.setOrganizationName(TOSTRING(APP_DEVELOPER));
+
+    qDebug().noquote() << app.applicationName() << TOSTRING(APP_VERSION_STR);
 
 //    QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
 //    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));

@@ -17,10 +17,10 @@
 #define VER_PRODUCTVERSION          VER_FILEVERSION
 #define VER_PRODUCTVERSION_STR      VER_FILEVERSION_STR
 
-#define VER_COMPANYNAME_STR         "fjellvannet"
+#define VER_COMPANYNAME_STR         TOSTRING(APP_DEVELOPER)
 #define VER_LEGALTRADEMARKS1_STR    "All Rights Reserved"
 #define VER_LEGALTRADEMARKS2_STR    VER_LEGALTRADEMARKS1_STR
-#define VER_LEGALCOPYRIGHT_STR      "Copyright \xA9 2017 fjellvannet"
-#define VER_COMPANYDOMAIN_STR       "https://github.com/fjellvannet/Wadden-Sea-Dictionary"
+#define VER_LEGALCOPYRIGHT_STR      TOSTRING(Copyright \xA9 2017 APP_DEVELOPER)
+#define VER_COMPANYDOMAIN_STR       "https://github.com/fjellvannet/Dictionary"
 
 #endif // APPINFO_H

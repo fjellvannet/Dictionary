@@ -1,7 +1,7 @@
 #ifndef APPINFO_DE_H
 #define APPINFO_DE_H
 #if WADDEN_SEA_DICTIONARY
-    #define VER_PRODUCTNAME_STR         "Wadden Sea Ditionary"
+    #define VER_PRODUCTNAME_STR         "Wadden Sea Dictionary"
 #else
     #define VER_PRODUCTNAME_STR         "German-Norwegian Dictionary"
 #endif
