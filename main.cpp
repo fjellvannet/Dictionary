@@ -1,7 +1,12 @@
 #if WADDEN_SEA_DICTIONARY
-#include "wadden_sea_dictionary/vocabularymodel.h"
-#include "wadden_sea_dictionary/vocabularylistmodel.h"
-#include "wadden_sea_dictionary/dictionarymodel.h"
+    #include "wadden_sea_dictionary/vocabularymodel.h"
+    #include "wadden_sea_dictionary/vocabularylistmodel.h"
+    #include "wadden_sea_dictionary/dictionarymodel.h"
+#else
+    #include "bonytysk/wordlistmodel.h"
+#if EDIT_DATABASE
+    #include "bonytysk/databasecreator.h"
+#endif
 #endif
 #define STRINGIFY(x) #x //Disse trengs for å kunne skrive ut App-versjonen i Kolofonen
 #define TOSTRING(x) STRINGIFY(x)
@@ -16,19 +21,101 @@
 #include <QQuickStyle>
 #include <QSettings>
 #include <QQmlProperty>
+#if !WADDEN_SEA_DICTIONARY
+    #include <QSqlDatabase>
+    #include <QDir>
+    #include <QStandardPaths>
+    #include <QSqlError>
+    #include <QFile>
+    #include <QTextStream>
+    #include <QDebug>
+    #include <QTextCodec>
+    #include <QSqlQuery>
+    #include <QElapsedTimer>
+    #include <QTime>
+    #include <QThread>
+
+#endif
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 #if WADDEN_SEA_DICTIONARY
     app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));//if you change it, remember to change appinfo.h (windows) accordingly
+#else
+    app.setApplicationName("BoNyTysk");
 #endif
     app.setOrganizationDomain("https://github.com/fjellvannet/Dictionary");//if you change it, remember to change appinfo.h (windows) accordingly
     app.setOrganizationName(TOSTRING(APP_DEVELOPER));
+    app.setApplicationVersion(TOSTRING(APP_VERSION_STR));
 
     qDebug().noquote() << app.applicationName() << TOSTRING(APP_VERSION_STR);
+#if !WADDEN_SEA_DICTIONARY
+#if EDIT_DATABASE
+    DatabaseCreator::updateHeinzelliste(true);
+    DatabaseCreator::updateVersion();
+    return 0;
+#endif
+    QFileInfo bonytyskVocabularyFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/bonytysk-database.sqlite");
+    bool copyDatabase = true;
+    if(bonytyskVocabularyFile.exists()) {
+        {//scope to isolate database, so that the connection can be deleted when the database is out of scope
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");//not dbConnection
+            db.setConnectOptions("QSQLITE_OPEN_READONLY");
+            db.setDatabaseName(bonytyskVocabularyFile.absoluteFilePath()); //if the database file doesn't exist yet, it will create it
+            if (!db.open()) qCritical().noquote() << db.lastError().text();
+            {//scope for query, so the connection can be deleted when the Query is out of scope
+                QSqlQuery query(db);
+                query.exec("SELECT * FROM version");
+                query.first();
+                if(query.isValid()){
+                    QVector<int> app_version = {APP_VERSION_NR};
+                    QVector<int> db_version(3);
+                    for(int i = 0; i < 3; i++) db_version[i] = query.value(i).toInt();
+                    copyDatabase = app_version != db_version;
+                    if(copyDatabase) {
+                        QString dbVersionString = QString::number(db_version[0]);
+                        for(int i = 1; i < db_version.count(); ++i) dbVersionString.append(QString(".%1").arg(db_version[i]));
+                        if(db_version < app_version) qDebug().noquote() << "Database-version" << dbVersionString << "smaller than app-version, update database-version.";
+                        else qDebug().noquote() << "Replace database, current database version" << dbVersionString;
+                    } else qDebug().noquote() << "No need to replace the database file - the app- and database versions are equal.";
+                }
+            }
+        }
+        QSqlDatabase::removeDatabase("qt_sql_default_connection");
+    }
+    if(copyDatabase){
+        if(QDir().mkpath(bonytyskVocabularyFile.absolutePath())){
+            QFile f(bonytyskVocabularyFile.absoluteFilePath());
+            f.setPermissions(QFile::ReadOther|QFile::WriteOther);
+            if(!f.remove()) qWarning() << "Could not delete old database.";
+            if(QFile(":/database/bonytysk-database.sqlite").copy(bonytyskVocabularyFile.absoluteFilePath()))
+                qDebug().noquote() << "Successfully replaced old database-file.";
+            else qWarning().noquote() << "Could not copy current version of database - check file permissions.";
+        } else {
+            qCritical().noquote() << "The AppData-Directory for updating the database could not be created, operation aborted.";
+        }
+    }
 
-//    QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");//not dbConnection
+    db.setDatabaseName(bonytyskVocabularyFile.absoluteFilePath());
+    if (!db.open()) qCritical().noquote() << db.lastError().text();
+    else qDebug().noquote() << "Successfully connected to database.";
+    QElapsedTimer t;
+    t.start();
+    QSqlQuery query;
+    query.exec("SELECT DISTINCT DE,DE_type FROM heinzelliste ORDER BY DE");// ORDER BY REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(DE,'Ä','a'),'Ö','o'),'Ü','u'),'ä','a'),'ö','o'),'ü','u')");
+    query.last();
+    //qDebug().noquote() << query.value(0) << query.value(1);
+    WordListModel test;
+    test.sortByLanguage(WordListModel::Deutsch);
+    qDebug() << test.rowCount();//<< query.value(0) << query.value(1) << "Dette tok" << QTime(0,0,0,0).addMSecs(t.elapsed()).toString("ss:zzz");
+//    for(int i = 0; i < 1000; ++i){
+//        query.previous();
+//        qDebug() << query.value(0) << query.value(1);
+//    }
+#else
+    QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
 //    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
 //    QLocale::setDefault(QLocale(QLocale::Dutch, QLocale::Netherlands));
 //    QLocale::setDefault(QLocale(QLocale::Danish, QLocale::Denmark));
@@ -63,13 +150,13 @@ int main(int argc, char *argv[])
             ;//nur um Compiler-Warnungen zu unterdrücken, kann durch das vorangegangene if nicht auftreten
         }
     }
-
     QQuickStyle::setStyle("Material");
     QQuickWindow::setDefaultAlphaBuffer(true);
     MyQQuickView view;
-
-//    view.setSource(QUrl("qrc:/qml/Main.qml"));//Um den SplashScreen wieder zu aktivieren, alle Kommentare in qml.qrc, dieser Datei und myqquickview.cpp entfernen, view.setSource mit AppWindow wieder auskommentieren.
-//    view.show();
+#if SPLASH
+    view.setSource(QUrl("qrc:/qml/Main.qml"));//Um den SplashScreen wieder zu aktivieren, alle Kommentare in qml.qrc, dieser Datei und myqquickview.cpp entfernen, view.setSource mit AppWindow wieder auskommentieren.
+    view.show();
+#endif
 
     VocabularyModel model;
     VocabularyListModel listModel(&model);
@@ -82,16 +169,17 @@ int main(int argc, char *argv[])
     ctxt->setContextProperty("app_version", TOSTRING(APP_VERSION_STR));
     ctxt->setContextProperty("qt_version", QT_VERSION_STR);
 
+#if !SPLASH
     view.setSource(QUrl("qrc:/qml/AppWindow.qml"));
     QQuickItem *mainWindow = view.rootObject();
-
-//    QQuickItem *mainLoader = view.rootObject()->findChild<QQuickItem*>("mainLoader");
-//    mainLoader->setProperty("active", true);
-//    QEventLoop loadMainWindow;
-//    loadMainWindow.connect(mainLoader, SIGNAL(loaded()), SLOT(quit()));
-//    loadMainWindow.exec();
-//    QQuickItem *mainWindow = qvariant_cast<QQuickItem*>(mainLoader->property("item"));
-
+#else
+    QQuickItem *mainLoader = view.rootObject()->findChild<QQuickItem*>("mainLoader");
+    mainLoader->setProperty("active", true);
+    QEventLoop loadMainWindow;
+    loadMainWindow.connect(mainLoader, SIGNAL(loaded()), SLOT(quit()));
+    loadMainWindow.exec();
+    QQuickItem *mainWindow = qvariant_cast<QQuickItem*>(mainLoader->property("item"));
+#endif
     listModel.connect(mainWindow->findChild<QQuickItem*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
     dictionaryModel.connect(mainWindow->findChild<QQuickItem*>("SearchField"), SIGNAL(textChanged(QVariant, QVariant)), SLOT(search(QVariant, QVariant)));
     if(mainWindow->property("vocabularyList").toBool())//sicherstellen, dass updateView zu Anfang einmal ausgeführt wird, wenn vocabularyList der letzte State war
@@ -101,4 +189,6 @@ int main(int argc, char *argv[])
 
     view.loadGeometry();
     return app.exec();
+#endif
 }
+

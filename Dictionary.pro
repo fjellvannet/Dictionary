@@ -1,21 +1,29 @@
 TEMPLATE = app
 include(deployment.pri) # Default rules for deployment.
 
-QT += core qml quick widgets svg quickcontrols2
-CONFIG += qml_debug c++11
+QT += core qml quick svg sql quickcontrols2
+CONFIG += qml_debug c++11 console
+#DEFINES *= QT_USE_QSTRINGBUILDER #denne må du eventuelt ta ut dersom det blir problemer. Erstatter alle + operatorene, som henger sammen strenger,
+    # med %-operatorer, forskjellen då er at det brukes stringbuildere, som forhindrer unødvendige kopieringer i minnen
 
 #Endring av denne variablen eller versjonsnummeret krever alltid, at appen rekompileres komplett.
-WADDEN_SEA_DICTIONARY=1 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert Deutsch-Norwegisch-Wörterbuch
+WADDEN_SEA_DICTIONARY=1 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert BoNyTysk
+SPLASH=0
+EDIT_DATABASE=0
+equals(SPLASH, 1): RESOURCES += splash.qrc
 
 VER_MAJ = 1 #endre også versjonen i Android.manifest!
 VER_MIN = 0
-VER_PAT = 2
+VER_PAT = 3
 VERSION = $$VER_MAJ"."$$VER_MIN"."$$VER_PAT
 
-DEFINES += WADDEN_SEA_DICTIONARY=$$WADDEN_SEA_DICTIONARY \
+DEFINES += \
+    WADDEN_SEA_DICTIONARY=$$WADDEN_SEA_DICTIONARY \
     APP_VERSION_STR=$$VERSION \
     APP_VERSION_NR=$$VER_MAJ,$$VER_MIN,$$VER_PAT \
-    APP_DEVELOPER=fjellvannet
+    APP_DEVELOPER=fjellvannet \
+    EDIT_DATABASE=$$EDIT_DATABASE \
+    SPLASH=$$SPLASH
 
 QT_QUICK_CONTROLS_STYLE=material
 QT_AUTO_SCREEN_SCALE_FACTOR=1
@@ -33,9 +41,10 @@ lupdate_only{
     RESOURCES += splash.qrc
 }
 
-RESOURCES += qml.qrc \
+RESOURCES += \
     images.qrc \
-    translations.qrc
+    common.qrc \
+    bonytysk.qrc
 
 TRANSLATIONS += \
     translations/Dictionary_da.ts \
@@ -47,7 +56,7 @@ DISTFILES += \
     README.md \
     translations/Dictionary_da.ts \
     translations/Dictionary_de.ts \
-    translations/Dictionary_nl.ts \ 
+    translations/Dictionary_nl.ts \
 
 windows {
     DISTFILES += \
@@ -154,8 +163,16 @@ equals(WADDEN_SEA_DICTIONARY, 1) { #Wadden Sea Dictionary
         ANDROID_PACKAGE_SOURCE_DIR = $$PWD/wadden_sea_dictionary/android
     }
 }
-else {#Deutsch-bokmål-nynorsk ordbok
+else {#BoNyTysk
+    equals(EDIT_DATABASE, 0) : RESOURCES +=
 
+    HEADERS += bonytysk/databasecreator.h \
+        bonytysk/localsortkeygenerator.h \
+        bonytysk/wordlistmodel.h
+
+    SOURCES += bonytysk/databasecreator.cpp \
+        bonytysk/localsortkeygenerator.cpp \
+        bonytysk/wordlistmodel.cpp
+
+    DISTFILES += bonytysk/heinzelliste.csv
 }
-
-

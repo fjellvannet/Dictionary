@@ -13,7 +13,7 @@ public slots:
 protected:
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
 private:
-    QStringList m_preSort;
+    QVector<QString> m_preSort;
 };
 
 #endif // VOCABULARYLISTMODEL_H

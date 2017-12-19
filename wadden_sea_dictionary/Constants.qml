@@ -16,7 +16,7 @@ Item {
                             <p>Icon for settings made by %8, icon for downarrow mady by %9. Both come from %10, licensed by %11.</p>\
                             <p>Background image taken by Lukas Neuenschwander on the southern beach of Rømø, on March 12<sup>th</sup> 2016.</p>")
 
-                            .arg(Qt.application.name)
+                            .arg(qsTr(Qt.application.name))
                             .arg(app_version)
                             .arg("Qt " + qt_version + "-Open-Source")
                             .arg("<a href=\"" + Qt.application.domain + "\">" + Qt.application.domain + "</a>")

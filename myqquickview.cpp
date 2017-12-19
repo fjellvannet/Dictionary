@@ -3,9 +3,11 @@
 MyQQuickView::MyQQuickView()
 {
     connect(this, SIGNAL(closing(QQuickCloseEvent*)), this, SLOT(saveGeometry()));
-    //setColor(QColor("transparent"));
-    //defaultFlags = flags();
-    //setFlags(Qt::SplashScreen);
+#if SPLASH
+    setColor(QColor("transparent"));
+    defaultFlags = flags();
+    setFlags(Qt::SplashScreen);
+#endif
 }
 
 void MyQQuickView::loadGeometry()
@@ -15,8 +17,10 @@ void MyQQuickView::loadGeometry()
     QRect defaultSize = screen.height() <= screen.width() ? QRect(screen.width()/2-screen.height()/3, screen.height()/4, screen.height()*2/3, screen.height()/2) :
         QRect(screen.height()/2-screen.width()/6, screen.width()/4, screen.width()/2, screen.width()*1/3) ;
     setGeometry(m_settings.value("geometry", defaultSize).toRect());
-    //setColor(QColor("white"));
-    //setFlags(defaultFlags);
+#if SPLASH
+    setColor(QColor("white"));
+    setFlags(defaultFlags);
+#endif
     switch(static_cast<Qt::WindowState>((quint8)m_settings.value("Window State").toUInt()))
     {
         case Qt::WindowNoState :
