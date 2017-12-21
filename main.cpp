@@ -101,19 +101,10 @@ int main(int argc, char *argv[])
     db.setDatabaseName(bonytyskVocabularyFile.absoluteFilePath());
     if (!db.open()) qCritical().noquote() << db.lastError().text();
     else qDebug().noquote() << "Successfully connected to database.";
-    QElapsedTimer t;
-    t.start();
-    QSqlQuery query;
-    query.exec("SELECT DISTINCT DE,DE_type FROM heinzelliste ORDER BY DE");// ORDER BY REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(DE,'Ä','a'),'Ö','o'),'Ü','u'),'ä','a'),'ö','o'),'ü','u')");
-    query.last();
-    //qDebug().noquote() << query.value(0) << query.value(1);
+
     WordListModel test;
-    test.sortByLanguage(WordListModel::Deutsch);
-    qDebug() << test.rowCount();//<< query.value(0) << query.value(1) << "Dette tok" << QTime(0,0,0,0).addMSecs(t.elapsed()).toString("ss:zzz");
-//    for(int i = 0; i < 1000; ++i){
-//        query.previous();
-//        qDebug() << query.value(0) << query.value(1);
-//    }
+    test.setSortLanguage(WordListModel::Bokmaal);
+
 #else
     QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
 //    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));

@@ -7,7 +7,7 @@ CONFIG += qml_debug c++11 console
     # med %-operatorer, forskjellen då er at det brukes stringbuildere, som forhindrer unødvendige kopieringer i minnen
 
 #Endring av denne variablen eller versjonsnummeret krever alltid, at appen rekompileres komplett.
-WADDEN_SEA_DICTIONARY=1 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert BoNyTysk
+WADDEN_SEA_DICTIONARY=0 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert BoNyTysk
 SPLASH=0
 EDIT_DATABASE=0
 equals(SPLASH, 1): RESOURCES += splash.qrc

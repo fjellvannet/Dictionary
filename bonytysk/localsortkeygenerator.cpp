@@ -41,6 +41,7 @@ QString LocalSortKeyGenerator::sortKey(const QString& input)
     localSortKey.reserve(sortKeyLength + 1);
     for(int i = 0; i < sortKeyLength; ++i) {
         const QChar& c = input.at(i).toLower();
+        if(!c.isLetter()) continue;
         bool appended = false;
         for(replace_pair pair : m_replace_pairs) {
             if(c == pair.value){

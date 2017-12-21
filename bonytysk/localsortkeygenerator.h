@@ -29,7 +29,7 @@ private:
         }
     };
     QVector<replace_pair> m_replace_pairs;
-    int m_maxLength = INT_MAX; //bitweises not 0 - so this is the maximum value
+    int m_maxLength = INT_MAX;
 };
 
 #endif // LOCALSORTKEYGENERATOR_H

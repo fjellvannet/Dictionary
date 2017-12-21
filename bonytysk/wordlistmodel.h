@@ -7,29 +7,28 @@
 class WordListModel : public QSortFilterProxyModel
 {
 public:
-    enum Language{
+    enum SortLanguage{
         Deutsch,
         Bokmaal,
-        Nynorsk
+        Nynorsk,
+        unsorted
     };
 
     WordListModel();
-    void sortByLanguage(Language a_language);
     bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const;
 
     //getters and setters
-    Language language() const;
-    void setLanguage(const Language &a_language);
+    SortLanguage sortLanguage() const;
+    void setSortLanguage(const SortLanguage &a_sortLanguage);
 
     QSqlQueryModel *sourceSqlModel() const;
     void setSourceSqlModel(QSqlQueryModel *a_sourceSqlModel);
 
     QVector<QString> sortKeys() const;
-    void setSortKeys(const QVector<QString> &a_sortKeys);
 
 private:
     //member variables
-    Language m_language;
+    SortLanguage m_sortLanguage;
     QSqlQueryModel *m_sourceSqlModel;
     QVector<QString> m_sortKeys;
 };
