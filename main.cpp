@@ -104,7 +104,6 @@ int main(int argc, char *argv[])
     WordListModel test;
     test.setSortLanguage(WordListModel::Bokmaal);
 
-    //test Änderung für commit
 #else
     QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
 //    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
