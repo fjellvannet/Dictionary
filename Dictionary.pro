@@ -7,8 +7,8 @@ CONFIG += qml_debug c++11 console
     # med %-operatorer, forskjellen då er at det brukes stringbuildere, som forhindrer unødvendige kopieringer i minnen
 
 #Endring av denne variablen eller versjonsnummeret krever alltid, at appen rekompileres komplett.
-WADDEN_SEA_DICTIONARY=0 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert BoNyTysk
-SPLASH=0
+WADDEN_SEA_DICTIONARY=1 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert BoNyTysk
+SPLASH=1
 EDIT_DATABASE=0
 equals(SPLASH, 1): RESOURCES += splash.qrc
 
@@ -57,6 +57,13 @@ DISTFILES += \
     translations/Dictionary_da.ts \
     translations/Dictionary_de.ts \
     translations/Dictionary_nl.ts \
+    wadden_sea_dictionary/android/AndroidManifest.xml \
+    wadden_sea_dictionary/android/gradle/wrapper/gradle-wrapper.jar \
+    wadden_sea_dictionary/android/gradlew \
+    wadden_sea_dictionary/android/res/values/libs.xml \
+    wadden_sea_dictionary/android/build.gradle \
+    wadden_sea_dictionary/android/gradle/wrapper/gradle-wrapper.properties \
+    wadden_sea_dictionary/android/gradlew.bat
 
 windows {
     DISTFILES += \
