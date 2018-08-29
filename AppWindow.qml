@@ -40,7 +40,7 @@ Item {
     property int globalFontPixelSize: fontHeight.font.pixelSize
     property int globalBorder: globalMargin / 10 > 1 ? globalMargin / 10 : 1
     property bool highDpi: Math.max(Screen.height, Screen.width) / globalMargin < 100
-    property bool vocabularyList: false
+    property bool vocabularyList: true
     property int language: appLanguage
 
     function nextLanguage() {

@@ -17,7 +17,7 @@ else : MOBILE=0
 
 VER_MAJ = 1 #endre også versjonen i Android.manifest!
 VER_MIN = 0
-VER_PAT = 3
+VER_PAT = 4
 VERSION = $$VER_MAJ"."$$VER_MIN"."$$VER_PAT
 
 DEFINES += \
