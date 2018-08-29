@@ -21,6 +21,7 @@
 #include <QQuickStyle>
 #include <QSettings>
 #include <QQmlProperty>
+#include <QTimer>
 #if !WADDEN_SEA_DICTIONARY
     #include <QSqlDatabase>
     #include <QDir>
@@ -28,11 +29,10 @@
     #include <QSqlError>
     #include <QFile>
     #include <QTextStream>
-    #include <QDebug>
     #include <QTextCodec>
     #include <QSqlQuery>
-    #include <QElapsedTimer>
     #include <QTime>
+    #include <QElapsedTimer>
     #include <QThread>
 #endif
 
@@ -104,8 +104,10 @@ int main(int argc, char *argv[])
     WordListModel test;
     test.setSortLanguage(WordListModel::Bokmaal);
 
+
+    return 0;
 #else
-    QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
+//    QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
 //    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
 //    QLocale::setDefault(QLocale(QLocale::Dutch, QLocale::Netherlands));
 //    QLocale::setDefault(QLocale(QLocale::Danish, QLocale::Denmark));
@@ -143,16 +145,27 @@ int main(int argc, char *argv[])
     QQuickStyle::setStyle("Material");
     QQuickWindow::setDefaultAlphaBuffer(true);
     MyQQuickView view;
+    QQmlContext *ctxt = view.engine()->rootContext();
+    bool mobile = MOBILE == 1;
+    ctxt->setContextProperty("mobile", mobile);
 #if SPLASH
     view.setSource(QUrl("qrc:/qml/Main.qml"));//Um den SplashScreen wieder zu aktivieren, alle Kommentare in qml.qrc, dieser Datei und myqquickview.cpp entfernen, view.setSource mit AppWindow wieder auskommentieren.
     view.show();
+/*
+//    this code is for testing the launch screen by showing it over 5 seconds
+    QTimer timer;
+    QEventLoop sleeper;
+    timer.setSingleShot(true);
+    sleeper.connect(&timer, SIGNAL(timeout()), SLOT(quit()));
+    timer.start(5000);
+    sleeper.exec();
+*/
 #endif
 
     VocabularyModel model;
     VocabularyListModel listModel(&model);
     DictionaryModel dictionaryModel(&model);
 
-    QQmlContext *ctxt = view.engine()->rootContext();
     ctxt->setContextProperty("vocabularyModel", &listModel);
     ctxt->setContextProperty("dictionaryModel", &dictionaryModel);
     ctxt->setContextProperty("appLanguage", appLanguage);
@@ -170,14 +183,15 @@ int main(int argc, char *argv[])
     loadMainWindow.exec();
     QQuickItem *mainWindow = qvariant_cast<QQuickItem*>(mainLoader->property("item"));
 #endif
+#if !MOBILE
+    view.loadGeometry();
+#endif
     listModel.connect(mainWindow->findChild<QQuickItem*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
     dictionaryModel.connect(mainWindow->findChild<QQuickItem*>("SearchField"), SIGNAL(textChanged(QVariant, QVariant)), SLOT(search(QVariant, QVariant)));
     if(mainWindow->property("vocabularyList").toBool())//sicherstellen, dass updateView zu Anfang einmal ausgeführt wird, wenn vocabularyList der letzte State war
     {
         QMetaObject::invokeMethod(mainWindow->findChild<QQuickItem*>("lvVocabulary"), "updateView");
     }
-
-    view.loadGeometry();
     return app.exec();
 #endif
 }

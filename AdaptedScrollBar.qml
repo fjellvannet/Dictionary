@@ -9,4 +9,5 @@ ScrollBar {
     visible: size < 1
     implicitWidth: barwidth//dette ser kanskje rart ut (høyden og bredden skal jo ikke være like.) Men denne koden gjør det den skal.
     implicitHeight: barwidth
+    minimumSize: 0.05
 }

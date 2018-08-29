@@ -14,7 +14,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../AppWindow.qml" line="675"/>
+        <location filename="../AppWindow.qml" line="670"/>
         <source>Settings</source>
         <translation>Instellingen</translation>
     </message>
@@ -69,7 +69,7 @@
 <context>
     <name>QCoreApplication</name>
     <message>
-        <location filename="../main.cpp" line="24"/>
+        <location filename="../main.cpp" line="43"/>
         <source>Wadden Sea Dictionary</source>
         <translation>Waddenzee Woordenboek</translation>
     </message>

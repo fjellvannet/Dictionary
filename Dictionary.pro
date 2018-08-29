@@ -9,8 +9,11 @@ CONFIG += qml_debug c++11 console
 #Endring av denne variablen eller versjonsnummeret krever alltid, at appen rekompileres komplett.
 WADDEN_SEA_DICTIONARY=1 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert BoNyTysk
 SPLASH=1
-EDIT_DATABASE=0
 equals(SPLASH, 1): RESOURCES += splash.qrc
+EDIT_DATABASE=0
+
+android || ios: MOBILE=1
+else : MOBILE=0
 
 VER_MAJ = 1 #endre også versjonen i Android.manifest!
 VER_MIN = 0
@@ -23,7 +26,8 @@ DEFINES += \
     APP_VERSION_NR=$$VER_MAJ,$$VER_MIN,$$VER_PAT \
     APP_DEVELOPER=fjellvannet \
     EDIT_DATABASE=$$EDIT_DATABASE \
-    SPLASH=$$SPLASH
+    SPLASH=$$SPLASH \
+    MOBILE=$$MOBILE
 
 QT_QUICK_CONTROLS_STYLE=material
 QT_AUTO_SCREEN_SCALE_FACTOR=1

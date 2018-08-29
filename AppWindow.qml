@@ -7,8 +7,8 @@ import QtQuick.Window 2.11
 import Qt.labs.settings 1.0
 Item {
     id: root
-    height: Screen.height
-    width: Screen.width
+    height: Window.height
+    width: Window.width
 
     Constants{id: constants}
     property alias dark_accent: constants.dark_accent

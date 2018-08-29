@@ -3,16 +3,16 @@ import QtQuick.Window 2.4
 import QtQuick.Layouts 1.11
 
 StackLayout {
-    height: childrenRect.height//splashLoader.active ? splashLoader.height : Screen.height
-    width: childrenRect.width//splashLoader.active ? splashLoader.width : Screen.width
+    height: childrenRect.height
+    width: childrenRect.width
     Loader {
         id: splashLoader
-        source: "qrc:/qml/Splash.qml"
+        sourceComponent: Splash{}
     }
     Loader{
         id: mainLoader
         objectName: "mainLoader"
-        source: "qrc:/qml/AppWindow.qml"
+        sourceComponent: AppWindow{}
         active: false
         asynchronous: true
         onLoaded: {splashLoader.active = false; parent.currentIndex = 1}

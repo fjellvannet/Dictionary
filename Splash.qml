@@ -6,9 +6,9 @@ import QtQuick.Controls.Material 2.4
 Rectangle {
     Material.theme: Material.Light
     Material.accent: Material.color(Material.Blue, Material.ShadeA700)
-    height: window.height//childrenRect.height + 500
-    width: window.width
-    color: width == window.width ? "transparent" : window.color
+    height: mobile ? Window.height : window.height//childrenRect.height + 500
+    width: mobile ? Window.width : window.width
+    color: mobile ? "white" : "transparent"
     property int basicUnit: splashImage.width / sizeConstant
     property int sizeConstant: 30
 
