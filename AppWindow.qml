@@ -95,10 +95,14 @@ Item {
 
                     signal sortBy(var role)
 
-                    background: FlagImage {anchors.fill: parent}
+                    background: Item{}
+                    FlagImage {
+                        id: fi
+                        anchors.fill: parent
+                    }
                     ColorOverlay {
                         anchors.fill: parent
-                        source: parent.background
+                        source: fi
                         color: "black"
                         opacity: 0.15
                         visible: parent.visualFocus
@@ -457,19 +461,20 @@ Item {
                             anchors.fill: parent
                             anchors.margins: parent.height / 5
                             spacing: parent.height / 10
-
                             Button {
-                                id: magnifying_glass
                                 Layout.fillHeight: true
                                 Layout.preferredWidth: height
                                 activeFocusOnTab: false
-                                background: AdaptedImage {
+                                background: Item{}
+                                AdaptedImage {
+                                    anchors.fill: parent
+                                    id: magnifying_glass_image
                                     source: "qrc:/images/icons/magnifying_glass"
                                 }
                                 onClicked: searchField.performSearch()
                                 ColorOverlay {
-                                    anchors.fill: parent.background
-                                    source: parent.background
+                                    anchors.fill: magnifying_glass_image
+                                    source: magnifying_glass_image
                                     color: Material.accent
                                 }
                             }

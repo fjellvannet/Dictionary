@@ -61,13 +61,6 @@ DISTFILES += \
     translations/Dictionary_da.ts \
     translations/Dictionary_de.ts \
     translations/Dictionary_nl.ts \
-    wadden_sea_dictionary/android/AndroidManifest.xml \
-    wadden_sea_dictionary/android/gradle/wrapper/gradle-wrapper.jar \
-    wadden_sea_dictionary/android/gradlew \
-    wadden_sea_dictionary/android/res/values/libs.xml \
-    wadden_sea_dictionary/android/build.gradle \
-    wadden_sea_dictionary/android/gradle/wrapper/gradle-wrapper.properties \
-    wadden_sea_dictionary/android/gradlew.bat
 
 windows {
     DISTFILES += \
@@ -153,13 +146,12 @@ equals(WADDEN_SEA_DICTIONARY, 1) { #Wadden Sea Dictionary
     android {
         DISTFILES += \
             wadden_sea_dictionary/android/AndroidManifest.xml \
-            wadden_sea_dictionary/android/gradle/wrapper/gradle-wrapper.jar \
-            wadden_sea_dictionary/android/gradlew \
-            wadden_sea_dictionary/android/res/values/libs.xml \
-            wadden_sea_dictionary/android/res/values/strings.xml \
             wadden_sea_dictionary/android/build.gradle \
+            wadden_sea_dictionary/android/gradle/wrapper/gradle-wrapper.jar \
             wadden_sea_dictionary/android/gradle/wrapper/gradle-wrapper.properties \
+            wadden_sea_dictionary/android/gradlew \
             wadden_sea_dictionary/android/gradlew.bat \
+            wadden_sea_dictionary/android/res/values/libs.xml \
             wadden_sea_dictionary/android/res/drawable-hdpi/app_icon.png \
             wadden_sea_dictionary/android/res/drawable-ldpi/app_icon.png \
             wadden_sea_dictionary/android/res/drawable-mdpi/app_icon.png \

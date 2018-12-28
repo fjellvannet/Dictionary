@@ -6,7 +6,9 @@ import QtGraphicalEffects 1.0
 Button {
     property string source
 
-    background: AdaptedImage {
+    background: Item{}
+    AdaptedImage {
+        id: icon
         anchors.centerIn: parent
         height: parent.parent.height / 1.35
         width: height
@@ -14,12 +16,12 @@ Button {
     }
     ColorOverlay {
         id: olColor
-        anchors.fill: parent.background
-        source: parent.background
+        anchors.fill: icon
+        source: icon
         color: Material.accent
     }
     ColorOverlay {
-        anchors.fill: parent.background
+        anchors.fill: icon
         source: olColor
         color: "black"
         opacity: 0.15

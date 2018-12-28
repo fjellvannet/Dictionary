@@ -3,4 +3,7 @@ Image {
     property bool ios: false
     sourceSize.height: height
     sourceSize.width: width
+    smooth: true
+    antialiasing: true
+    mipmap: true
 }

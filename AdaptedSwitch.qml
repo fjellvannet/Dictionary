@@ -3,7 +3,8 @@ import QtQuick.Controls 2.4
 import QtQuick.Controls.Material 2.4
 Switch {
     implicitHeight: Math.max(focus_indicator.height-1.5 * globalMargin, contentItem.implicitHeight)
-    background: Rectangle {
+    background: Item{}
+    Rectangle {
         id: background
         height: 2.5 * globalMargin
         x: (focus_indicator.height - height)/2
@@ -98,7 +99,6 @@ Switch {
             }
         }
     }
-
 
     contentItem: AdaptedText {
         text: parent.text
