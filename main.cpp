@@ -4,7 +4,7 @@
     #include "wadden_sea_dictionary/dictionarymodel.h"
 #else
     #include "bonytysk/wordlistmodel.h"
-#if EDIT_DATABASE
+#if EDIT_DATABASE + UPDATE_DB_VERSION
     #include "bonytysk/databasecreator.h"
 #endif
 #endif
@@ -50,6 +50,10 @@ int main(int argc, char *argv[])
 
     qDebug().noquote() << app.applicationName() << TOSTRING(APP_VERSION_STR);
 #if !WADDEN_SEA_DICTIONARY
+#if UPDATE_DB_VERSION
+    DatabaseCreator::updateVersion();
+    return 0;
+#endif
 #if EDIT_DATABASE
     DatabaseCreator::updateHeinzelliste(true);
     DatabaseCreator::updateVersion();
@@ -151,7 +155,7 @@ int main(int argc, char *argv[])
 #if SPLASH
     view.setSource(QUrl("qrc:/qml/Main.qml"));//Um den SplashScreen wieder zu aktivieren, alle Kommentare in qml.qrc, dieser Datei und myqquickview.cpp entfernen, view.setSource mit AppWindow wieder auskommentieren.
     view.show();
-/*
+
 //    this code is for testing the launch screen by showing it over 5 seconds
     QTimer timer;
     QEventLoop sleeper;
@@ -159,7 +163,7 @@ int main(int argc, char *argv[])
     sleeper.connect(&timer, SIGNAL(timeout()), SLOT(quit()));
     timer.start(5000);
     sleeper.exec();
-*/
+
 #endif
 
     VocabularyModel model;

@@ -4,11 +4,11 @@ QFileInfo DatabaseCreator::sqliteFileSSD;
 
 bool DatabaseCreator::prepareDatabase()
 {
-    sqliteFileProject.setFile("../Dictionary/buchmaal/buchmaal-vocabulary.sqlite");
+    sqliteFileProject.setFile("../Dictionary/bonytysk/bonytysk-database.sqlite");
     sqliteFileSSD.setFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + '/' + sqliteFileProject.fileName());
     if(!QSqlDatabase::database().isOpen()){
         //viktig: pass på at databasen ligger på SSD'en når du skal skrive i den. Ellers tar det 10x så lang tid å skrive databasen!
-        //sqliteFileProject = QFileInfo("../Dictionary/buchmaal/buchmaal-vocabulary.sqlite");
+        //sqliteFileProject = QFileInfo("../Dictionary/bonytsk/bonytsk-vocabulary.sqlite");
         if(QDir().mkpath(sqliteFileSSD.absolutePath())) { //sqlite fila kan ikke lages, dersom dens mappe ikke eksisterer, så det er ikke vitsig å fortsette dersom mappa ikke kunne lages
             qDebug().noquote() << "Directory for database exists";
             if(sqliteFileProject.exists()){
@@ -51,7 +51,7 @@ bool DatabaseCreator::finishEditingDatabase()
 }
 
 /*!
- * \brief DatabaseCreator::updateHeinzelliste updates the heinzelliste table in the buchmaal-vocabulary sqlite database
+ * \brief DatabaseCreator::updateHeinzelliste updates the heinzelliste table in the bonytsk-vocabulary sqlite database
  */
 bool DatabaseCreator::updateHeinzelliste(bool continueEditingAfterThisOperation, bool batchOperation, DatabaseCreator::SourceFileType fileType)
 {
@@ -69,7 +69,7 @@ bool DatabaseCreator::updateHeinzelliste(bool continueEditingAfterThisOperation,
 
     QString fileSuffix = fileType == jsFile ? "js" : "csv";
 
-    QFile sourceFile("../Dictionary/buchmaal/" + TABLENAME + '.' + fileSuffix);
+    QFile sourceFile("../Dictionary/bonytysk/" + TABLENAME + '.' + fileSuffix);
     if(!sourceFile.exists()) askToContinueDespiteError(sourceFile.fileName() + " does not exist.");
     if(!sourceFile.open(QIODevice::ReadOnly | QIODevice::Text)) askToContinueDespiteError("Error opening " + sourceFile.fileName() + " even though the file exists.");
     QTextStream textStream(&sourceFile);

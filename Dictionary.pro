@@ -7,12 +7,13 @@ CONFIG += qml_debug c++11 console
     # med %-operatorer, forskjellen då er at det brukes stringbuildere, som forhindrer unødvendige kopieringer i minnen
 
 #Endring av denne variablen eller versjonsnummeret krever alltid, at appen rekompileres komplett.
-WADDEN_SEA_DICTIONARY=1 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert BoNyTysk
+WADDEN_SEA_DICTIONARY=0 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert BoNyTysk
 SPLASH=1
 equals(SPLASH, 1): RESOURCES += splash.qrc
 EDIT_DATABASE=0
+UPDATE_DB_VERSION=0
 
-android || ios: MOBILE=1
+android || ios || winrt: MOBILE=1
 else : MOBILE=0
 
 VER_MAJ = 1 #endre også versjonen i Android.manifest!
@@ -26,6 +27,7 @@ DEFINES += \
     APP_VERSION_NR=$$VER_MAJ,$$VER_MIN,$$VER_PAT \
     APP_DEVELOPER=fjellvannet \
     EDIT_DATABASE=$$EDIT_DATABASE \
+    UPDATE_DB_VERSION=$$UPDATE_DB_VERSION \
     SPLASH=$$SPLASH \
     MOBILE=$$MOBILE
 
@@ -57,10 +59,19 @@ TRANSLATIONS += \
 
 DISTFILES += \
     LICENSE.txt \
-    README.md \
-    translations/Dictionary_da.ts \
-    translations/Dictionary_de.ts \
-    translations/Dictionary_nl.ts \
+    README.md
+
+winrt {
+    QT_OPENGL=software
+    QT_ANGLE_PLATFORM=
+}
+
+!winrt {
+    DISTFILES += \
+        translations/Dictionary_da.ts \
+        translations/Dictionary_de.ts \
+        translations/Dictionary_nl.ts
+}
 
 windows {
     DISTFILES += \
@@ -167,6 +178,7 @@ equals(WADDEN_SEA_DICTIONARY, 1) { #Wadden Sea Dictionary
     }
 }
 else {#BoNyTysk
+    message("BoNyTysk" $$VERSION)
     equals(EDIT_DATABASE, 0) : RESOURCES +=
 
     HEADERS += bonytysk/databasecreator.h \
