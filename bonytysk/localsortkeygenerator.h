@@ -3,6 +3,7 @@
 
 #include <QVector>
 #include <QStringBuilder>
+#include <QtDebug>
 
 class LocalSortKeyGenerator
 {
@@ -12,7 +13,7 @@ public:
     QString toString();
     void setMaxLength(int a_maxLength);
     int maxLength();
-    QString sortKey(const QString& input);
+    QPair<QString, QChar> sortKey(const QString& input);
 private:
     struct replace_pair {
         QChar value;

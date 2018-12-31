@@ -80,12 +80,13 @@ public:
         SecDanskRole
     };
 
-    VocabularyModel(QObject *parent = 0);
+    VocabularyModel(QObject *parent = nullptr);
     bool fillModelFromCsv(QString a_csvPath);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role = -1) const;
+    QVariant at(int index, int role = -1);
 
 protected:
     QHash<int, QByteArray> roleNames() const;

@@ -23,9 +23,6 @@ void WordListModel::setSortLanguage(const WordListModel::SortLanguage &a_sortLan
         switch(sortLanguage()) {
             case Deutsch:
                 qDebug().noquote() << "sorted in German";
-                generator.addReplacePair(QString("ä").at(0), "a");
-                generator.addReplacePair(QString("ö").at(0), "o");
-                generator.addReplacePair(QString("ü").at(0), "u");
                 generator.addReplacePair(QString("ß").at(0), "ss");
                 sourceSqlModel()->setQuery("SELECT DISTINCT DE,DE_type FROM heinzelliste ORDER BY DE,DE_type");
                 break;
@@ -60,7 +57,23 @@ void WordListModel::setSortLanguage(const WordListModel::SortLanguage &a_sortLan
 
 bool WordListModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
-    return m_sortKeys.at(left.row()) < m_sortKeys.at(right.row());
+    return m_sortKeys.at(left.row()).first < m_sortKeys.at(right.row()).first;
+}
+
+QVariant WordListModel::data(const QModelIndex &ind, int role) const
+{
+    if(ind.isValid())
+    {
+        if(role == SectionRole)
+        {
+            return m_sortKeys.at(QSortFilterProxyModel::mapToSource(ind).row()).second;
+        }
+        else
+        {
+            return QSortFilterProxyModel::data(ind, role);
+        }
+    }
+    else return QVariant();
 }
 
 QSqlQueryModel *WordListModel::sourceSqlModel() const
@@ -74,7 +87,21 @@ void WordListModel::setSourceSqlModel(QSqlQueryModel *a_sourceSqlModel)
     setSourceModel(sourceSqlModel());
 }
 
-QVector<QString> WordListModel::sortKeys() const
+QVariant WordListModel::at(int row, int role)
+{
+    qDebug().noquote() << data(index(row, role), role) << row << role;
+    return(data(index(row, role), role));
+}
+
+QVector<QPair<QString, QChar>> WordListModel::sortKeys() const
 {
     return m_sortKeys;
+}
+
+QHash<int, QByteArray> WordListModel::roleNames() const {
+    QHash<int, QByteArray> roles;
+    roles[WordRole    ] = "Word";
+    roles[WordTypeRole] = "WordType";
+    roles[SectionRole ] = "SectionLetter";
+    return roles;
 }

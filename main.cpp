@@ -105,12 +105,10 @@ int main(int argc, char *argv[])
     if (!db.open()) qCritical().noquote() << db.lastError().text();
     else qDebug().noquote() << "Successfully connected to database.";
 
-    WordListModel test;
-    test.setSortLanguage(WordListModel::Bokmaal);
-
-
-    return 0;
-#else
+    WordListModel listModel;
+    listModel.setSortLanguage(WordListModel::Bokmaal);
+    //qDebug().noquote() << listModel.at(5, 0);
+#endif
 //    QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
 //    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
 //    QLocale::setDefault(QLocale(QLocale::Dutch, QLocale::Netherlands));
@@ -165,20 +163,26 @@ int main(int argc, char *argv[])
     sleeper.exec();
 
 #endif
-
+#if WADDEN_SEA_DICTIONARY
     VocabularyModel model;
     VocabularyListModel listModel(&model);
     DictionaryModel dictionaryModel(&model);
-
     ctxt->setContextProperty("vocabularyModel", &listModel);
     ctxt->setContextProperty("dictionaryModel", &dictionaryModel);
+#else
+    ctxt->setContextProperty("vocabularyModel", &listModel);
+    ctxt->setContextProperty("dictionaryModel", nullptr);
+#endif
     ctxt->setContextProperty("appLanguage", appLanguage);
     ctxt->setContextProperty("app_version", TOSTRING(APP_VERSION_STR));
     ctxt->setContextProperty("qt_version", QT_VERSION_STR);
 
 #if !SPLASH
     view.setSource(QUrl("qrc:/qml/AppWindow.qml"));
+#if WADDEN_SEA_DICTIONARY
     QQuickItem *mainWindow = view.rootObject();
+#else
+#endif
 #else
     QQuickItem *mainLoader = view.rootObject()->findChild<QQuickItem*>("mainLoader");
     mainLoader->setProperty("active", true);
@@ -190,6 +194,7 @@ int main(int argc, char *argv[])
 #if !MOBILE
     view.loadGeometry();
 #endif
+#if WADDEN_SEA_DICTIONARY
     listModel.connect(mainWindow->findChild<QQuickItem*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
     dictionaryModel.connect(mainWindow->findChild<QQuickItem*>("SearchField"), SIGNAL(textChanged(QVariant, QVariant)), SLOT(search(QVariant, QVariant)));
     if(mainWindow->property("vocabularyList").toBool())//sicherstellen, dass updateView zu Anfang einmal ausgeführt wird, wenn vocabularyList der letzte State war
@@ -198,5 +203,6 @@ int main(int argc, char *argv[])
     }
     return app.exec();
 #endif
+    return app.exec();
 }
 

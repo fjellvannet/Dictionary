@@ -1,5 +1,15 @@
 <RCC>
+    <qresource prefix="/qml">
+        <file alias="Constants.qml">bonytysk/Constants.qml</file>
+        <file alias="FlagImage.qml">bonytysk/FlagImage.qml</file>
+        <file alias="DictionaryRow.qml">bonytysk/DictionaryRow.qml</file>
+        <file alias="ResultView.qml">bonytysk/ResultView.qml</file>
+        <file alias="ResultRow.qml">bonytysk/ResultRow.qml</file>
+    </qresource>
     <qresource prefix="/database">
         <file alias="bonytysk-database.sqlite">bonytysk/bonytysk-database.sqlite</file>
+    </qresource>
+    <qresource prefix="/js">
+        <file alias="js-functions.js">bonytysk/js-functions.js</file>
     </qresource>
 </RCC>

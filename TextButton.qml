@@ -4,9 +4,11 @@ import QtQuick.Controls.Material 2.4
 import QtGraphicalEffects 1.0
 Button {
     contentItem: AdaptedText{
-        text: " " + parent.text + " "
+        text: "  " + parent.text + "  "
     }
-    background: Rectangle{
+    background: Item{}
+    Rectangle{
+        anchors.fill: parent
         color: Material.accent
         radius: parent.padding
     }

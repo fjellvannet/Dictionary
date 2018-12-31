@@ -34,15 +34,23 @@ int LocalSortKeyGenerator::maxLength()
     return m_maxLength;
 }
 
-QString LocalSortKeyGenerator::sortKey(const QString& input)
+QPair<QString, QChar> LocalSortKeyGenerator::sortKey(const QString& input)
 {
     int sortKeyLength = qMin(input.length(), maxLength());
     QString localSortKey;
+    QChar sectionLetter = QChar();
     localSortKey.reserve(sortKeyLength + 1);
-    for(int i = 0; i < sortKeyLength; ++i) {
-        const QChar& c = input.at(i).toLower();
+    for(int i = 0; qMax(localSortKey.length(), i) < sortKeyLength; ++i) {
+        QChar c = input.at(i).toLower();
         if(!c.isLetter()) continue;
+        if(c != QString("å").at(0)) {
+            c = QString(c).normalized(QString::NormalizationForm_D).at(0);
+        }
         bool appended = false;
+        if(sectionLetter == QChar())
+        {
+            sectionLetter = c.toUpper();
+        }
         for(replace_pair pair : m_replace_pairs) {
             if(c == pair.value){
                 localSortKey.append(pair.replacement);
@@ -53,5 +61,5 @@ QString LocalSortKeyGenerator::sortKey(const QString& input)
         if(!appended) localSortKey.append(c);
     }
     localSortKey.squeeze();
-    return localSortKey;
+    return QPair<QString, QChar>(localSortKey, sectionLetter);
 }

@@ -134,6 +134,11 @@ QVariant VocabularyModel::data(const QModelIndex & index, int role) const {
     return section;
 }
 
+QVariant VocabularyModel::at(int row, int role)
+{
+    return(data(index(row, role), role));
+}
+
 QHash<int, QByteArray> VocabularyModel::roleNames() const {
     QHash<int, QByteArray> roles;
     roles[DeutschRole      ] = "Deutsch";

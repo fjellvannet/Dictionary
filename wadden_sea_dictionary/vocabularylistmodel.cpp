@@ -3,7 +3,13 @@
 VocabularyListModel::VocabularyListModel(VocabularyModel *a_sourceModel, QObject *parent)
     : QSortFilterProxyModel(parent)
 {
-    setSourceModel(a_sourceModel);
+    m_sourceModel = a_sourceModel;
+    setSourceModel(m_sourceModel);
+}
+
+QVariant VocabularyListModel::at(int row, int role)
+{
+    return m_sourceModel->at(row, role);
 }
 
 void VocabularyListModel::sortBy(QVariant role)

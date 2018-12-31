@@ -5,6 +5,7 @@ import QtGraphicalEffects 1.0
 import QtQuick.Layouts 1.11
 import QtQuick.Window 2.11
 import Qt.labs.settings 1.0
+import "qrc:/js/js-functions.js" as JSfunctions
 Item {
     id: root
     height: Window.height
@@ -375,17 +376,14 @@ Item {
                             id: word
                             anchors.left: parent.left; anchors.right: parent.right
                             anchors.leftMargin: globalMargin / 2
-                            text: {
-                                var s
-                                switch(language){
-                                    case 0: s = Deutsch; break
-                                    case 1: s = English; break
-                                    case 2: s = Nederlands; break
-                                    case 3: s = Dansk; break
-                                    case undefined: s = ""
-                                }
-                                return s + (Scientific === "" ? "" : " (<i>" + Scientific + "</i>)")
-                            }
+                            text: JSfunctions.wordlist_text(index)
+//                            text: {
+//                                var s, scientific;
+//                                if(language == undefined) s = "";
+//                                else s = vocabularyModel.atind(index, language);
+//                                scientific = vocabularyModel.atind(index, 4);
+//                                return s + (scientific === "" ? "" : " (<i>" + scientific + "</i>)")
+//                            }
                             height: parent.height
                             verticalAlignment: Text.AlignVCenter
                             wrapMode: Text.Wrap

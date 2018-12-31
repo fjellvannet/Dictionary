@@ -20,7 +20,7 @@ public:
     };
 
 
-    DictionaryModel(VocabularyModel *a_sourceModel, QObject *parent = 0);
+    DictionaryModel(VocabularyModel *a_sourceModel, QObject *parent = nullptr);
     void fillWithSearchResults(QString a_searchPattern, bool a_findUmlauts);
 
     int rowCount(const QModelIndex &parent = QModelIndex()) const;

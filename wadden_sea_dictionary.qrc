@@ -9,4 +9,7 @@
     <qresource prefix="/database">
         <file alias="Wadden_Sea_vocabulary.csv">wadden_sea_dictionary/Wadden_Sea_vocabulary.csv</file>
     </qresource>
+    <qresource prefix="/js">
+        <file alias="js-functions.js">wadden_sea_dictionary/js-functions.js</file>
+    </qresource>
 </RCC>

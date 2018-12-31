@@ -2,13 +2,13 @@ TEMPLATE = app
 include(deployment.pri) # Default rules for deployment.
 
 QT += core qml quick svg sql quickcontrols2
-CONFIG += qml_debug c++11 console
+CONFIG += qml_debug c++11
 #DEFINES *= QT_USE_QSTRINGBUILDER #denne må du eventuelt ta ut dersom det blir problemer. Erstatter alle + operatorene, som henger sammen strenger,
     # med %-operatorer, forskjellen då er at det brukes stringbuildere, som forhindrer unødvendige kopieringer i minnen
 
 #Endring av denne variablen eller versjonsnummeret krever alltid, at appen rekompileres komplett.
 WADDEN_SEA_DICTIONARY=0 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert BoNyTysk
-SPLASH=1
+SPLASH=0
 equals(SPLASH, 1): RESOURCES += splash.qrc
 EDIT_DATABASE=0
 UPDATE_DB_VERSION=0
