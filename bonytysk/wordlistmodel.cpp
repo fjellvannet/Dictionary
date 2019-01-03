@@ -7,6 +7,7 @@ WordListModel::WordListModel()
 {
     setSourceSqlModel(new QSqlQueryModel(this));
     m_sortLanguage = unsorted;
+    m_sortKeys = new QVector<QPair<QString, QChar>>();
 }
 
 WordListModel::SortLanguage WordListModel::sortLanguage() const
@@ -17,6 +18,8 @@ WordListModel::SortLanguage WordListModel::sortLanguage() const
 void WordListModel::setSortLanguage(const WordListModel::SortLanguage &a_sortLanguage)
 {
     if(sortLanguage() == unsorted || sortLanguage() != a_sortLanguage) {
+        invalidate();
+        beginResetModel();
         m_sortLanguage = a_sortLanguage;
         const int SORT_COLUMN = 0;
         LocalSortKeyGenerator generator;
@@ -37,8 +40,8 @@ void WordListModel::setSortLanguage(const WordListModel::SortLanguage &a_sortLan
                 ;//feilmelding
         }
 
-        int row;
-        for(row = 0; 1; ++row)
+        QVector<QPair<QString, QChar>> *sortKeys = new QVector<QPair<QString, QChar>>();
+        for(int row = 0; 1; ++row)
         {
             QString word = data(index(row, SORT_COLUMN), SORT_COLUMN).toString();
             if(word.isEmpty()) {
@@ -48,16 +51,20 @@ void WordListModel::setSortLanguage(const WordListModel::SortLanguage &a_sortLan
                 }
                 else break;
             }
-            m_sortKeys.append(generator.sortKey(word));
+            sortKeys->append(generator.sortKey(word));
         }
-        m_sortKeys.squeeze();
+        sortKeys->squeeze();
+        qDebug() << m_sortKeys->length() << sortKeys->length();
+        delete m_sortKeys;
+        m_sortKeys = sortKeys;
         sort(SORT_COLUMN);
+        endResetModel();
     }
 }
 
 bool WordListModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
-    return m_sortKeys.at(left.row()).first < m_sortKeys.at(right.row()).first;
+    return sortKeys()->at(left.row()).first < sortKeys()->at(right.row()).first;
 }
 
 QVariant WordListModel::data(const QModelIndex &ind, int role) const
@@ -66,10 +73,12 @@ QVariant WordListModel::data(const QModelIndex &ind, int role) const
     {
         if(role == SectionRole)
         {
-            return m_sortKeys.at(QSortFilterProxyModel::mapToSource(ind).row()).second;
+            return sortKeys()->at(QSortFilterProxyModel::mapToSource(ind).row()).second;
         }
         else
         {
+            if(role == WordTypeRole) {
+            }
             return QSortFilterProxyModel::data(ind, role);
         }
     }
@@ -89,11 +98,24 @@ void WordListModel::setSourceSqlModel(QSqlQueryModel *a_sourceSqlModel)
 
 QVariant WordListModel::at(int row, int role)
 {
-    qDebug().noquote() << data(index(row, role), role) << row << role;
-    return(data(index(row, role), role));
+    return(QSortFilterProxyModel::data(index(row, role), 0));
 }
 
-QVector<QPair<QString, QChar>> WordListModel::sortKeys() const
+void WordListModel::sortBy(int role)
+{
+    switch(role) {
+        case 0:
+            setSortLanguage(Deutsch);
+            break;
+        case 1:
+            setSortLanguage(Bokmaal);
+            break;
+        default:
+            qWarning() << "WordListModel: Sort Language not changed, invalid sort language Role.";
+    }
+}
+
+QVector<QPair<QString, QChar>>* WordListModel::sortKeys() const
 {
     return m_sortKeys;
 }

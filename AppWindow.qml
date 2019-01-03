@@ -45,13 +45,13 @@ Item {
     property int language: appLanguage
 
     function nextLanguage() {
-        if(language < constants.antallSpraak) language++;
-        else language = 0;
+        if(language === constants.antallSpraak - 1) language = 0;
+        else language++;
     }
 
     Image {
         anchors.fill: parent
-        source: "qrc:/images/background/background"
+        source: JSfunctions.backgroundSource()
         fillMode: Image.PreserveAspectCrop
         opacity: 0.3
     }
@@ -93,8 +93,6 @@ Item {
                     objectName: "LanguageButton"
                     Layout.fillHeight: true
                     Layout.preferredWidth: height / 3 * 5
-
-                    signal sortBy(var role)
 
                     background: Item{}
                     FlagImage {
@@ -337,13 +335,12 @@ Item {
 
                     function updateView(){
                         visible = false
-                        languageButton.sortBy(language)
+                        vocabularyModel.sortBy(language)
                         positionViewAtEnd()
                         positionViewAtBeginning()
                         currentIndex = 0
                         resultView.updateText = !resultView.updateText//damit ResultWidget aktualisiert und ggf ausgeblendet wird
                         visible = true
-
                     }
 
                     section.labelPositioning: ViewSection.CurrentLabelAtStart | ViewSection.InlineLabels
@@ -377,13 +374,6 @@ Item {
                             anchors.left: parent.left; anchors.right: parent.right
                             anchors.leftMargin: globalMargin / 2
                             text: JSfunctions.wordlist_text(index)
-//                            text: {
-//                                var s, scientific;
-//                                if(language == undefined) s = "";
-//                                else s = vocabularyModel.atind(index, language);
-//                                scientific = vocabularyModel.atind(index, 4);
-//                                return s + (scientific === "" ? "" : " (<i>" + scientific + "</i>)")
-//                            }
                             height: parent.height
                             verticalAlignment: Text.AlignVCenter
                             wrapMode: Text.Wrap
@@ -489,8 +479,6 @@ Item {
                                 verticalAlignment: Text.AlignVCenter
                                 font: fontHeight.font
                                 selectByMouse: true
-
-                                signal textChanged(var text, var findUmlauts)
                                 property string dbcurrentquery
 
                                 AdaptedText {
@@ -506,7 +494,7 @@ Item {
                                     if(text !== dbcurrentquery)//verhindert, dass der gleiche Begriff 2x gesucht wird
                                     {
                                         dbcurrentquery = text
-                                        searchField.textChanged(searchField.text, settings.findUmlauts)
+                                        dictionaryModel.search(searchField.text, settings.findUmlauts)
                                         lvDictionary.currentIndex = 0
                                     }
                                     //console.log("Die Suche & Anzeige von " + text + " dauerte " + (new Date().getTime() - starttime) + " ms")
@@ -630,9 +618,6 @@ Item {
                     id: resultWidget
                     property ListView resultListView: lvVocabulary
                     Layout.preferredHeight: resultView.height
-//                    Layout.preferredWidth: resultView.width
-//                    Layout.minimumWidth: parent.width / 4
-//                    Layout.maximumWidth: parent.width / 2
                     Layout.preferredWidth: parent.width / 2
                     Layout.fillHeight: true
                     Layout.fillWidth: false

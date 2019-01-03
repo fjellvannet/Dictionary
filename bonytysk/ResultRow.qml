@@ -12,7 +12,7 @@ Row {
     spacing: globalMargin
     visible: fromLanguage !== rowLanguage
 
-    AdaptedImage {
+    FlagImage {
         id: flag
         height: 4 * resize * globalMargin
         width: height / 3 * 5

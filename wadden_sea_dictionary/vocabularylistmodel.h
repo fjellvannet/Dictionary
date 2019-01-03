@@ -9,8 +9,7 @@ class VocabularyListModel : public QSortFilterProxyModel
 public:
     VocabularyListModel(VocabularyModel *a_sourceModel, QObject *parent = nullptr);
     Q_INVOKABLE QVariant at(int row, int role);
-public slots:
-    void sortBy(QVariant role);    
+    Q_INVOKABLE void sortBy(QVariant role);
 protected:
     bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
 private:

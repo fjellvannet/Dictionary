@@ -31,8 +31,9 @@ public:
     QSqlQueryModel *sourceSqlModel() const;
     void setSourceSqlModel(QSqlQueryModel *a_sourceSqlModel);
 
-    QVector<QPair<QString, QChar>> sortKeys() const;
+    QVector<QPair<QString, QChar>> *sortKeys() const;
     Q_INVOKABLE QVariant at(int row, int role = -1);
+    Q_INVOKABLE void sortBy(int role);
 
 public slots:
     void setSortLanguage(const SortLanguage &a_sortLanguage);
@@ -44,7 +45,7 @@ private:
     //member variables
     SortLanguage m_sortLanguage;
     QSqlQueryModel *m_sourceSqlModel;
-    QVector<QPair<QString, QChar>> m_sortKeys;
+    QVector<QPair<QString, QChar>> *m_sortKeys;
 };
 
 #endif // WORDLISTMODEL_H

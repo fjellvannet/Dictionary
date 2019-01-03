@@ -30,8 +30,7 @@ public:
     unsigned int limitSearchResults() const;
     void setLimitSearchResults(unsigned int a_limitSearchResults);
 
-public slots:
-    void search(QVariant v_searchPattern, QVariant v_findUmlauts);
+    Q_INVOKABLE void search(QVariant v_searchPattern, QVariant v_findUmlauts);
 
 protected:
     QHash<int, QByteArray> roleNames() const;

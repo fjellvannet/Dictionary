@@ -1,7 +1,14 @@
 function wordlist_text(index) {
-    return vocabularyModel.at(index, 0);
+    var s;
+    s = vocabularyModel.at(index, 1);
+    if(s === "") {
+        return vocabularyModel.at(index, 0);
+    }
+    else {
+        return vocabularyModel.at(index, 0) + " <i>" + s + "</i>";
+    }
 }
 
-function wordlist_section(index) {
-    return vocabularyModel.at(index, 0).charAt(0).toUpperCase();
+function backgroundSource() {
+    return "qrc:/images/background/background-nor"
 }

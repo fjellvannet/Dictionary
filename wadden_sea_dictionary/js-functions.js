@@ -6,9 +6,7 @@ function wordlist_text(index) {
     return s + (scientific === "" ? "" : " (<i>" + scientific + "</i>)")
 }
 
-function wordlist_section(index) {
-    var s;
-    if(language === undefined) s = "";
-    else s = vocabularyModel.at(index, language+5);
-    return s;
+function backgroundSource() {
+    return "qrc:/images/background/background"
 }
+

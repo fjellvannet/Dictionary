@@ -106,8 +106,8 @@ int main(int argc, char *argv[])
     else qDebug().noquote() << "Successfully connected to database.";
 
     WordListModel listModel;
-    listModel.setSortLanguage(WordListModel::Bokmaal);
-    //qDebug().noquote() << listModel.at(5, 0);
+    listModel.setSortLanguage(WordListModel::Deutsch);
+
 #endif
 //    QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
 //    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
@@ -195,13 +195,10 @@ int main(int argc, char *argv[])
     view.loadGeometry();
 #endif
 #if WADDEN_SEA_DICTIONARY
-    listModel.connect(mainWindow->findChild<QQuickItem*>("LanguageButton"), SIGNAL(sortBy(QVariant)), SLOT(sortBy(QVariant)));
-    dictionaryModel.connect(mainWindow->findChild<QQuickItem*>("SearchField"), SIGNAL(textChanged(QVariant, QVariant)), SLOT(search(QVariant, QVariant)));
     if(mainWindow->property("vocabularyList").toBool())//sicherstellen, dass updateView zu Anfang einmal ausgeführt wird, wenn vocabularyList der letzte State war
     {
         QMetaObject::invokeMethod(mainWindow->findChild<QQuickItem*>("lvVocabulary"), "updateView");
     }
-    return app.exec();
 #endif
     return app.exec();
 }

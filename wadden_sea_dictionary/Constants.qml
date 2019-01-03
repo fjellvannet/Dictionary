@@ -1,7 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Controls.Material 2.1
 Item {
-    readonly property int antallSpraak: 3
+    readonly property int antallSpraak: 4
     readonly property color dark_accent: Material.color(Material.BlueGrey, Material.Shade700)
     readonly property int materialAccent: Material.Blue
     property string impressum: qsTr("<h3>Impressum</h3><p>%1 %2</p> \
@@ -30,6 +30,7 @@ Item {
                             .arg("<a href=\"http://creativecommons.org/licenses/by/3.0/\" title=\"Creative Commons BY 3.0\" target=\"_blank\">CC 3.0 BY</a>")
     property string wordlist: qsTr("Wadden Sea wordlist")
     property string dictionary: qsTr("Wadden Sea dictionary")
+    property string background: "qrc:/images/background/background"
     property string sectionLetter: switch (language) {
                                    case 0:
                                        return "SecDeutsch"

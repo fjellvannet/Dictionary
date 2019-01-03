@@ -1,9 +1,9 @@
 import QtQuick 2.11
 import QtQuick.Controls.Material 2.1
 Item {
-    readonly property int antallSpraak: 3
+    readonly property int antallSpraak: 2
     readonly property color dark_accent: Material.color(Material.BlueGrey, Material.Shade700)
-    readonly property int materialAccent: Material.Blue
+    readonly property int materialAccent: Material.Red
     property string impressum: qsTr("<h3>Impressum</h3><p>%1 %2</p> \
                             <p>During my Voluntary ecological year (FÖJ, Germany) 2015/16 \
                             at the Wadden Sea Centre in Vester Vedsted, Denmark, I have programmed this dictionary. \
@@ -28,7 +28,7 @@ Item {
                             .arg("<a href=\"http://www.flaticon.com/authors/dave-gandy\" title=\"Dave Gandy\">Dave Gandy</a>")
                             .arg("<a href=\"http://www.flaticon.com\" title=\"Flaticon\">www.flaticon.com</a>")
                             .arg("<a href=\"http://creativecommons.org/licenses/by/3.0/\" title=\"Creative Commons BY 3.0\" target=\"_blank\">CC 3.0 BY</a>")
-    property string wordlist: qsTr("Wadden Sea wordlist")
-    property string dictionary: qsTr("Wadden Sea dictionary")
+    property string wordlist: qsTr("BoNyTysk wordlist")
+    property string dictionary: qsTr("BoNyTysk dictionary")
     property string sectionLetter: "SectionLetter"
 }

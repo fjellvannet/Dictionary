@@ -7,11 +7,7 @@ AdaptedImage {
             case 0:
                 return "qrc:/images/flags/german_flag"
             case 1:
-                return "qrc:/images/flags/union_jack"
-            case 2:
-                return "qrc:/images/flags/netherlands_flag"
-            case 3:
-                return "qrc:/images/flags/danish_flag"
+                return "qrc:/images/flags/norwegian_flag"
             case undefined:
                 return ""
             }
