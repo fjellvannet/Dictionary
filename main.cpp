@@ -3,9 +3,9 @@
     #include "wadden_sea_dictionary/vocabularylistmodel.h"
     #include "wadden_sea_dictionary/dictionarymodel.h"
 #else
-    #include "bonytysk/wordlistmodel.h"
+    #include "buchmaal/wordlistmodel.h"
 #if EDIT_DATABASE + UPDATE_DB_VERSION
-    #include "bonytysk/databasecreator.h"
+    #include "buchmaal/databasecreator.h"
 #endif
 #endif
 #define STRINGIFY(x) #x //Disse trengs for å kunne skrive ut App-versjonen i Kolofonen
@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 #if WADDEN_SEA_DICTIONARY
     app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));//if you change it, remember to change appinfo.h (windows) accordingly
 #else
-    app.setApplicationName("BoNyTysk");
+    app.setApplicationName("Buchmål");
 #endif
     app.setOrganizationDomain("https://github.com/fjellvannet/Dictionary");//if you change it, remember to change appinfo.h (windows) accordingly
     app.setOrganizationName(TOSTRING(APP_DEVELOPER));
@@ -55,17 +55,18 @@ int main(int argc, char *argv[])
     return 0;
 #endif
 #if EDIT_DATABASE
+//    DatabaseCreator::optimizeSortKeys();
     DatabaseCreator::updateHeinzelliste(true);
     DatabaseCreator::updateVersion();
     return 0;
 #endif
-    QFileInfo bonytyskVocabularyFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/bonytysk-database.sqlite");
+    QFileInfo buchmaalVocabularyFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/buchmaal-database.sqlite");
     bool copyDatabase = true;
-    if(bonytyskVocabularyFile.exists()) {
+    if(buchmaalVocabularyFile.exists()) {
         {//scope to isolate database, so that the connection can be deleted when the database is out of scope
             QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");//not dbConnection
             db.setConnectOptions("QSQLITE_OPEN_READONLY");
-            db.setDatabaseName(bonytyskVocabularyFile.absoluteFilePath()); //if the database file doesn't exist yet, it will create it
+            db.setDatabaseName(buchmaalVocabularyFile.absoluteFilePath()); //if the database file doesn't exist yet, it will create it
             if (!db.open()) qCritical().noquote() << db.lastError().text();
             {//scope for query, so the connection can be deleted when the Query is out of scope
                 QSqlQuery query(db);
@@ -88,11 +89,11 @@ int main(int argc, char *argv[])
         QSqlDatabase::removeDatabase("qt_sql_default_connection");
     }
     if(copyDatabase){
-        if(QDir().mkpath(bonytyskVocabularyFile.absolutePath())){
-            QFile f(bonytyskVocabularyFile.absoluteFilePath());
+        if(QDir().mkpath(buchmaalVocabularyFile.absolutePath())){
+            QFile f(buchmaalVocabularyFile.absoluteFilePath());
             f.setPermissions(QFile::ReadOther|QFile::WriteOther);
             if(!f.remove()) qWarning() << "Could not delete old database.";
-            if(QFile(":/database/bonytysk-database.sqlite").copy(bonytyskVocabularyFile.absoluteFilePath()))
+            if(QFile(":/database/buchmaal-database.sqlite").copy(buchmaalVocabularyFile.absoluteFilePath()))
                 qDebug().noquote() << "Successfully replaced old database-file.";
             else qWarning().noquote() << "Could not copy current version of database - check file permissions.";
         } else {
@@ -101,12 +102,11 @@ int main(int argc, char *argv[])
     }
 
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");//not dbConnection
-    db.setDatabaseName(bonytyskVocabularyFile.absoluteFilePath());
+    db.setDatabaseName(buchmaalVocabularyFile.absoluteFilePath());
     if (!db.open()) qCritical().noquote() << db.lastError().text();
     else qDebug().noquote() << "Successfully connected to database.";
 
     WordListModel listModel;
-    listModel.setSortLanguage(WordListModel::Deutsch);
 
 #endif
 //    QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
@@ -179,10 +179,7 @@ int main(int argc, char *argv[])
 
 #if !SPLASH
     view.setSource(QUrl("qrc:/qml/AppWindow.qml"));
-#if WADDEN_SEA_DICTIONARY
     QQuickItem *mainWindow = view.rootObject();
-#else
-#endif
 #else
     QQuickItem *mainLoader = view.rootObject()->findChild<QQuickItem*>("mainLoader");
     mainLoader->setProperty("active", true);
@@ -194,12 +191,10 @@ int main(int argc, char *argv[])
 #if !MOBILE
     view.loadGeometry();
 #endif
-#if WADDEN_SEA_DICTIONARY
     if(mainWindow->property("vocabularyList").toBool())//sicherstellen, dass updateView zu Anfang einmal ausgeführt wird, wenn vocabularyList der letzte State war
     {
         QMetaObject::invokeMethod(mainWindow->findChild<QQuickItem*>("lvVocabulary"), "updateView");
     }
-#endif
     return app.exec();
 }
 

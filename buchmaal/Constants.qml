@@ -28,7 +28,7 @@ Item {
                             .arg("<a href=\"http://www.flaticon.com/authors/dave-gandy\" title=\"Dave Gandy\">Dave Gandy</a>")
                             .arg("<a href=\"http://www.flaticon.com\" title=\"Flaticon\">www.flaticon.com</a>")
                             .arg("<a href=\"http://creativecommons.org/licenses/by/3.0/\" title=\"Creative Commons BY 3.0\" target=\"_blank\">CC 3.0 BY</a>")
-    property string wordlist: qsTr("BoNyTysk wordlist")
-    property string dictionary: qsTr("BoNyTysk dictionary")
+    property string wordlist: qsTr("Buchmål wordlist")
+    property string dictionary: qsTr("Buchmål dictionary")
     property string sectionLetter: "SectionLetter"
 }

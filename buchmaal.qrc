@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/qml">
+        <file alias="Constants.qml">buchmaal/Constants.qml</file>
+        <file alias="FlagImage.qml">buchmaal/FlagImage.qml</file>
+        <file alias="DictionaryRow.qml">buchmaal/DictionaryRow.qml</file>
+        <file alias="ResultView.qml">buchmaal/ResultView.qml</file>
+        <file alias="ResultRow.qml">buchmaal/ResultRow.qml</file>
+    </qresource>
+    <qresource prefix="/database">
+        <file alias="buchmaal-database.sqlite">buchmaal/buchmaal-database.sqlite</file>
+    </qresource>
+    <qresource prefix="/js">
+        <file alias="js-functions.js">buchmaal/js-functions.js</file>
+    </qresource>
+</RCC>

@@ -7,7 +7,7 @@ CONFIG += qml_debug c++11
     # med %-operatorer, forskjellen då er at det brukes stringbuildere, som forhindrer unødvendige kopieringer i minnen
 
 #Endring av denne variablen eller versjonsnummeret krever alltid, at appen rekompileres komplett.
-WADDEN_SEA_DICTIONARY=0 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert BoNyTysk
+WADDEN_SEA_DICTIONARY=0 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert Buchmål
 SPLASH=0
 equals(SPLASH, 1): RESOURCES += splash.qrc
 EDIT_DATABASE=0
@@ -50,7 +50,7 @@ lupdate_only{
 RESOURCES += \
     images.qrc \
     common.qrc \
-    bonytysk.qrc
+    buchmaal.qrc
 
 TRANSLATIONS += \
     translations/Dictionary_da.ts \
@@ -177,17 +177,17 @@ equals(WADDEN_SEA_DICTIONARY, 1) { #Wadden Sea Dictionary
         ANDROID_PACKAGE_SOURCE_DIR = $$PWD/wadden_sea_dictionary/android
     }
 }
-else {#BoNyTysk
-    message("BoNyTysk" $$VERSION)
+else {#Buchmål
+    message("Buchmål" $$VERSION)
     equals(EDIT_DATABASE, 0) : RESOURCES +=
 
-    HEADERS += bonytysk/databasecreator.h \
-        bonytysk/localsortkeygenerator.h \
-        bonytysk/wordlistmodel.h
+    HEADERS += buchmaal/databasecreator.h \
+        buchmaal/localsortkeygenerator.h \
+        buchmaal/wordlistmodel.h
 
-    SOURCES += bonytysk/databasecreator.cpp \
-        bonytysk/localsortkeygenerator.cpp \
-        bonytysk/wordlistmodel.cpp
+    SOURCES += buchmaal/databasecreator.cpp \
+        buchmaal/localsortkeygenerator.cpp \
+        buchmaal/wordlistmodel.cpp
 
-    DISTFILES += bonytysk/heinzelliste.csv
+    DISTFILES += buchmaal/heinzelliste.csv
 }
