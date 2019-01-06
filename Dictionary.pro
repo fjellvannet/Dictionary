@@ -49,8 +49,7 @@ lupdate_only{
 
 RESOURCES += \
     images.qrc \
-    common.qrc \
-    buchmaal.qrc
+    common.qrc
 
 TRANSLATIONS += \
     translations/Dictionary_da.ts \
@@ -179,15 +178,17 @@ equals(WADDEN_SEA_DICTIONARY, 1) { #Wadden Sea Dictionary
 }
 else {#Buchmål
     message("Buchmål" $$VERSION)
-    equals(EDIT_DATABASE, 0) : RESOURCES +=
+    equals(EDIT_DATABASE, 0) : RESOURCES += buchmaal.qrc
 
     HEADERS += buchmaal/databasecreator.h \
         buchmaal/localsortkeygenerator.h \
-        buchmaal/wordlistmodel.h
+        buchmaal/wordlistmodel.h \
+        buchmaal/resultmodel.h
 
     SOURCES += buchmaal/databasecreator.cpp \
         buchmaal/localsortkeygenerator.cpp \
-        buchmaal/wordlistmodel.cpp
+        buchmaal/wordlistmodel.cpp\
+        buchmaal/resultmodel.cpp
 
     DISTFILES += buchmaal/heinzelliste.csv
 }

@@ -4,6 +4,7 @@
     #include "wadden_sea_dictionary/dictionarymodel.h"
 #else
     #include "buchmaal/wordlistmodel.h"
+    #include "buchmaal/resultmodel.h"
 #if EDIT_DATABASE + UPDATE_DB_VERSION
     #include "buchmaal/databasecreator.h"
 #endif
@@ -65,7 +66,7 @@ int main(int argc, char *argv[])
     if(buchmaalVocabularyFile.exists()) {
         {//scope to isolate database, so that the connection can be deleted when the database is out of scope
             QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");//not dbConnection
-            db.setConnectOptions("QSQLITE_OPEN_READONLY");
+            db.setConnectOptions("QSQLITE_OPEN_READONLY=1;QSQLITE_ENABLE_REGEXP=1");
             db.setDatabaseName(buchmaalVocabularyFile.absoluteFilePath()); //if the database file doesn't exist yet, it will create it
             if (!db.open()) qCritical().noquote() << db.lastError().text();
             {//scope for query, so the connection can be deleted when the Query is out of scope
@@ -107,7 +108,7 @@ int main(int argc, char *argv[])
     else qDebug().noquote() << "Successfully connected to database.";
 
     WordListModel listModel;
-
+    ResultModel resultModel;
 #endif
 //    QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
 //    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
