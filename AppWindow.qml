@@ -1,9 +1,9 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.4
-import QtQuick.Controls.Material 2.4
+import QtQuick 2.13
+import QtQuick.Controls 2.13
+import QtQuick.Controls.Material 2.13
 import QtGraphicalEffects 1.0
-import QtQuick.Layouts 1.11
-import QtQuick.Window 2.11
+import QtQuick.Layouts 1.13
+import QtQuick.Window 2.13
 import Qt.labs.settings 1.0
 import "qrc:/js/js-functions.js" as JSfunctions
 Item {
@@ -145,7 +145,7 @@ Item {
             }
         }
 
-        Rectangle {
+        Rectangle {//separating line between search-items and top meny
             color: "black"
             Layout.fillWidth: true
             Layout.preferredHeight: globalBorder
@@ -650,6 +650,15 @@ Item {
                     }
                 }
             }
+        }
+
+        TextProgressBar {
+            id: db_progress
+            Layout.fillWidth: true
+            value: 0.73
+            height: 4 * globalMargin
+            indeterminate: true
+            visible: false
         }
 
         states: [

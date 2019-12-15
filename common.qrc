@@ -6,6 +6,7 @@
         <file>IconButton.qml</file>
         <file>AdaptedScrollBar.qml</file>
         <file>TextButton.qml</file>
+        <file>TextProgressBar.qml</file>
     </qresource>
     <qresource prefix="/translations">
         <file alias="Dictionary_de.qm">translations/Dictionary_de.qm</file>
