@@ -4,6 +4,7 @@ Item {
     readonly property int antallSpraak: 4
     readonly property color dark_accent: Material.color(Material.BlueGrey, Material.Shade700)
     readonly property int materialAccent: Material.Blue
+    readonly property bool isBuchmaal: false
     property string impressum: qsTr("<h3>Impressum</h3><p>%1 %2</p> \
                             <p>During my Voluntary ecological year (FÖJ, Germany) 2015/16 \
                             at the Wadden Sea Centre in Vester Vedsted, Denmark, I have programmed this dictionary. \

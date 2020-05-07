@@ -1,12 +1,13 @@
 #if WADDEN_SEA_DICTIONARY
-    #include "wadden_sea_dictionary/vocabularymodel.h"
-    #include "wadden_sea_dictionary/vocabularylistmodel.h"
-    #include "wadden_sea_dictionary/dictionarymodel.h"
+#include "wadden_sea_dictionary/vocabularymodel.h"
+#include "wadden_sea_dictionary/vocabularylistmodel.h"
+#include "wadden_sea_dictionary/dictionarymodel.h"
 #else
-    #include "buchmaal/wordlistmodel.h"
-    #include "buchmaal/resultmodel.h"
+#include "buchmaal/wordlistmodel.h"
+#include "buchmaal/resultmodel.h"
+#include "buchmaal/databasemanager.h"
 #if EDIT_DATABASE + UPDATE_DB_VERSION
-    #include "buchmaal/databasecreator.h"
+#include "buchmaal/databasecreator.h"
 #endif
 #endif
 #define STRINGIFY(x) #x //Disse trengs for å kunne skrive ut App-versjonen i Kolofonen
@@ -24,178 +25,181 @@
 #include <QQmlProperty>
 #include <QTimer>
 #if !WADDEN_SEA_DICTIONARY
-    #include <QSqlDatabase>
-    #include <QDir>
-    #include <QStandardPaths>
-    #include <QSqlError>
-    #include <QFile>
-    #include <QTextStream>
-    #include <QTextCodec>
-    #include <QSqlQuery>
-    #include <QTime>
-    #include <QElapsedTimer>
-    #include <QThread>
+#include <QSqlDatabase>
+#include <QDir>
+#include <QStandardPaths>
+#include <QSqlError>
+#include <QFile>
+#include <QTextStream>
+#include <QTextCodec>
+#include <QSqlQuery>
+#include <QTime>
+#include <QElapsedTimer>
+#include <QThread>
 #endif
 
-int main(int argc, char *argv[])
-{
-    QApplication app(argc, argv);
+int main(int argc, char* argv[]) {
+  QApplication app(argc, argv);
 #if WADDEN_SEA_DICTIONARY
-    app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));//if you change it, remember to change appinfo.h (windows) accordingly
+  app.setApplicationName(QCoreApplication::tr("Wadden Sea Dictionary"));//if you change it, remember to change appinfo.h (windows) accordingly
 #else
-    app.setApplicationName("Buchmål");
+  app.setApplicationName("Buchmål");
 #endif
-    app.setOrganizationDomain("https://github.com/fjellvannet/Dictionary");//if you change it, remember to change appinfo.h (windows) accordingly
-    app.setOrganizationName(TOSTRING(APP_DEVELOPER));
-    app.setApplicationVersion(TOSTRING(APP_VERSION_STR));
-
-    qDebug().noquote() << app.applicationName() << TOSTRING(APP_VERSION_STR);
+  app.setOrganizationDomain("https://github.com/fjellvannet/Dictionary");//if you change it, remember to change appinfo.h (windows) accordingly
+  app.setOrganizationName(TOSTRING(APP_DEVELOPER));
+  app.setApplicationVersion(TOSTRING(APP_VERSION_STR));
+  DatabaseManager databaseManager;
+  //databaseManager.downloadToString();
+  databaseManager.openDatabaseConnection();
+  databaseManager.updateWordList();
+  return 0;
 #if !WADDEN_SEA_DICTIONARY
 #if UPDATE_DB_VERSION
-    DatabaseCreator::updateVersion();
-    return 0;
+  DatabaseCreator::updateVersion();
+  return 0;
 #endif
 #if EDIT_DATABASE
-//    DatabaseCreator::optimizeSortKeys();
-    DatabaseCreator::updateHeinzelliste(true);
-    DatabaseCreator::updateVersion();
-    return 0;
+  //    DatabaseCreator::optimizeSortKeys();
+  DatabaseCreator::updateHeinzelliste(true);
+  DatabaseCreator::updateVersion();
+  return 0;
 #endif
-    QFileInfo buchmaalVocabularyFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/buchmaal-database.sqlite");
-    bool copyDatabase = true;
-    if(buchmaalVocabularyFile.exists()) {
-        {//scope to isolate database, so that the connection can be deleted when the database is out of scope
-            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");//not dbConnection
-            db.setConnectOptions("QSQLITE_OPEN_READONLY=1;QSQLITE_ENABLE_REGEXP=1");
-            db.setDatabaseName(buchmaalVocabularyFile.absoluteFilePath()); //if the database file doesn't exist yet, it will create it
-            if (!db.open()) qCritical().noquote() << db.lastError().text();
-            {//scope for query, so the connection can be deleted when the Query is out of scope
-                QSqlQuery query(db);
-                query.exec("SELECT * FROM version");
-                query.first();
-                if(query.isValid()){
-                    QVector<int> app_version = {APP_VERSION_NR};
-                    QVector<int> db_version(3);
-                    for(int i = 0; i < 3; i++) db_version[i] = query.value(i).toInt();
-                    copyDatabase = app_version != db_version;
-                    if(copyDatabase) {
-                        QString dbVersionString = QString::number(db_version[0]);
-                        for(int i = 1; i < db_version.count(); ++i) dbVersionString.append(QString(".%1").arg(db_version[i]));
-                        if(db_version < app_version) qDebug().noquote() << "Database-version" << dbVersionString << "smaller than app-version, update database-version.";
-                        else qDebug().noquote() << "Replace database, current database version" << dbVersionString;
-                    } else qDebug().noquote() << "No need to replace the database file - the app- and database versions are equal.";
-                }
-            }
-        }
-        QSqlDatabase::removeDatabase("qt_sql_default_connection");
-    }
-    if(copyDatabase){
-        if(QDir().mkpath(buchmaalVocabularyFile.absolutePath())){
-            QFile f(buchmaalVocabularyFile.absoluteFilePath());
-            f.setPermissions(QFile::ReadOther|QFile::WriteOther);
-            if(!f.remove()) qWarning() << "Could not delete old database.";
-            if(QFile(":/database/buchmaal-database.sqlite").copy(buchmaalVocabularyFile.absoluteFilePath()))
-                qDebug().noquote() << "Successfully replaced old database-file.";
-            else qWarning().noquote() << "Could not copy current version of database - check file permissions.";
-        } else {
-            qCritical().noquote() << "The AppData-Directory for updating the database could not be created, operation aborted.";
-        }
-    }
-
-    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");//not dbConnection
-    db.setDatabaseName(buchmaalVocabularyFile.absoluteFilePath());
-    if (!db.open()) qCritical().noquote() << db.lastError().text();
-    else qDebug().noquote() << "Successfully connected to database.";
-
-    WordListModel listModel;
-    ResultModel resultModel;
-#endif
-//    QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
-//    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
-//    QLocale::setDefault(QLocale(QLocale::Dutch, QLocale::Netherlands));
-//    QLocale::setDefault(QLocale(QLocale::Danish, QLocale::Denmark));
-//    QLocale::setDefault(QLocale(QLocale::NorwegianBokmal, QLocale::Norway));
-//    QLocale::setDefault(QLocale(QLocale::NorwegianNynorsk, QLocale::Norway));
-    QTranslator translator;
-    int appLanguage = 1;//default - English UK
-    if (translator.load(QLocale(), "Dictionary", "_", ":/translations", ".qm"))
+  QFileInfo buchmaalVocabularyFile(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/buchmaal-database.sqlite");
+  bool copyDatabase = true;
+  if(buchmaalVocabularyFile.exists()) {
     {
-        app.installTranslator(&translator);
-        switch(QLocale().language())
-        {
-        case QLocale::German:
-            appLanguage = 0;
-            break;
-#if WADDEN_SEA_DICTIONARY
-        case QLocale::Dutch:
-            appLanguage = 2;
-            break;
-        case QLocale::Danish:
-            appLanguage = 3;
-            break;
-#else
-        case QLocale::NorwegianBokmal:
-            appLanguage = 2;
-            break;
-        case QLocale::NorwegianNynorsk:
-            appLanguage = 3;
-            break;
-#endif
-        default:
-            ;//nur um Compiler-Warnungen zu unterdrücken, kann durch das vorangegangene if nicht auftreten
+      //scope to isolate database, so that the connection can be deleted when the database is out of scope
+      QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");//not dbConnection
+      db.setConnectOptions("QSQLITE_OPEN_READONLY=1;QSQLITE_ENABLE_REGEXP=1");
+      db.setDatabaseName(buchmaalVocabularyFile.absoluteFilePath()); //if the database file doesn't exist yet, it will create it
+      if (!db.open()) qCritical().noquote() << db.lastError().text();
+      {
+        //scope for query, so the connection can be deleted when the Query is out of scope
+        QSqlQuery query(db);
+        query.exec("SELECT * FROM version");
+        query.first();
+        if(query.isValid()) {
+          QVector<int> app_version = {APP_VERSION_NR};
+          QVector<int> db_version(3);
+          for(int i = 0; i < 3; i++) db_version[i] = query.value(i).toInt();
+          copyDatabase = app_version != db_version;
+          if(copyDatabase) {
+            QString dbVersionString = QString::number(db_version[0]);
+            for(int i = 1; i < db_version.count(); ++i) dbVersionString.append(QString(".%1").arg(db_version[i]));
+            if(db_version < app_version) qDebug().noquote() << "Database-version" << dbVersionString << "smaller than app-version, update database-version.";
+            else qDebug().noquote() << "Replace database, current database version" << dbVersionString;
+          } else qDebug().noquote() << "No need to replace the database file - the app- and database versions are equal.";
         }
+      }
     }
-    QQuickStyle::setStyle("Material");
-    QQuickWindow::setDefaultAlphaBuffer(true);
-    MyQQuickView view;
-    QQmlContext *ctxt = view.engine()->rootContext();
-    bool mobile = MOBILE == 1;
-    ctxt->setContextProperty("mobile", mobile);
-#if SPLASH
-    view.setSource(QUrl("qrc:/qml/Main.qml"));//Um den SplashScreen wieder zu aktivieren, alle Kommentare in qml.qrc, dieser Datei und myqquickview.cpp entfernen, view.setSource mit AppWindow wieder auskommentieren.
-    view.show();
+    QSqlDatabase::removeDatabase("qt_sql_default_connection");
+  }
+  if(copyDatabase) {
+    if(QDir().mkpath(buchmaalVocabularyFile.absolutePath())) {
+      QFile f(buchmaalVocabularyFile.absoluteFilePath());
+      f.setPermissions(QFile::ReadOther | QFile::WriteOther);
+      if(!f.remove()) qWarning() << "Could not delete old database.";
+      if(QFile(":/database/buchmaal-database.sqlite").copy(buchmaalVocabularyFile.absoluteFilePath()))
+        qDebug().noquote() << "Successfully replaced old database-file.";
+      else qWarning().noquote() << "Could not copy current version of database - check file permissions.";
+    } else {
+      qCritical().noquote() << "The AppData-Directory for updating the database could not be created, operation aborted.";
+    }
+  }
 
-//    this code is for testing the launch screen by showing it over 5 seconds
-    QTimer timer;
-    QEventLoop sleeper;
-    timer.setSingleShot(true);
-    sleeper.connect(&timer, SIGNAL(timeout()), SLOT(quit()));
-    timer.start(5000);
-    sleeper.exec();
+  QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");//not dbConnection
+  db.setDatabaseName(buchmaalVocabularyFile.absoluteFilePath());
+  if (!db.open()) qCritical().noquote() << db.lastError().text();
+  else qDebug().noquote() << "Successfully connected to database.";
+
+  WordListModel listModel;
+  ResultModel resultModel;
+#endif
+  //    QLocale::setDefault(QLocale(QLocale::German, QLocale::Germany));
+  //    QLocale::setDefault(QLocale(QLocale::English, QLocale::UnitedKingdom));
+  //    QLocale::setDefault(QLocale(QLocale::Dutch, QLocale::Netherlands));
+  //    QLocale::setDefault(QLocale(QLocale::Danish, QLocale::Denmark));
+  //    QLocale::setDefault(QLocale(QLocale::NorwegianBokmal, QLocale::Norway));
+  //    QLocale::setDefault(QLocale(QLocale::NorwegianNynorsk, QLocale::Norway));
+  QTranslator translator;
+  int appLanguage = 1;//default - English UK
+  if (translator.load(QLocale(), "Dictionary", "_", ":/translations", ".qm")) {
+    app.installTranslator(&translator);
+    switch(QLocale().language()) {
+      case QLocale::German:
+        appLanguage = 0;
+        break;
+#if WADDEN_SEA_DICTIONARY
+      case QLocale::Dutch:
+        appLanguage = 2;
+        break;
+      case QLocale::Danish:
+        appLanguage = 3;
+        break;
+#else
+      case QLocale::NorwegianBokmal:
+        appLanguage = 2;
+        break;
+      case QLocale::NorwegianNynorsk:
+        appLanguage = 3;
+        break;
+#endif
+      default:
+        ;//nur um Compiler-Warnungen zu unterdrücken, kann durch das vorangegangene if nicht auftreten
+    }
+  }
+  QQuickStyle::setStyle("Material");
+  QQuickWindow::setDefaultAlphaBuffer(true);
+  MyQQuickView view;
+  QQmlContext* ctxt = view.engine()->rootContext();
+  bool mobile = MOBILE == 1;
+  ctxt->setContextProperty("mobile", mobile);
+#if SPLASH
+  view.setSource(QUrl("qrc:/qml/Main.qml"));//Um den SplashScreen wieder zu aktivieren, alle Kommentare in qml.qrc, dieser Datei und myqquickview.cpp entfernen, view.setSource mit AppWindow wieder auskommentieren.
+  view.show();
+
+  //    this code is for testing the launch screen by showing it over 5 seconds
+  QTimer timer;
+  QEventLoop sleeper;
+  timer.setSingleShot(true);
+  sleeper.connect(&timer, SIGNAL(timeout()), SLOT(quit()));
+  timer.start(5000);
+  sleeper.exec();
 
 #endif
 #if WADDEN_SEA_DICTIONARY
-    VocabularyModel model;
-    VocabularyListModel listModel(&model);
-    DictionaryModel dictionaryModel(&model);
-    ctxt->setContextProperty("vocabularyModel", &listModel);
-    ctxt->setContextProperty("dictionaryModel", &dictionaryModel);
+  VocabularyModel model;
+  VocabularyListModel listModel(&model);
+  DictionaryModel dictionaryModel(&model);
+  ctxt->setContextProperty("vocabularyModel", &listModel);
+  ctxt->setContextProperty("dictionaryModel", &dictionaryModel);
 #else
-    ctxt->setContextProperty("vocabularyModel", &listModel);
-    ctxt->setContextProperty("dictionaryModel", nullptr);
+  ctxt->setContextProperty("vocabularyModel", &listModel);
+  ctxt->setContextProperty("dictionaryModel", nullptr);
 #endif
-    ctxt->setContextProperty("appLanguage", appLanguage);
-    ctxt->setContextProperty("app_version", TOSTRING(APP_VERSION_STR));
-    ctxt->setContextProperty("qt_version", QT_VERSION_STR);
+  ctxt->setContextProperty("appLanguage", appLanguage);
+  ctxt->setContextProperty("app_version", TOSTRING(APP_VERSION_STR));
+  ctxt->setContextProperty("qt_version", QT_VERSION_STR);
 
 #if !SPLASH
-    view.setSource(QUrl("qrc:/qml/AppWindow.qml"));
-    QQuickItem *mainWindow = view.rootObject();
+  view.setSource(QUrl("qrc:/qml/AppWindow.qml"));
+  QQuickItem* mainWindow = view.rootObject();
 #else
-    QQuickItem *mainLoader = view.rootObject()->findChild<QQuickItem*>("mainLoader");
-    mainLoader->setProperty("active", true);
-    QEventLoop loadMainWindow;
-    loadMainWindow.connect(mainLoader, SIGNAL(loaded()), SLOT(quit()));
-    loadMainWindow.exec();
-    QQuickItem *mainWindow = qvariant_cast<QQuickItem*>(mainLoader->property("item"));
+  QQuickItem* mainLoader = view.rootObject()->findChild<QQuickItem*>("mainLoader");
+  mainLoader->setProperty("active", true);
+  QEventLoop loadMainWindow;
+  loadMainWindow.connect(mainLoader, SIGNAL(loaded()), SLOT(quit()));
+  loadMainWindow.exec();
+  QQuickItem* mainWindow = qvariant_cast<QQuickItem*>(mainLoader->property("item"));
 #endif
 #if !MOBILE
-    view.loadGeometry();
+  view.loadGeometry();
 #endif
-    if(mainWindow->property("vocabularyList").toBool())//sicherstellen, dass updateView zu Anfang einmal ausgeführt wird, wenn vocabularyList der letzte State war
-    {
-        QMetaObject::invokeMethod(mainWindow->findChild<QQuickItem*>("lvVocabulary"), "updateView");
-    }
-    return app.exec();
+  if(mainWindow->property("vocabularyList").toBool()) { //sicherstellen, dass updateView zu Anfang einmal ausgeführt wird, wenn vocabularyList der letzte State war
+    QMetaObject::invokeMethod(mainWindow->findChild<QQuickItem*>("lvVocabulary"), "updateView");
+
+  }
+  qDebug() << QMetaObject::invokeMethod(mainWindow->findChild<QQuickItem*>("db_update"), "setUpdatedDate", Q_ARG(QVariant, QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss")));
+  return app.exec();
 }
 

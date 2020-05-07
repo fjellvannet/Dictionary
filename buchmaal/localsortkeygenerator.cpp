@@ -7,13 +7,13 @@ LocalSortKeyGenerator::LocalSortKeyGenerator()
 
 void LocalSortKeyGenerator::addReplacePair(const QChar a_value, const QString a_replacement)
 {
-    m_replace_pairs.append(replace_pair(a_value, a_replacement));
+    m_replace_pairs.append(ReplacePair(a_value, a_replacement));
 }
 
 QString LocalSortKeyGenerator::toString()
 {
     QString s;
-    for(replace_pair pair: m_replace_pairs){
+    for(ReplacePair pair: m_replace_pairs){
         s.append(pair.toString());
     }
     return s;
@@ -55,7 +55,7 @@ QPair<QString, QChar> LocalSortKeyGenerator::sortKey(const QString& input)
         {
             sectionLetter = c.toUpper();
         }
-        for(replace_pair pair : m_replace_pairs) {
+        for(ReplacePair pair : m_replace_pairs) {
             if(c == pair.value){
                 localSortKey.append(pair.replacement);
                 appended = true;

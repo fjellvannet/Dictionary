@@ -1,7 +1,7 @@
 TEMPLATE = app
 include(deployment.pri) # Default rules for deployment.
 
-QT += core qml quick svg sql quickcontrols2
+QT += core qml quick svg sql quickcontrols2 network
 CONFIG += qml_debug c++11
 #DEFINES *= QT_USE_QSTRINGBUILDER #denne må du eventuelt ta ut dersom det blir problemer. Erstatter alle + operatorene, som henger sammen strenger,
     # med %-operatorer, forskjellen då er at det brukes stringbuildere, som forhindrer unødvendige kopieringer i minnen
@@ -35,9 +35,11 @@ QT_QUICK_CONTROLS_STYLE=material
 QT_AUTO_SCREEN_SCALE_FACTOR=1
 
 HEADERS += \
+    buchmaal/databasemanager.h \
     myqquickview.h
 
 SOURCES += main.cpp \
+    buchmaal/databasemanager.cpp \
     myqquickview.cpp
 
 lupdate_only{

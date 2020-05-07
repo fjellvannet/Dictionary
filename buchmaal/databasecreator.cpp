@@ -322,4 +322,3 @@ bool DatabaseCreator::askToContinueDespiteError(QString errorMessage)
     if(!continueApp) std::exit(0);
     return !continueApp;
 }
-

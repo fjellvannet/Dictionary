@@ -288,10 +288,37 @@ Item {
                         Layout.fillWidth: true
                     }
 
+
                     Rectangle {
                         color: "black"
                         Layout.fillWidth: true
                         Layout.preferredHeight: globalBorder
+                    }
+
+                    RowLayout {
+                        id: db_settings
+                        visible: constants.isBuchmaal
+                        AdaptedText {
+                            Layout.fillWidth: true
+                            objectName: "db_update"
+                            id: db_update
+                            wrapMode: Text.WordWrap
+                            function setUpdatedDate(date) {
+                                db_update.text = qsTr("<h3>Database</h3><p>Last updated: %1</p>").arg(date)
+                            }
+                        }
+
+                        TextButton {
+                            text: "Update database"
+                        }
+
+                    }
+
+                    Rectangle {
+                        visible: constants.isBuchmaal
+                        color: "black"
+                        Layout.preferredHeight: globalBorder
+                        Layout.fillWidth: true
                     }
 
                     AdaptedText {
@@ -658,7 +685,7 @@ Item {
             value: 0.73
             height: 4 * globalMargin
             indeterminate: true
-            visible: false
+            visible: true
         }
 
         states: [

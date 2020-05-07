@@ -1,4 +1,4 @@
-#include "WordListModel.h"
+#include "wordlistmodel.h"
 
 WordListModel::WordListModel()
 {
