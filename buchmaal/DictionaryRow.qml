@@ -4,16 +4,16 @@ import QtQuick.Controls.Material 2.1
 import QtQuick.Layouts 1.1
 
 RowLayout{
-    y: globalMargin / 2
+    y: mg
     anchors.margins: y
     spacing: y
-    property int baseHeight: 3*globalMargin
+    property int baseHeight: 1.5 * em
     property alias textHeight: dictionaryWord.contentHeight
 
     FlagImage {
         visible: settings.flags_in_all_language_mode
         Layout.preferredHeight: baseHeight
-        Layout.preferredWidth: 5 * globalMargin
+        Layout.preferredWidth: 2.5 * em
         Layout.alignment: Qt.AlignVCenter
         languageId: {
             var a = ResultLanguage

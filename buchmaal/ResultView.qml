@@ -16,8 +16,8 @@ Item {
     Column {
         id: resultColumn
         anchors.fill: parent
-        anchors.margins: 1.5 * globalMargin
-        spacing: globalMargin
+        anchors.margins: 0.75 * em
+        spacing: mg
         property int row: resultWidget.resultListView.currentIndex
         property alias updateText: resultView.updateText
         ResultRow {

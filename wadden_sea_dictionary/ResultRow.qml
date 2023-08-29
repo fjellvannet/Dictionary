@@ -1,6 +1,6 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.0
-import QtQuick.Layouts 1.3
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
 
 Row {
     property double resize: highDpi ? 1 : 1.25
@@ -9,12 +9,12 @@ Row {
     property bool scientific: false
     property bool updateText: parent.updateText
 
-    spacing: globalMargin
+    spacing: em
     visible: fromLanguage !== rowLanguage
 
     FlagImage {
         id: flag
-        height: 4 * resize * globalMargin
+        height: 1.75 * resize * em
         width: height / 3 * 5
         languageId: rowLanguage
     }

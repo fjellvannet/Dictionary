@@ -1,57 +1,97 @@
 #include "databasemanager.h"
+#include "progressmanager.h"
 #include "localsortkeygenerator.h"
+#include <QtSql>
 
-DatabaseManager::DatabaseManager() {
+// Constants
+const QStringList WORDLIST_COLUMNS = QStringList({"NO", "NO_type", "NO_add_query", "NO_comment",
+                                                  "DE", "DE_type", "DE_add_query", "DE_comment", "DE_category",
+                                                  "NO_sort", "NO_sect", "DE_sort", "DE_sect"});
+const QVector<QPair<const char*, QStringList>> WORDLIST_INDICES = {{"i_NO", WORDLIST_COLUMNS.mid(0, 3)},
+  {"s_NO", WORDLIST_COLUMNS.mid(8, 1)}, {"i_DE", WORDLIST_COLUMNS.mid(4, 3)}, {"s_DE", WORDLIST_COLUMNS.mid(10, 1)}
+};
+const QStringList WORDLIST_INFO_COLUMNS = QStringList({"LAST_UPDATED_LOCAL", "LAST_UPDATED_SERVER"});
+const QStringList WORDLIST_INFO_DOWNLOAD_LINKS = QStringList({"https://www.heinzelnisse.info/",
+                                                              "https://www.heinzelnisse.info/wiki/OldNews"});
+#define DATABASE_FILENAME "buchmaal-database.sqlite"
+#define DATABASE_FILENAME_RESOURCES ":/database/buchmaal-database.sqlite"
+#define TABLE_WORDLIST "WORDLIST"
+#define TABLE_WORDLIST_INFO "WORDLIST_INFO"
+//#define WORDLIST_DOWNLOAD_LINK "http://ftp.uni-kl.de/pub/linux/knoppix-dvd/KNOPPIX_V8.6.1-2019-10-14-DE.iso"
+#define WORDLIST_DOWNLOAD_LINK "https://www.heinzelnisse.info/Downloads/heinzelliste.js"
+#define IS_SQL_SELECT_REGEX "^SELECT .*? FROM ."
+#define MSG_TABLES_EXIST "tables exist"
+#define SQL_TABLES_EXISTING "SELECT CASE WHEN COUNT(*) == 2 THEN '" MSG_TABLES_EXIST "' ELSE 'tables don''t exist' " \
+  "END FROM SQLITE_MASTER WHERE TYPE = 'table' AND NAME IN ('" TABLE_WORDLIST "', '" TABLE_WORDLIST_INFO "')"
+#define SQL_INSERT_INTO "INSERT INTO %1 VALUES(%2)"
+#define SQL_SELECT "SELECT %1 FROM %2"
+#define SQL_UPDATE "UPDATE %1 SET %2"
+#define SQL_CREATE_INDEX "CREATE INDEX IF NOT EXISTS %1 ON %2 (%3)"
+#define SQL_CREATE_TABLE "CREATE TABLE %1 (%2)"
+#define SQL_DROP_INDEX "DROP INDEX IF EXISTS %1 ON %2"
 
+#define REGEXP_FIND_WORDLIST_LAST_UPDATED "^<li> (?<lastUpdatedDate>\\d{2}\\.\\d{2}\\.\\d{4}) <ul>(\r|\n|\r\n)" \
+  "<li> Update der Wörterliste </li>$"
+#define ERROR_DOWNLOADING_WORDLIST_INFO "Error trying to check if the wordlist has been updated on the server. %1\n" \
+  "The update mechanism will anyway try to download the newest wordlist."
+#define ERROR_TABLES_NOT_CREATED "The table structure hasn't been initialized."
+#define ERROR_NO_LAST_UPDATED_DATE "Couldn't extract the date when the wordlist was last updated."
+
+#define BATCH_SIZE 1000
+#define MAX_BATCH_SIZE 1000
+#define RECORDS_TO_TOGGLE_INDEX 1000
+
+#define PROGRESS_MANAGER_FORMAT_ALL_STATS "<td width='%1'><%percentage%></td>" \
+  "<td width='%1'><sup><%done.unit-s%></sup>&frasl;<sub><%tot.unit-s%></sub><%unit-l%></td>\n" \
+  "<td width='%1'><%speed%> <sup><%unit-l%></sup>&frasl;<sub>s</sub></td><td width='%1'><%estimateFormat%></td>"
+#define PROGRESS_MANAGER_FORMAT_INDETERMINATE_DONE_SPEED "\n<td width='%6'><%done.unit-l%></td>" \
+  "<td width='%6'><%speed%> <sup><%unit-l%></sup>&frasl;<sub>s</sub></td>"
+
+DatabaseManager::DatabaseManager(QObject* parent): QObject(parent) {
+  try {
+    wordListUpdateLocal = directQuery(QString(SQL_SELECT).arg(TABLE_WORDLIST, WORDLIST_COLUMNS.at(0)),
+                                      tr(ERROR_NO_LAST_UPDATED_DATE)).toDateTime();
+  } catch (QString s) {
+    qWarning().noquote() << s;
+  }
+  connect(this, &DatabaseManager::startWordListUpdate, this, &DatabaseManager::executeWordListUpdate,
+          Qt::ConnectionType::QueuedConnection);
 }
 
-QString DatabaseManager::downloadToString() {
-  QNetworkAccessManager manager;
-  if (!manager.networkAccessible()) throw "Network is not available";
-  else if (!QSslSocket::supportsSsl()) throw "SSL libraries are not available";
-
-  QNetworkReply* reply = manager.get(QNetworkRequest(DOWNLOAD_LINK));
-  QEventLoop sleeper;
-  QObject::connect(reply, &QNetworkReply::finished, &sleeper, &QEventLoop::quit);
-  sleeper.exec();
-  for(auto x : reply->rawHeaderPairs()) {
-    qDebug() << x.first << x.second;
+bool DatabaseManager::openDatabaseConnection() {
+  const QFileInfo databaseFile = QFileInfo(QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) +
+                                           "/" + DATABASE_FILENAME);
+  if (!databaseFile.exists()) {
+    copyOrReplaceDatabaseFile(databaseFile, false);
   }
-
-  if (reply->error()) throw reply->errorString();
-  return reply->readAll();
+  bool connectionSuccessful = connectDatabase(databaseFile);
+  if (!connectionSuccessful) {
+    copyOrReplaceDatabaseFile(databaseFile, true);
+    connectionSuccessful = connectDatabase(databaseFile);
+  }
+  return connectionSuccessful;
 }
 
-void DatabaseManager::openDatabaseConnection() {
-  if (!DATABASE_FILE.exists()) {
-    copyOrReplaceDatabaseFile(false);
-  }
-  if (!connectDatabase()) {
-    copyOrReplaceDatabaseFile(true);
-  }
-}
-
-bool DatabaseManager::connectDatabase() {
+bool DatabaseManager::connectDatabase(const QFileInfo& databaseFile) {
   QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-  db.setDatabaseName(DATABASE_FILE.absoluteFilePath());
-  if (!db.open()) {
+  db.setDatabaseName(databaseFile.absoluteFilePath());
+  bool connectionSuccessful = db.open();
+  if (connectionSuccessful) {
     qCritical().noquote() << db.lastError().text();
-    return false;
   } else {
     qDebug().noquote() << "Successfully connected to database.";
-    return true;
   }
+  return connectionSuccessful;
 }
 
-bool DatabaseManager::copyOrReplaceDatabaseFile(bool overwrite) {
-  qDebug() << DATABASE_FILE.absolutePath();
-  if(QDir().mkpath(DATABASE_FILE.absolutePath())) {
-    QFile f(DATABASE_FILE.absoluteFilePath());
+bool DatabaseManager::copyOrReplaceDatabaseFile(const QFileInfo& databaseFile, bool overwrite) {
+  if(QDir().mkpath(databaseFile.absolutePath())) {
+    QFile f(databaseFile.absoluteFilePath());
     f.setPermissions(QFile::ReadOther | QFile::WriteOther);
-    if (DATABASE_FILE.exists() && overwrite) { //remove existing database-file - copy doesn't overwrite
+    if (databaseFile.exists() && overwrite) { //remove existing database-file - copy doesn't overwrite
       if(!f.remove()) qWarning() << "Could not delete old database.";
     }
-    if(QFile(":/database/buchmaal-database.sqlite").copy(DATABASE_FILE.absoluteFilePath())) {
+    if(QFile(DATABASE_FILENAME_RESOURCES).copy(databaseFile.absoluteFilePath())) {
       qDebug().noquote() << "Successfully copied database-file.";
       return true;
     } else {
@@ -63,118 +103,10 @@ bool DatabaseManager::copyOrReplaceDatabaseFile(bool overwrite) {
   return false;
 }
 
-bool DatabaseManager::updateWordList(bool skipHashCheck) {
-  try {
-    QString updatedWordListString = getUpdatedWordlist();
-    QDateTime newDownloadTime = QDateTime::currentDateTime();
-    QByteArray wordListSha512 = QCryptographicHash::hash(updatedWordListString.toUtf8(), QCryptographicHash::Sha512);
-    if (directQuery(SQL_TABLES_EXISTING, ERROR_TABLES_NOT_CREATED) != MSG_TABLES_EXIST) {
-      createTableStructure();
-      skipHashCheck = true; // the new tables are empty - no need to check
-    }
-    if(!skipHashCheck) {
-      QVariantList wordListInfo = directQuery(SQL_SELECT_WORDLIST_INFO).toList();
-      if (wordListInfo.at(1) == updatedWordListString.length() && wordListInfo.at(2) == wordListSha512) {
-        qDebug() << "The database is already up to date.";
-        updateWordListInfo(&newDownloadTime);
-        return true;
-      }
-    }
-    QSet<QString> currentWordSet = getCurrentWordSet();
-    QStringList updatedWordList = prepareRawWordList(&updatedWordListString);
-    QSet<QString> updatedWordSet(updatedWordList.begin(), updatedWordList.end());
-
-    QSet<QString> wordsToAdd = updatedWordSet.subtract(currentWordSet);
-    insertNewWords(&wordsToAdd);
-
-    updatedWordSet = QSet<QString>(updatedWordList.begin(), updatedWordList.end());
-    QSet<QString> wordsToRemove = currentWordSet.subtract(updatedWordSet);
-    deleteRemovedWords(&wordsToRemove);
-
-    updateWordListInfo(&newDownloadTime, updatedWordListString.length(), &wordListSha512);
-    qDebug() << "The database has been updated successfully.";
-    return true;
-  } catch (const char* s) {
-    qWarning().noquote() << s << "Aborting updating wordlist.";
-  } catch (QString s) {
-    qWarning().noquote() << s << "Aborting updating wordlist.";
-  }
-  return false;
-}
-
-bool DatabaseManager::deleteRemovedWords(QSet<QString>* wordsToRemove) {
-  QVector<QVector<QStringRef>> removeWords;
-  splitWordLines(&removeWords, wordsToRemove);
-  QSqlQuery query(QString("DELETE FROM WORDLIST WHERE %1=?").arg(WORDLIST_COLUMNS.mid(0, 9).join("=? AND ")));
-
-  QElapsedTimer speed;
-  speed.start();
-  for(int i = 0; i < removeWords.length(); i += BATCHSIZE) { // går gjennom batchpakker
-    int batchStarted = speed.elapsed();
-    bool lastUncopleteBatch = (i + BATCHSIZE) > removeWords.length();
-    QVariantList no_batch_words, de_batch_words;
-    for(int j = 0; j < WORDLIST_COLUMNS.length() - 4; j++) { //går gjennom kolonner
-      QVariantList currentColumnValues;
-      for(int k = 0; k < BATCHSIZE; k++) { //går gjennom linjer i batchpakka
-        if(lastUncopleteBatch && (k + i) >= removeWords.length()) break;
-        QVector<QStringRef>* currentRowValues = &removeWords[k + i];
-        if(currentRowValues->length() <= j) {
-          currentColumnValues.append(QVariant());
-        } else { // då må den være større eller lik j, så det må finnes en verdi
-          currentColumnValues.append(currentRowValues->at(j).toString());
-        }
-      }
-      query.addBindValue(currentColumnValues);
-    }
-    if (!query.execBatch()) throw QString("Couldn't remove updated words from database " % query.lastError().text());
-    qDebug().noquote() << QTime(0, 0, 0, 0).addMSecs(speed.elapsed()).toString("mm:ss")
-                       << "Deleting updated words, executed Batch"
-                       << QString::number(i / BATCHSIZE + 1) + ", which took"
-                       << QTime(0, 0, 0, 0).addMSecs(speed.elapsed() - batchStarted).toString("mm:ss:zzz");
-  }
-  return true;
-}
-
-QSet<QString> DatabaseManager::getCurrentWordSet() {
-  QSqlQuery query;
-  query.setForwardOnly(true);
-  QSet<QString> currentWordList;
-  currentWordList.reserve(50000);
-  bool success = query.exec(SQL_SELECT_WORDLIST.arg(WORDLIST_COLUMNS.mid(0, 9).join(", ")));
-  if (success) {
-    query.first();
-    while (query.isValid()) {
-      QString line;
-      line += query.value(0).toString();
-      for (int i = 1; i < 9; ++i) {
-        line += QString('\t' % query.value(i).toString());
-      }
-      currentWordList.insert(line);
-      query.next();
-    }
-  } else throw QString("Couldn't retrieve data from wordlist-table. " % query.lastError().text());
-  return currentWordList;
-}
-
-bool DatabaseManager::updateWordListInfo(QDateTime* lastUpdatedTimestamp, int length, QByteArray* sha512Hash) {
-  QSqlQuery query;
-  if (sha512Hash == nullptr) {
-    query.prepare(SQL_UPDATE_INFO.arg(QString(WORDLIST_INFO_COLUMNS.at(0) % "=?")));
-  } else {
-    query.prepare(SQL_UPDATE_INFO.arg(QString(WORDLIST_INFO_COLUMNS.join("=?, ") % "=?")));
-    query.bindValue(1, length);
-    query.bindValue(2, *sha512Hash);
-  }
-  query.bindValue(0, *lastUpdatedTimestamp);
-  bool success = query.exec();
-  if (!success) throw QString("Couldn't update wordlist-information in database. " % query.lastError().text());
-  return success;
-}
-
 QVariant DatabaseManager::directQuery(QString sqlSelect, QString errorMessage) {
   QSqlQuery query;
-  if(!QRegularExpression("^SELECT .*? FROM .", QRegularExpression::CaseInsensitiveOption).match(sqlSelect).hasMatch()) {
-    throw "The query is no SELECT-SQL-clause";
+  if(!QRegularExpression(IS_SQL_SELECT_REGEX, QRegularExpression::CaseInsensitiveOption).match(sqlSelect).hasMatch()) {
+    throw tr("The query is no SELECT-SQL-clause");
   }
   if(!query.exec(sqlSelect)) throw QString(errorMessage % ' ' % query.lastError().text());
   query.first();
@@ -188,35 +120,162 @@ QVariant DatabaseManager::directQuery(QString sqlSelect, QString errorMessage) {
   return i <= 1 ? results.last() : results;
 }
 
-bool DatabaseManager::insertNewWords(QSet<QString>* wordsToAdd) {
+bool DatabaseManager::executeWordListUpdate() {
+  QPair<bool, QString> updateResult = updateWordList();
+  if (updateResult.first) {
+    qDebug().noquote() << updateResult.second;
+  } else {
+    qWarning().noquote() << updateResult.second;
+  }
+  emit wordListUpdateCompleted(updateResult.second);
+  return updateResult.first;
+}
+
+QPair<bool, QString> DatabaseManager::updateWordList() {
+  try {
+    QSqlDatabase::database().close();
+    ProgressManager progressManager;
+    prepareProgressManager(progressManager);
+    QDateTime wordListUpdateServer = getWordListUpdatedOnServer(progressManager);
+    if (wordListUpdateLocal.isValid() && wordListUpdateServer.isValid() && wordListUpdateLocal > wordListUpdateServer) {
+      updateWordListInfo(QDateTime::currentDateTime());
+      return QPair(true, tr("The wordlist is up to date, last updated on the server: %1").arg(
+                     wordListUpdateServer.date().toString(Qt::DefaultLocaleShortDate)));
+    } // update is necessary - either one of the dates wasn't defined, or there is a newer version on the server
+    QString updatedWordListString(progressManager.download(QUrl(WORDLIST_DOWNLOAD_LINK),
+                                                           tr("Downloading updated wordlist")));
+    QDateTime newDownloadTime = QDateTime::currentDateTime();
+    if (directQuery(SQL_TABLES_EXISTING, ERROR_TABLES_NOT_CREATED) != MSG_TABLES_EXIST) {
+      createTableStructure(progressManager);
+    }
+    progressManager.setCurrentStep(tr("Preparing to update wordlist."));
+    QSet<QString> currentWordSet = getCurrentWordSet();
+    QStringList updatedWordList = prepareRawWordList(updatedWordListString);
+    QSet<QString> updatedWordSet(updatedWordList.begin(), updatedWordList.end());
+
+    QSet<QString> wordsToAdd = updatedWordSet.subtract(currentWordSet);
+    updatedWordSet = QSet<QString>(updatedWordList.begin(), updatedWordList.end());
+    QSet<QString> wordsToRemove = currentWordSet.subtract(updatedWordSet);
+
+    updateWordListInDatabase(progressManager, wordsToAdd, wordsToRemove);
+    updateWordListInfo(newDownloadTime, wordListUpdateServer);
+    return QPair(true, wordListUpdateCompletedMessage(wordsToAdd.size(), wordsToRemove.size()));
+  } catch (QString s) {
+    if (s == ProgressManager::OPERATION_CANCELLED_BY_USER) {
+      return QPair(false, tr("Updating the wordlist has been cancelled by the user."));
+    } else {
+      return QPair(false, tr("Error updating wordlist. %1 The operation has been aborted.").arg(s));
+    }
+  }
+}
+
+QDateTime DatabaseManager::getWordListUpdatedOnServer(ProgressManager& progressManager) {
+  progressManager.setCurrentStep(tr("Checking if wordlist update is necessary."));
+  QRegularExpression findLastUpdatedDate(REGEXP_FIND_WORDLIST_LAST_UPDATED, QRegularExpression::MultilineOption |
+                                         QRegularExpression::DontCaptureOption);
+  for (QString downloadLink : WORDLIST_INFO_DOWNLOAD_LINKS) {
+    try {
+      QRegularExpressionMatch matchServerDate = findLastUpdatedDate.match(progressManager.download(QUrl(downloadLink)));
+      if (matchServerDate.hasMatch()) {
+        return QDateTime::fromString(matchServerDate.captured("lastUpdatedDate"), "dd.MM.yyyy");
+      }
+    } catch (QString s) {
+      qWarning().noquote() << tr(ERROR_DOWNLOADING_WORDLIST_INFO).arg(s);
+    }
+  }
+  return QDateTime();
+}
+
+void DatabaseManager::deleteRemovedWords(ProgressManager& progressManager, QSet<QString>& wordsToRemove) {
+  progressManager.setCurrentStep(tr("Removing updated words from the database"));
+  QVector<QVector<QStringView>> removeWords;
+  splitWordLines(removeWords, wordsToRemove);
+  QSqlQuery query(QString("DELETE FROM WORDLIST WHERE %1=?").arg(WORDLIST_COLUMNS.mid(0, 9).join("=? AND ")));
+
+  for(int i = 0; i < removeWords.length(); i += BATCH_SIZE) { // går gjennom batchpakker
+    bool lastUncopleteBatch = (i + BATCH_SIZE) > removeWords.length();
+    QVariantList no_batch_words, de_batch_words;
+    int k;
+    for(int j = 0; j < WORDLIST_COLUMNS.length() - 4; j++) { //går gjennom kolonner
+      QVariantList currentColumnValues;
+      for(k = 0; k < BATCH_SIZE; k++) { //går gjennom linjer i batchpakka
+        if(lastUncopleteBatch && (k + i) >= removeWords.length()) break;
+        QVector<QStringView>* currentRowValues = &removeWords[k + i];
+        if(currentRowValues->length() <= j) {
+          currentColumnValues.append(QVariant());
+        } else { // då må den være større eller lik j, så det må finnes en verdi
+          currentColumnValues.append(currentRowValues->at(j).toString());
+        }
+      }
+      query.addBindValue(currentColumnValues);
+    }
+    if (!query.execBatch()) throw QString("Couldn't remove updated words from database " % query.lastError().text());
+    progressManager.emitCurrentStepProgress(k + i, removeWords.length());
+  }
+}
+
+QSet<QString> DatabaseManager::getCurrentWordSet() {
+  QSqlQuery query;
+  query.setForwardOnly(true);
+  QSet<QString> currentWordSet;
+  currentWordSet.reserve(50000);
+  bool success = query.exec(QString(SQL_SELECT).arg(WORDLIST_COLUMNS.mid(0, 9).join(", "), TABLE_WORDLIST));
+  if (success) {
+    query.first();
+    while (query.isValid()) {
+      QString line = query.value(0).toString();
+      for (int i = 1; i < 9; ++i) {
+        line.append(QString('\t' % query.value(i).toString()));
+      }
+      currentWordSet.insert(line);
+      query.next();
+    }
+  } else throw QString("Couldn't retrieve data from wordlist-table. " % query.lastError().text());
+  return currentWordSet;
+}
+
+bool DatabaseManager::updateWordListInfo(QDateTime wordListUpdateLocal, QDateTime wordListUpdateServer) {
+  QSqlQuery query;
+  if (!wordListUpdateServer.isValid()) {
+    query.prepare(QString(SQL_UPDATE).arg(TABLE_WORDLIST_INFO, WORDLIST_INFO_COLUMNS.at(0) + "=?"));
+  } else {
+    query.prepare(QString(SQL_UPDATE).arg(TABLE_WORDLIST_INFO, WORDLIST_INFO_COLUMNS.join("=?, ") + "=?"));
+    query.bindValue(1, wordListUpdateServer);
+  }
+  query.bindValue(0, wordListUpdateLocal);
+  bool success = query.exec();
+  if (!success) throw QString(tr("Couldn't update wordlist-information in database.") % " " % query.lastError().text());
+  else this->wordListUpdateLocal = wordListUpdateLocal;
+  return success;
+}
+
+void DatabaseManager::insertNewWords(ProgressManager& progressManager, QSet<QString>& wordsToAdd) {
   LocalSortKeyGenerator generator_no, generator_de;
   generator_de.addReplacePair(QString("ß").at(0), "ss");
   generator_no.addReplacePair(QString("æ").at(0), "Å");
   generator_no.addReplacePair(QString("ø").at(0), "Æ");
   generator_no.addReplacePair(QString("å").at(0), "Ø");
 
-  QString placeholders = QString(QString("?, ").repeated(WORDLIST_COLUMNS.length() - 1) % '?');
-  QSqlQuery query(QString("INSERT INTO WORDLIST (%1) VALUES(%2)").arg(WORDLIST_COLUMNS.join(", ")).arg(placeholders));
+  QSqlQuery query(QString(SQL_INSERT_INTO).arg(TABLE_WORDLIST,
+                                               QString("?, ").repeated(WORDLIST_COLUMNS.length() - 1) + '?'));
+  progressManager.setCurrentStep(tr("Inserting %n new words into the database", "", wordsToAdd.size()), tr("words"));
 
-  QElapsedTimer speed;
-  speed.start();
-  QVector<QVector<QStringRef>> insertWords;
-  splitWordLines(&insertWords, wordsToAdd);
+  QVector<QVector<QStringView>> insertWords;
+  splitWordLines(insertWords, wordsToAdd);
   bool lastUncopleteBatch;
 
-  for(int i = 0; i < insertWords.length(); i += BATCHSIZE) { // går gjennom batchpakker
-    int batchStarted = speed.elapsed();
-    lastUncopleteBatch = (i + BATCHSIZE) > insertWords.length();
+  for(int i = 0; i < insertWords.length(); i += BATCH_SIZE) { // går gjennom batchpakker
+    lastUncopleteBatch = (i + BATCH_SIZE) > insertWords.length();
     QVariantList no_batch_words, de_batch_words;
     for(int j = 0; j < WORDLIST_COLUMNS.length() - 4; j++) { //går gjennom kolonner
       QVariantList currentColumnValues;
-      for(int k = 0; k < BATCHSIZE; k++) { //går gjennom linjer i batchpakka
+      for(int k = 0; k < BATCH_SIZE; k++) { //går gjennom linjer i batchpakka
         if(lastUncopleteBatch && (k + i) >= insertWords.length()) break;
-        QVector<QStringRef>* currentRowValues = &insertWords[k + i];
-        if(currentRowValues->length() <= j) {
+        QVector<QStringView>& currentRowValues = insertWords[k + i];
+        if(currentRowValues.length() <= j) {
           currentColumnValues.append(QVariant());
         } else { // då må den være større eller lik j, så det må finnes en verdi
-          currentColumnValues.append(currentRowValues->at(j).toString());
+          currentColumnValues.append(currentRowValues.at(j).toString());
         }
       }
       if(j == 0) no_batch_words = currentColumnValues;
@@ -239,45 +298,88 @@ bool DatabaseManager::insertNewWords(QSet<QString>* wordsToAdd) {
     query.addBindValue(DE_sort);
     query.addBindValue(DE_sect);
     if (!query.execBatch()) throw QString("Couldn't insert new words into database " % query.lastError().text());
-    if (!lastUncopleteBatch) {
-      qDebug().noquote() << QTime(0, 0, 0, 0).addMSecs(speed.elapsed()).toString("mm:ss")
-                         << "Inserting new words, executed Batch"
-                         << QString::number(i / BATCHSIZE + 1) + ", which took"
-                         << QTime(0, 0, 0, 0).addMSecs(speed.elapsed() - batchStarted).toString("mm:ss:zzz");
+    progressManager.emitCurrentStepProgress(i + no_batch_words.length(), insertWords.length());
+  }
+}
+
+bool DatabaseManager::splitWordLines(QVector<QVector<QStringView>>& result, QSet<QString>& wordLines) {
+  result.reserve(wordLines.size());
+  for (QSet<QString>::iterator wordLine = wordLines.begin(); wordLine != wordLines.end(); ++wordLine) {
+    result.append(wordLine->splitRef("\t"));
+  }
+  return true;
+}
+
+void DatabaseManager::updateWordListInDatabase(ProgressManager& progressManager, QSet<QString>& wordsToAdd,
+                                               QSet<QString>& wordsToRemove) {
+  QSqlQuery query;
+  if (wordsToAdd.size() + wordsToRemove.size() < RECORDS_TO_TOGGLE_INDEX) {
+    progressManager.setCurrentStep(tr("Updating wordlist database"));
+    deleteRemovedWords(progressManager, wordsToRemove);
+    insertNewWords(progressManager, wordsToAdd);
+  } else {
+    for (const QPair<const char*, QStringList> index : WORDLIST_INDICES) {
+      query.exec(QString(SQL_DROP_INDEX).arg(index.first));
+    }
+    deleteRemovedWords(progressManager, wordsToRemove);
+    insertNewWords(progressManager, wordsToAdd);
+    progressManager.setCurrentStep(tr("Adding indices to make search faster"), tr("indices", "", WORDLIST_INDICES.size()));
+    qint8 i = 0;
+    for (const QPair<const char*, QStringList> index : WORDLIST_INDICES) {
+      query.exec(QString(SQL_CREATE_INDEX).arg(index.first, index.second.join(", ")));
+      progressManager.emitCurrentStepProgress(++i, WORDLIST_INDICES.length());
     }
   }
-  return true;
+  progressManager.setCurrentStep(tr("Compressing the wordlist-database-file"));
+  query.exec("VACUUM");
 }
 
-bool DatabaseManager::splitWordLines(QVector<QVector<QStringRef>>* result, QSet<QString>* wordLines) {
-  result->reserve(wordLines->size());
-  for (QSet<QString>::iterator wordLine = wordLines->begin(); wordLine != wordLines->end(); ++wordLine) {
-    result->append(wordLine->splitRef("\t"));
-  }
-  return true;
+QStringList DatabaseManager::prepareRawWordList(QString& rawWordList) {
+  return rawWordList.replace(QLatin1String("\\\""), QLatin1String("\""))
+         .left(rawWordList.lastIndexOf(QLatin1String("\\t\\n""")))
+         .mid(rawWordList.indexOf(QLatin1String("HeinzelSearch.Config.hndb = [""")) + 30).toString()
+         .replace(QLatin1String("\\t"), QLatin1String("\t")).split(QLatin1String("\t\\n"));
 }
 
-QStringList DatabaseManager::prepareRawWordList(QString* rawWordList) {
-  return rawWordList->replace("\\\"", "\"").left(rawWordList->lastIndexOf("\\t\\n"""))
-         .midRef(rawWordList->indexOf("HeinzelSearch.Config.hndb = [""") + 30).toString()
-         .replace("\\t", "\t").split("\t\\n");
-}
-
-bool DatabaseManager::createTableStructure() {
-  qDebug().noquote() << "Table structure has not been initialized, creating table structure.";
+bool DatabaseManager::createTableStructure(ProgressManager& progressManager) {
+  progressManager.setCurrentStep(tr("Creating table structure for wordlist-database"));
   QSqlQuery query;
-  bool success = query.exec(SQL_CREATE_WORDLIST_INFO) && query.exec(SQL_CREATE_WORDLIST) &&
-                 query.exec(SQL_INSERT_INITIAL_WORDLIST_INFO);
-  if (!success) throw QString("Couldn't create table structure " % query.lastError().text());
+  const QString SQL_CREATE_WORDLIST_TABLE = QString(SQL_CREATE_TABLE)
+                                            .arg(TABLE_WORDLIST, WORDLIST_COLUMNS.join(" TEXT, ") + " TEXT");
+  const QString SQL_CREATE_WORDLIST_INFO_TABLE = QString(SQL_CREATE_TABLE)
+                                                 .arg(TABLE_WORDLIST_INFO, WORDLIST_INFO_COLUMNS.join(" TEXT, ") + " TEXT");
+  const QString SQL_INSERT_INITIAL_VALUES_INTO_WORDLIST_INFO = QString(SQL_INSERT_INTO)
+                                                               .arg(TABLE_WORDLIST_INFO, "NULL" + QString(", NULL").repeated(WORDLIST_INFO_COLUMNS.length() - 1));
+  bool success = query.exec(SQL_CREATE_WORDLIST_TABLE) && query.exec(SQL_CREATE_WORDLIST_INFO_TABLE) &&
+                 query.exec(SQL_INSERT_INITIAL_VALUES_INTO_WORDLIST_INFO);
+  if (!success) throw QString(tr("Couldn't create table structure ") % query.lastError().text());
   return success;
 }
 
 QString DatabaseManager::getUpdatedWordlist() {
   QFile sourceFile("../Dictionary/buchmaal/heinzelliste.js");
-  if(!sourceFile.exists()) throw sourceFile.fileName() + " does not exist.";
+  if(!sourceFile.exists()) throw QString(sourceFile.fileName() % " does not exist.");
   if(!sourceFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
     throw "Error opening " + sourceFile.fileName() + " even though the file exists.";
   }
   QTextStream textStream(&sourceFile);
   return textStream.readAll();
+}
+
+void DatabaseManager::prepareProgressManager(ProgressManager& progressManager) {
+  progressManager.setFormat(QLatin1String(PROGRESS_MANAGER_FORMAT_ALL_STATS),
+                            QLatin1String(PROGRESS_MANAGER_FORMAT_INDETERMINATE_DONE_SPEED));
+  connect(&progressManager, &ProgressManager::sendCurrentStepProgress,
+          this, &DatabaseManager::sendCurrentStepProgress);
+  connect(&progressManager, &ProgressManager::sendCurrentStep, this, &DatabaseManager::sendCurrentStep);
+  connect(this, &DatabaseManager::cancelWordListUpdate, &progressManager, &ProgressManager::cancelOperation);
+}
+
+QString DatabaseManager::wordListUpdateCompletedMessage(int insertedWords, int removedWords) {
+  QString wordListUpdateCompletedMsg(tr("The wordlist has been successfully updated."));
+  if (insertedWords) wordListUpdateCompletedMsg.append(tr("%n word(s) were inserted", "", insertedWords));
+  if (insertedWords && !removedWords) wordListUpdateCompletedMsg.append(".");
+  else if (insertedWords && removedWords) wordListUpdateCompletedMsg.append(" and ");
+  if (removedWords) wordListUpdateCompletedMsg.append(tr("%n updated word(s) were removed.", "", removedWords));
+  return wordListUpdateCompletedMsg;
 }

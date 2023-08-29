@@ -1,12 +1,12 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.4
-import QtQuick.Controls.Material 2.4
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
 Switch {
-    implicitHeight: Math.max(focus_indicator.height-1.5 * globalMargin, contentItem.implicitHeight)
+    implicitHeight: Math.max(focus_indicator.height-0.75*em, contentItem.implicitHeight)
     background: Item{}
     Rectangle {
         id: background
-        height: 2.5 * globalMargin
+        height: 1.25 * em
         x: (focus_indicator.height - height)/2
         width: 2.5 * height
         radius: height / 2

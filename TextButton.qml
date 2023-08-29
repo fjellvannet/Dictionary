@@ -1,23 +1,25 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.4
-import QtQuick.Controls.Material 2.4
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import Qt5Compat.GraphicalEffects
 Button {
     contentItem: AdaptedText{
         text: "  " + parent.text + "  "
+        horizontalAlignment: Qt.AlignHCenter
     }
     background: Item{}
     Rectangle{
+        id: bg
         anchors.fill: parent
         color: Material.accent
         radius: parent.padding
     }
     ColorOverlay {
-        anchors.fill: parent.background
-        source: parent.background
+        anchors.fill: bg
+        source: bg
         color: "black"
         opacity: 0.15
         visible: parent.visualFocus
     }
-    padding: globalMargin/2
+    padding: mg
 }

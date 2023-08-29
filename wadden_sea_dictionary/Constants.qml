@@ -1,5 +1,5 @@
-import QtQuick 2.11
-import QtQuick.Controls.Material 2.1
+import QtQuick
+import QtQuick.Controls.Material
 Item {
     readonly property int antallSpraak: 4
     readonly property color dark_accent: Material.color(Material.BlueGrey, Material.Shade700)

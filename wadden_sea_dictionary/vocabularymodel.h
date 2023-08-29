@@ -46,7 +46,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
-#include <QTextCodec>
+#include <QRegularExpression>
 
 class WaddenseaWord
 {
@@ -62,6 +62,7 @@ public:
     QString word(int role) const;
 
     bool fillFromCsvLine(QString csvLine);
+    static const QRegularExpression s_removeParanthesis;
 };
 
 class VocabularyModel : public QAbstractTableModel

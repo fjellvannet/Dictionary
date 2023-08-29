@@ -39,6 +39,8 @@
 ****************************************************************************/
 #include "vocabularymodel.h"
 
+const QRegularExpression WaddenseaWord::s_removeParanthesis = QRegularExpression("^\\(.*\\)\\s*");
+
 WaddenseaWord::WaddenseaWord()
 {
 }
@@ -76,7 +78,7 @@ bool VocabularyModel::fillModelFromCsv(QString a_csvPath)
     csv.open(QIODevice::ReadOnly | QIODevice::Text);
     qDebug().noquote() << "csv Wörterbuchdatei" << (csv.exists() ? "existiert" : "existiert nicht");
     QTextStream csvStream(&csv);
-    csvStream.setCodec(QTextCodec::codecForName("UTF-8"));//wichtig, die Datei muss mit UTF-8 codiert sein
+    csvStream.setEncoding(QStringConverter::Utf8);//wichtig, die Datei muss mit UTF-8 codiert sein
     QVector<WaddenseaWord> vocabulary;
     qDebug().noquote() << csvStream.readLine().replace("\t", " "); //in der ersten Zeile stehen die Sprachennamen - die sollen nicht ins Model
     while(!csvStream.atEnd())
@@ -123,7 +125,7 @@ QVariant VocabularyModel::data(const QModelIndex & index, int role) const {
     {
         return waddenseaWord.word(role);
     }
-    QChar section = waddenseaWord.word(role - 5).remove(QRegExp("^\\(.*\\)\\s*")).at(0).toUpper();
+    QChar section = waddenseaWord.word(role - 5).remove(WaddenseaWord::s_removeParanthesis).at(0).toUpper();
     if(section.isDigit()) return "0-9";
     else if(role == SecDeutschRole)
     {

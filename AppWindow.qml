@@ -1,10 +1,10 @@
-import QtQuick 2.13
-import QtQuick.Controls 2.13
-import QtQuick.Controls.Material 2.13
-import QtGraphicalEffects 1.0
-import QtQuick.Layouts 1.13
-import QtQuick.Window 2.13
-import Qt.labs.settings 1.0
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import Qt5Compat.GraphicalEffects
+import QtQuick.Layouts
+import QtQuick.Window
+import QtCore
 import "qrc:/js/js-functions.js" as JSfunctions
 Item {
     id: root
@@ -37,10 +37,11 @@ Item {
         property alias vocabularyList: root.vocabularyList
     }
 
-    property int globalMargin: fontHeight.height / 2
+    property int em: fontHeight.height
+    property int mg: em / 2
     property int globalFontPixelSize: fontHeight.font.pixelSize
-    property int globalBorder: globalMargin / 10 > 1 ? globalMargin / 10 : 1
-    property bool highDpi: Math.max(Screen.height, Screen.width) / globalMargin < 100
+    property int px: em / 20 > 1 ? em / 20 : 1
+    property bool highDpi: Math.max(Screen.height, Screen.width) / em < 50
     property bool vocabularyList: true
     property int language: appLanguage
 
@@ -48,6 +49,42 @@ Item {
         if(language === constants.antallSpraak - 1) language = 0;
         else language++;
     }
+
+//    ProgressDialog {
+//        id: pd
+//        title: qsTr("Updating wordlist")
+//        cancelQuestion: qsTr("Are you sure that you want to cancel updating? You will be able to continue later.")
+
+//        function updateWordList() {
+//            pd.openProgressDialog()
+//            databaseManager.startWordListUpdate()
+//        }
+
+//        onCancelOperation: {
+//            databaseManager.cancelWordListUpdate()
+//        }
+
+//        Connections {
+//            target: databaseManager
+//            onWordListUpdateCompleted: {
+//                pd.setFinished(message)
+//            }
+
+//            onSendCurrentStep: {
+//                pd.setCurrentStep(currentStep)
+//            }
+
+//            onSendCurrentStepProgress: {
+//                if (formattedValue === "0 %" || (formattedValue === "" && value === -1)) {
+//                    pd.setCurrentStepProgress(value, formattedValue)
+//                } else {
+//                    var splitValueStats = formattedValue.arg(5 * em).split("\n")
+//                    pd.setCurrentStepProgress(value, splitValueStats[0])
+//                    if (splitValueStats[0]) pd.setCurrentStepStatistics(splitValueStats[1])
+//                }
+//            }
+//        }
+//    }
 
     Image {
         anchors.fill: parent
@@ -65,7 +102,7 @@ Item {
 
         Item{//Menubar
             Layout.fillWidth: true
-            Layout.preferredHeight: globalMargin *(highDpi ? 6 : 11)
+            Layout.preferredHeight: em * (highDpi ? 3 : 6)
             //color: medium_blue
 
             RowLayout {
@@ -148,7 +185,7 @@ Item {
         Rectangle {//separating line between search-items and top meny
             color: "black"
             Layout.fillWidth: true
-            Layout.preferredHeight: globalBorder
+            Layout.preferredHeight: px
             visible: mainlayout.state === "settings" && settingsWindow.contentHeight > settingsWindow.height
         }
 
@@ -169,9 +206,9 @@ Item {
 
                 ColumnLayout {
                     id: settingsColumn
-                    x: globalMargin
+                    x: mg
                     width: parent.width - 2*x
-                    spacing: globalMargin
+                    spacing: mg
 
                     Item{Layout.fillWidth: true}
 
@@ -184,7 +221,7 @@ Item {
 
                     RowLayout {
                         Layout.fillWidth: true
-                        spacing: globalMargin
+                        spacing: mg
                         TextButton {
                             onClicked: sizeSlider.value = defaultFontHeight.font.pixelSize
                             text: qsTr("Default")
@@ -201,19 +238,19 @@ Item {
                             id: sizeSlider
                             from: defaultFontHeight.font.pixelSize * Math.max(6/defaultFontHeight.font.pointSize, 0.5)//den minste verdien skal enten være 6 point eller halvparten av originalfonten (det som er størst av de)
                             to: {
-                                if(root.height == 0) return 1000
+                                if(root.height === 0) return 1000
                                 else return Math.max(Math.min(root.height, root.width) / 17, from)
                             }
                             stepSize: 1
                             Layout.fillWidth: true
-                            implicitHeight: focus_indicator.height - 1.5 * globalMargin
+                            implicitHeight: focus_indicator.height - 0.75 * em
 
                             value: defaultFontHeight.font.pixelSize
 
                             handle: Rectangle {
                                 anchors.verticalCenter: parent.verticalCenter
                                 color: Material.accent
-                                height: 2.5 * globalMargin
+                                height: 1.25 * em
                                 width: height
                                 radius: height / 2
                                 x: (focus_indicator.height - height)/2 + parent.visualPosition * (parent.background.width - parent.background.height)
@@ -237,7 +274,7 @@ Item {
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.leftMargin: (focus_indicator.height - height)/2; anchors.rightMargin: anchors.leftMargin
-                                height: globalMargin
+                                height: mg
                                 width: parent.width - 2*x
                                 opacity: 0.5
                                 Rectangle {
@@ -264,7 +301,7 @@ Item {
                     Rectangle {
                         color: "black"
                         Layout.fillWidth: true
-                        Layout.preferredHeight: globalBorder
+                        Layout.preferredHeight: px
                     }
 
                     AdaptedText {
@@ -292,34 +329,38 @@ Item {
                     Rectangle {
                         color: "black"
                         Layout.fillWidth: true
-                        Layout.preferredHeight: globalBorder
+                        Layout.preferredHeight: px
                     }
 
-                    RowLayout {
-                        id: db_settings
-                        visible: constants.isBuchmaal
-                        AdaptedText {
-                            Layout.fillWidth: true
-                            objectName: "db_update"
-                            id: db_update
-                            wrapMode: Text.WordWrap
-                            function setUpdatedDate(date) {
-                                db_update.text = qsTr("<h3>Database</h3><p>Last updated: %1</p>").arg(date)
-                            }
-                        }
+//                    RowLayout {
+//                        id: db_settings
+//                        visible: constants.isBuchmaal
 
-                        TextButton {
-                            text: "Update database"
-                        }
+//                        AdaptedText {
+//                            Layout.fillWidth: true
+//                            objectName: "db_update"
+//                            id: db_update
+//                            wrapMode: Text.WordWrap
+//                            text: databaseManager.wordListLastUpdated ?
+//                                      qsTr("<h3>Database</h3><p>Last updated: %1</p>")
+//                                      .arg(databaseManager.wordListLastUpdated.toLocaleString()) :
+//                                      qsTr("<h3>Database</h3>")
+//                        }
 
-                    }
+//                        TextButton {
+//                            id: btnUpdateWordList
+//                            text: databaseManager.wordListLastUpdated ? qsTr("Update wordlist") :
+//                                                                        qsTr("Initialize wordlist")
+//                            onClicked: pd.updateWordList()
+//                        }
+//                    }
 
-                    Rectangle {
-                        visible: constants.isBuchmaal
-                        color: "black"
-                        Layout.preferredHeight: globalBorder
-                        Layout.fillWidth: true
-                    }
+//                    Rectangle {
+//                        visible: constants.isBuchmaal
+//                        color: "black"
+//                        Layout.preferredHeight: px
+//                        Layout.fillWidth: true
+//                    }
 
                     AdaptedText {
                         Layout.fillWidth: true
@@ -340,7 +381,7 @@ Item {
             GridLayout {
                 id: gridLayout
                 anchors.fill: parent
-                flow:  height < 1.8 * resultView.height ? GridLayout.LeftToRight : GridLayout.TopToBottom
+                flow:  height < 2 * resultView.height ? GridLayout.LeftToRight : GridLayout.TopToBottom
                 rowSpacing: 0
                 columnSpacing: 0
 
@@ -377,10 +418,10 @@ Item {
                         id: sectionDelegate
                         color: dark_accent
                         width: window.width
-                        height: 4 * globalMargin
+                        height: 2 * em
                         AdaptedText {
                             anchors.left: parent.left
-                            anchors.leftMargin: globalMargin / 2
+                            anchors.leftMargin: mg
                             id: text
                             text: section
                             font.bold: true
@@ -394,13 +435,13 @@ Item {
                     delegate: Rectangle {
                         id: wordDelegate
                         width: lvVocabulary.width
-                        height: Math.max(4 * globalMargin, word.implicitHeight + globalMargin)
+                        height: Math.max(em, word.implicitHeight + em)
                         color: "transparent"
-                        AdaptedText {
+
+                        WordDelegateText{
                             id: word
                             anchors.left: parent.left; anchors.right: parent.right
-                            anchors.leftMargin: globalMargin / 2
-                            text: JSfunctions.wordlist_text(index)
+                            anchors.leftMargin: em / 4
                             height: parent.height
                             verticalAlignment: Text.AlignVCenter
                             wrapMode: Text.Wrap
@@ -465,9 +506,9 @@ Item {
                     Rectangle { //Suchfeld
                         Layout.fillWidth: true
                         Layout.preferredHeight: 2 * searchField.implicitHeight
-                        Layout.margins: globalMargin
+                        Layout.margins: mg
 
-                        border.width: 2 * globalBorder
+                        border.width: 2 * px
                         border.color: Material.accent
                         radius: height / 4
                         color: "transparent"
@@ -567,7 +608,7 @@ Item {
                         id: seperatorLine
                         color: "black"
                         Layout.fillWidth: true
-                        Layout.preferredHeight: globalBorder
+                        Layout.preferredHeight: px
                     }
 
                     ListView {
@@ -586,7 +627,7 @@ Item {
                         delegate: Rectangle {
                             id: dictionaryDelegate
                             width: lvDictionary.width
-                            height: Math.max(4*globalMargin, rl.textHeight + globalMargin)
+                            height: Math.max(2*em, rl.textHeight + mg)
                             color: "transparent"
 
                             DictionaryRow {
@@ -628,7 +669,7 @@ Item {
                             anchors.fill: parent
                             text: qsTr("No matches found!")
                             horizontalAlignment: Text.AlignHCenter
-                            anchors.margins: globalMargin
+                            anchors.margins: mg
                             visible: false
                         }
                     }
@@ -636,7 +677,7 @@ Item {
 
                 Rectangle {
                     color: "black"
-                    Layout.preferredHeight: globalBorder
+                    Layout.preferredHeight: px
                     Layout.fillWidth: true
                     visible: gridLayout.flow === GridLayout.TopToBottom && resultWidget.resultListView.contentHeight > resultWidget.resultListView.height
                 }
@@ -677,15 +718,6 @@ Item {
                     }
                 }
             }
-        }
-
-        TextProgressBar {
-            id: db_progress
-            Layout.fillWidth: true
-            value: 0.73
-            height: 4 * globalMargin
-            indeterminate: true
-            visible: true
         }
 
         states: [

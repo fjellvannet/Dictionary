@@ -9,12 +9,12 @@ Row {
     property bool scientific: false
     property bool updateText: parent.updateText
 
-    spacing: globalMargin
+    spacing: mg
     visible: fromLanguage !== rowLanguage
 
     FlagImage {
         id: flag
-        height: 4 * resize * globalMargin
+        height: 2 * resize * em
         width: height / 3 * 5
         source: switch(rowLanguage) {
                 case 0:

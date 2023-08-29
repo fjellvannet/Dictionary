@@ -1,7 +1,7 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.1
-import QtQuick.Controls.Material 2.0
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import Qt5Compat.GraphicalEffects
 
 Item {
     id: resultView
@@ -16,8 +16,8 @@ Item {
     Column {
         id: resultColumn
         anchors.fill: parent
-        anchors.margins: 1.5 * globalMargin
-        spacing: globalMargin
+        anchors.margins: em
+        spacing: em / 2
         property int row: resultWidget.resultListView.currentIndex
         property alias updateText: resultView.updateText
         ResultRow {

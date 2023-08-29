@@ -1,5 +1,5 @@
-import QtQuick 2.13
-import QtQuick.Controls 2.13
+import QtQuick
+import QtQuick.Controls
 
 ProgressBar {
     property string text
@@ -11,8 +11,9 @@ ProgressBar {
         id: txt
         z: pb.z + 1
         anchors.verticalCenter: pb.verticalCenter
-        anchors.leftMargin: globalMargin
+        anchors.leftMargin: mg
         anchors.left: pb.left
         text: pb.text
+        textFormat: Text.RichText
     }
 }

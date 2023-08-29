@@ -15,28 +15,30 @@ QVariant VocabularyListModel::at(int row, int role)
 void VocabularyListModel::sortBy(QVariant role)
 {
     int column = role.toInt();
+    beginResetModel();
     if(column == 0) //Deutsch, sicherstellen, dass Ä, Ö und Ü eingereiht werden
     {
         for(int row = 0; row < rowCount(); ++row)
         {
-            m_preSort.append(sourceModel()->data(index(row, column), column).toString().toLower().remove(QRegExp("^\\(.*\\)\\s*")).replace("ä", "a").replace("ö", "o").replace("ü", "u"));
+            m_preSort.append(sourceModel()->data(index(row, column), column).toString().toLower().remove(WaddenseaWord::s_removeParanthesis).replace("ä", "a").replace("ö", "o").replace("ü", "u"));
         }
     }
     else if(column == 3) //Dänisch - Reihenfolge von ÅÆØ zu ÆØÅ ändern
     {
         for(int row = 0; row < rowCount(); ++row)
         {//es müssen großbuchstaben ersetzt werden, da die verschiedenen Replaces sich sonst behindern.
-            m_preSort.append(sourceModel()->data(index(row, column), column).toString().toLower().remove(QRegExp("^\\(.*\\)\\s*")).replace("æ", "Å").replace("ø", "Æ").replace("å", "Ø"));
+            m_preSort.append(sourceModel()->data(index(row, column), column).toString().toLower().remove(WaddenseaWord::s_removeParanthesis).replace("æ", "Å").replace("ø", "Æ").replace("å", "Ø"));
         }
     }
     else
     {
         for(int row = 0; row < rowCount(); ++row)
         {
-            m_preSort.append(sourceModel()->data(index(row, column), column).toString().toLower().remove(QRegExp("^\\(.*\\)\\s*")));
+            m_preSort.append(sourceModel()->data(index(row, column), column).toString().toLower().remove(WaddenseaWord::s_removeParanthesis));
         }
     }
     sort(column);
+    endResetModel();
     m_preSort.clear();
 }
 

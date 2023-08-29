@@ -4,7 +4,6 @@
 #include <QQuickView>
 #include <QSettings>
 #include <QRect>
-#include <QDesktopWidget>
 #include <QApplication>
 
 class MyQQuickView : public QQuickView

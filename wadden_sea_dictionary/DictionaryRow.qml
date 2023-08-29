@@ -1,19 +1,19 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.1
-import QtQuick.Controls.Material 2.1
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import QtQuick.Layouts
 
 RowLayout{
-    y: globalMargin / 2
+    y: em / 2
     anchors.margins: y
     spacing: y
-    property int baseHeight: 3*globalMargin
+    property int baseHeight: em
     property alias textHeight: dictionaryWord.contentHeight
 
     FlagImage {
         visible: settings.flags_in_all_language_mode
         Layout.preferredHeight: baseHeight
-        Layout.preferredWidth: 5 * globalMargin
+        Layout.preferredWidth: 5 * baseHeight / 3
         Layout.alignment: Qt.AlignVCenter
         languageId: {
             var a = ResultLanguage

@@ -5,6 +5,7 @@
         <file alias="DictionaryRow.qml">buchmaal/DictionaryRow.qml</file>
         <file alias="ResultView.qml">buchmaal/ResultView.qml</file>
         <file alias="ResultRow.qml">buchmaal/ResultRow.qml</file>
+        <file alias="ProgressDialog.qml">buchmaal/ProgressDialog.qml</file>
     </qresource>
     <qresource prefix="/database">
         <file alias="buchmaal-database.sqlite">buchmaal/buchmaal-database.sqlite</file>

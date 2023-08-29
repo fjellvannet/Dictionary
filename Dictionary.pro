@@ -1,13 +1,13 @@
 TEMPLATE = app
 include(deployment.pri) # Default rules for deployment.
 
-QT += core qml quick svg sql quickcontrols2 network
-CONFIG += qml_debug c++11
+QT += core qml quick svg sql quickcontrols2 network concurrent widgets core5compat
+CONFIG += qml_debug c++17
 #DEFINES *= QT_USE_QSTRINGBUILDER #denne må du eventuelt ta ut dersom det blir problemer. Erstatter alle + operatorene, som henger sammen strenger,
     # med %-operatorer, forskjellen då er at det brukes stringbuildere, som forhindrer unødvendige kopieringer i minnen
 
 #Endring av denne variablen eller versjonsnummeret krever alltid, at appen rekompileres komplett.
-WADDEN_SEA_DICTIONARY=0 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert Buchmål
+WADDEN_SEA_DICTIONARY=1 #1 heißt Wadden Sea Dictionary wird kompiliert, 0 kompiliert Buchmål
 SPLASH=0
 equals(SPLASH, 1): RESOURCES += splash.qrc
 EDIT_DATABASE=0
@@ -35,11 +35,9 @@ QT_QUICK_CONTROLS_STYLE=material
 QT_AUTO_SCREEN_SCALE_FACTOR=1
 
 HEADERS += \
-    buchmaal/databasemanager.h \
     myqquickview.h
 
 SOURCES += main.cpp \
-    buchmaal/databasemanager.cpp \
     myqquickview.cpp
 
 lupdate_only{
@@ -183,11 +181,13 @@ else {#Buchmål
     equals(EDIT_DATABASE, 0) : RESOURCES += buchmaal.qrc
 
     HEADERS += buchmaal/databasecreator.h \
+        buchmaal/databasemanager.h \
         buchmaal/localsortkeygenerator.h \
         buchmaal/wordlistmodel.h \
         buchmaal/resultmodel.h
 
     SOURCES += buchmaal/databasecreator.cpp \
+        buchmaal/databasemanager.cpp \
         buchmaal/localsortkeygenerator.cpp \
         buchmaal/wordlistmodel.cpp\
         buchmaal/resultmodel.cpp
