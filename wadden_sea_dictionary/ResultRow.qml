@@ -17,6 +17,7 @@ Row {
         height: 1.75 * resize * em
         width: height / 3 * 5
         languageId: rowLanguage
+        visible: flags_in_all_language_mode
     }
 
     Column {

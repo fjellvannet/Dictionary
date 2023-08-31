@@ -1,7 +1,9 @@
-import QtQuick 2.11
+import QtQuick
+import QtQuick.Window
+
 Image {
     property bool ios: false
-    sourceSize.height: height
-    sourceSize.width: width
+    sourceSize.height: height * Screen.devicePixelRatio
+    sourceSize.width: width * Screen.devicePixelRatio
     smooth: true
 }

@@ -1,7 +1,7 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.1
-import QtQuick.Controls.Material 2.0
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
+import Qt5Compat.GraphicalEffects
 
 Item {
     id: resultView

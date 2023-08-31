@@ -61,7 +61,7 @@ void DictionaryModel::fillWithSearchResults(QString a_searchPattern, bool a_find
     }*/
     if(searchResultIndexes.count() > 0)
     {
-        beginInsertRows(QModelIndex(), 0, searchResultIndexes.count() - 1);
+        beginInsertRows(QModelIndex(), 0, (int)searchResultIndexes.count() - 1);
         m_searchResultIndexes = searchResultIndexes;
         endInsertRows();
     }
@@ -69,7 +69,7 @@ void DictionaryModel::fillWithSearchResults(QString a_searchPattern, bool a_find
 
 int DictionaryModel::rowCount(const QModelIndex & parent) const {
     Q_UNUSED(parent);
-    return m_searchResultIndexes.count();
+    return (int)m_searchResultIndexes.count();
 }
 
 int DictionaryModel::columnCount(const QModelIndex & parent) const

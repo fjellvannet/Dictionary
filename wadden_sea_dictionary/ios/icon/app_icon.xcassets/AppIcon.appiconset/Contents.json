@@ -1,11 +1,13 @@
 {
   "images" : [
     {
+      "filename" : "iPhoneNotification2x.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
+      "filename" : "iPhoneNotification3x.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
@@ -65,6 +67,7 @@
       "size" : "60x60"
     },
     {
+      "filename" : "iPadNotification2x.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "20x20"
@@ -136,6 +139,7 @@
       "size" : "83.5x83.5"
     },
     {
+      "filename" : "iTunesArtwork@2x.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"

@@ -16,9 +16,9 @@ UPDATE_DB_VERSION=0
 android || ios || winrt: MOBILE=1
 else : MOBILE=0
 
-VER_MAJ = 1 #endre også versjonen i Android.manifest!
-VER_MIN = 0
-VER_PAT = 4
+VER_MAJ = 1  # Do a complete rebuild for a version change to take effect
+VER_MIN = 1
+VER_PAT = 0
 VERSION = $$VER_MAJ"."$$VER_MIN"."$$VER_PAT
 
 DEFINES += \
@@ -147,13 +147,18 @@ equals(WADDEN_SEA_DICTIONARY, 1) { #Wadden Sea Dictionary
             wadden_sea_dictionary/ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-Small@2x.png \
             wadden_sea_dictionary/ios/icon/app_icon.xcassets/AppIcon.appiconset/Icon-Small@3x.png
 
-        assets_catalogs.files = $$files($$PWD/wadden_sea_dictionary/ios/icon/*.xcassets)
+        #assets_catalogs.files = $$files($$PWD/wadden_sea_dictionary/ios/icon/*.xcassets)
         app_launch_images.files = $$PWD/wadden_sea_dictionary/ios/LaunchScreen.xib $$PWD/ios/images/app_icon.png
         QMAKE_BUNDLE_DATA += assets_catalogs \
             app_launch_images
+        QMAKE_ASSET_CATALOGS += wadden_sea_dictionary/ios/icon/app_icon.xcassets
     }
 
     android {
+        ANDROID_VERSION_CODE = 2
+        ANDROID_VERSION_NAME = $$VERSION
+        ANDROID_PACKAGE_SOURCE_DIR = $$PWD/wadden_sea_dictionary/android
+
         DISTFILES += \
             wadden_sea_dictionary/android/AndroidManifest.xml \
             wadden_sea_dictionary/android/build.gradle \
@@ -162,18 +167,17 @@ equals(WADDEN_SEA_DICTIONARY, 1) { #Wadden Sea Dictionary
             wadden_sea_dictionary/android/gradlew \
             wadden_sea_dictionary/android/gradlew.bat \
             wadden_sea_dictionary/android/res/values/libs.xml \
-            wadden_sea_dictionary/android/res/drawable-hdpi/app_icon.png \
-            wadden_sea_dictionary/android/res/drawable-ldpi/app_icon.png \
-            wadden_sea_dictionary/android/res/drawable-mdpi/app_icon.png \
-            wadden_sea_dictionary/android/res/drawable-tvdpi/app_icon.png \
-            wadden_sea_dictionary/android/res/drawable-xhdpi/app_icon.png \
-            wadden_sea_dictionary/android/res/drawable-xxhdpi/app_icon.png \
-            wadden_sea_dictionary/android/res/drawable-xxxhdpi/app_icon.png \
+            wadden_sea_dictionary/android/res/drawable-hdpi/icon.png \
+            wadden_sea_dictionary/android/res/drawable-ldpi/icon.png \
+            wadden_sea_dictionary/android/res/drawable-mdpi/icon.png \
+            wadden_sea_dictionary/android/res/drawable-tvdpi/icon.png \
+            wadden_sea_dictionary/android/res/drawable-xhdpi/icon.png \
+            wadden_sea_dictionary/android/res/drawable-xxhdpi/icon.png \
+            wadden_sea_dictionary/android/res/drawable-xxxhdpi/icon.png \
             wadden_sea_dictionary/android/res/values-da/strings.xml \
             wadden_sea_dictionary/android/res/values-de/strings.xml \
-            wadden_sea_dictionary/android/res/values-nl/strings.xml
-
-        ANDROID_PACKAGE_SOURCE_DIR = $$PWD/wadden_sea_dictionary/android
+            wadden_sea_dictionary/android/res/values-nl/strings.xml \
+            wadden_sea_dictionary/android/res/xml/locales_config.xml
     }
 }
 else {#Buchmål

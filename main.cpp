@@ -125,11 +125,14 @@ int main(int argc, char* argv[]) {
   loadMainWindow.exec();
   QQuickItem* mainWindow = qvariant_cast<QQuickItem*>(mainLoader->property("item"));
 #endif
-#if !MOBILE
+#if MOBILE
+  view.setResizeMode(QQuickView::SizeRootObjectToView);
+#else
   view.loadGeometry();
 #endif
   if(mainWindow->property("vocabularyList").toBool()) { //sicherstellen, dass updateView zu Anfang einmal ausgeführt wird, wenn vocabularyList der letzte State war
     QMetaObject::invokeMethod(mainWindow->findChild<QQuickItem*>("lvVocabulary"), "updateView");
   }
+  view.show();
   return app.exec();
 }

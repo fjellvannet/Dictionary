@@ -3,9 +3,10 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import Qt5Compat.GraphicalEffects
 import QtQuick.Layouts
-import QtQuick.Window
 import QtCore
+import QtQuick.Window
 import "qrc:/js/js-functions.js" as JSfunctions
+
 Item {
     id: root
     height: Window.height
@@ -219,82 +220,90 @@ Item {
                         font.bold: true
                     }
 
-                    RowLayout {
-                        Layout.fillWidth: true
-                        spacing: mg
+                    GridLayout {
+                        flow:  tbDefault.implicitWidth > parent.width / 3.5 ? GridLayout.TopToBottom : GridLayout.LeftToRight
+                        Layout.fillWidth: True
+                        rowSpacing: mg
+                        columnSpacing: mg
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            spacing: 0
+
+                            TextButton {
+                                onClicked: sizeSlider.decrease()
+                                text: "–"
+                            }
+
+                            Slider {
+                                id: sizeSlider
+                                from: defaultFontHeight.font.pixelSize * Math.max(6/defaultFontHeight.font.pointSize, 0.5)//den minste verdien skal enten være 6 point eller halvparten av originalfonten (det som er størst av de)
+                                to: {
+                                    if(root.height === 0) return 1000
+                                    else return Math.max(Math.min(root.height, root.width) / 17, from)
+                                }
+                                stepSize: 1
+                                Layout.fillWidth: true
+                                implicitHeight: focus_indicator.height - 0.75 * em
+
+                                value: defaultFontHeight.font.pixelSize
+
+                                handle: Rectangle {
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    color: Material.accent
+                                    height: 1.25 * em
+                                    width: height
+                                    radius: height / 2
+                                    x: (focus_indicator.height - height)/2 + parent.visualPosition * (parent.background.width - parent.background.height)
+                                }
+
+                                Rectangle {
+                                    id: focus_indicator
+                                    visible: parent.visualFocus
+                                    anchors.centerIn: parent.handle
+                                    color: Material.accent
+                                    opacity: 0.3
+                                    height: 2 * parent.handle.height
+                                    radius: height/2
+                                    width: height
+                                    z: parent.handle.z - 1
+                                }
+
+                                background: RowLayout {
+                                    spacing: 0
+                                    anchors.verticalCenter: parent.verticalCenter
+                                    anchors.left: parent.left
+                                    anchors.right: parent.right
+                                    anchors.leftMargin: (focus_indicator.height - height)/2; anchors.rightMargin: anchors.leftMargin
+                                    height: mg
+                                    width: parent.width - 2*x
+                                    opacity: 0.5
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.preferredWidth: sizeSlider.visualPosition * parent.width
+                                        radius: height / 2
+                                        color: Material.accent
+                                    }
+                                    Rectangle {
+                                        Layout.fillHeight: true
+                                        Layout.fillWidth: true
+                                        radius: height / 2
+                                        color: Material.color(Material.Grey, Material.Shade700)
+                                    }
+                                }
+                            }
+
+                            TextButton {
+                                onClicked: sizeSlider.increase()
+                                text: "+"
+                            }
+                        }
+
                         TextButton {
+                            id: tbDefault
                             onClicked: sizeSlider.value = defaultFontHeight.font.pixelSize
                             text: qsTr("Default")
-                        }
-
-                        Item{height: 1}//Abstandhalter
-
-                        TextButton {
-                            onClicked: sizeSlider.decrease()
-                            text: "–"
-                        }
-
-                        Slider {
-                            id: sizeSlider
-                            from: defaultFontHeight.font.pixelSize * Math.max(6/defaultFontHeight.font.pointSize, 0.5)//den minste verdien skal enten være 6 point eller halvparten av originalfonten (det som er størst av de)
-                            to: {
-                                if(root.height === 0) return 1000
-                                else return Math.max(Math.min(root.height, root.width) / 17, from)
-                            }
-                            stepSize: 1
-                            Layout.fillWidth: true
-                            implicitHeight: focus_indicator.height - 0.75 * em
-
-                            value: defaultFontHeight.font.pixelSize
-
-                            handle: Rectangle {
-                                anchors.verticalCenter: parent.verticalCenter
-                                color: Material.accent
-                                height: 1.25 * em
-                                width: height
-                                radius: height / 2
-                                x: (focus_indicator.height - height)/2 + parent.visualPosition * (parent.background.width - parent.background.height)
-                            }
-
-                            Rectangle {
-                                id: focus_indicator
-                                visible: parent.visualFocus
-                                anchors.centerIn: parent.handle
-                                color: Material.accent
-                                opacity: 0.3
-                                height: 2 * parent.handle.height
-                                radius: height/2
-                                width: height
-                                z: parent.handle.z - 1
-                            }
-
-                            background: RowLayout {
-                                spacing: 0
-                                anchors.verticalCenter: parent.verticalCenter
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.leftMargin: (focus_indicator.height - height)/2; anchors.rightMargin: anchors.leftMargin
-                                height: mg
-                                width: parent.width - 2*x
-                                opacity: 0.5
-                                Rectangle {
-                                    Layout.fillHeight: true
-                                    Layout.preferredWidth: sizeSlider.visualPosition * parent.width
-                                    radius: height / 2
-                                    color: Material.accent
-                                }
-                                Rectangle {
-                                    Layout.fillHeight: true
-                                    Layout.fillWidth: true
-                                    radius: height / 2
-                                    color: Material.color(Material.Grey, Material.Shade700)
-                                }
-                            }
-                        }
-
-                        TextButton {
-                            onClicked: sizeSlider.increase()
-                            text: "+"
+                            Layout.fillWidth: parent.flow === GridLayout.TopToBottom
                         }
                     }
 

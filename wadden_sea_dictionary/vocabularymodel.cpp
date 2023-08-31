@@ -94,7 +94,7 @@ bool VocabularyModel::fillModelFromCsv(QString a_csvPath)
         }
     }
     vocabulary.squeeze();//det er nok å squeeze her - m_vocabulary har da heller ikke preallokert for mye minne.
-    beginInsertRows(QModelIndex(), 0, vocabulary.count() - 1);
+    beginInsertRows(QModelIndex(), 0, (int)vocabulary.count() - 1);
     m_vocabulary = vocabulary;
     endInsertRows();
     return true;
@@ -102,7 +102,7 @@ bool VocabularyModel::fillModelFromCsv(QString a_csvPath)
 
 int VocabularyModel::rowCount(const QModelIndex & parent) const {
     Q_UNUSED(parent);
-    return m_vocabulary.count();
+    return (int)m_vocabulary.count();
 }
 
 int VocabularyModel::columnCount(const QModelIndex & parent) const
