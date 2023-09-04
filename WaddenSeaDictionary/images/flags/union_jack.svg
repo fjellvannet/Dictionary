@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 50 30"
+   width="1000"
+   height="600"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="Union Jack 5;3.svg">
+  <title
+     id="title2993">Union Jack</title>
+  <metadata
+     id="metadata21">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Union Jack</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by/3.0/" />
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Mik</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>Union Jack flag</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by/3.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs19">
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient3824">
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="0"
+         id="stop3826" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:0;"
+         offset="1"
+         id="stop3828" />
+    </linearGradient>
+    <radialGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient3824"
+       id="radialGradient3830"
+       cx="588.34918"
+       cy="90.410378"
+       fx="588.34918"
+       fy="90.410378"
+       r="604.21606"
+       gradientTransform="matrix(0.99996948,0.00781226,-0.00645161,0.82580642,0.87544744,181.60158)"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <sodipodi:namedview
+     pagecolor="#989898"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0.47843137"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     id="namedview17"
+     showgrid="false"
+     inkscape:zoom="0.67639946"
+     inkscape:cx="376.83869"
+     inkscape:cy="272.42788"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <clipPath
+     id="t">
+    <path
+       d="m 30,15 30,0 0,15 z m 0,0 0,15 -30,0 z M 30,15 0,15 0,0 Z m 0,0 0,-15 30,0 z"
+       id="path5"
+       inkscape:connector-curvature="0" />
+  </clipPath>
+  <g
+     id="g3047"
+     transform="matrix(0.83328015,0,0,0.99890937,-0.08013609,0.13080167)">
+    <path
+       id="path3025"
+       d="m 0.09807944,-0.11457048 0,30.00001048 59.99999956,0 0,-30.00000948 z"
+       inkscape:connector-curvature="0"
+       style="fill:#00247d" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path3016"
+       d="m 0.09807944,-0.11457048 0,3.35937498 L 23.379329,14.88543 0.09807944,26.52606 l 0,3.35938 6.72499996,0 23.2749996,-11.625 23.27501,11.625 6.72499,0 0,-3.35938 -23.28125,-11.64062 23.28125,-11.6406345 0,-3.35937498 -6.72499,0 L 30.098079,11.51044 6.8230794,-0.11456948 l -6.72499996,0 z"
+       style="fill:#ffffff" />
+    <path
+       sodipodi:nodetypes="ccccccccccccc"
+       inkscape:connector-curvature="0"
+       id="path3043"
+       d="M 0.09616944,2.1480655 27.838629,15.99909 0.09616944,29.90181 l 4.47915996,0 27.7192796,-13.93713 27.80539,13.93713 0,-2.2568 -27.80539,-13.88547 27.80539,-13.89048448 -4.62631,0 L 27.838629,13.72901 0.09616944,-0.13094448 Z"
+       style="fill:#cf142b;fill-opacity:1;stroke:none" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path3012"
+       d="m 25.098079,-0.11456748 0,9.99999698 -24.99998956,0 0,10.0000005 24.99998956,0 0,10 10,0 0,-10 25,0 0,-10.0000005 -25,0 0,-9.99999698 -10,0 z"
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:Sans;-inkscape-font-specification:Sans;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:10;marker:none;enable-background:accumulate" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path3014"
+       d="m 27.098089,-0.11456648 0,11.99999648 -26.99999956,0 0,6 26.99999956,0 0,12 6,0 0,-12 27,0 0,-6 -27,0 0,-11.99999648 -6,0 z"
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:Sans;-inkscape-font-specification:Sans;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#cf142b;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:6;marker:none;enable-background:accumulate" />
+  </g>
+</svg>
