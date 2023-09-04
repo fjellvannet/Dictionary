@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/Dictionary">
+        <file>images/background/background.jpg</file>
+        <file>images/flags/danish_flag.svg</file>
+        <file>images/flags/german_flag.svg</file>
+        <file>images/flags/netherlands_flag.svg</file>
+        <file>images/flags/union_jack.svg</file>
+        <file>images/icons/app_icon.svg</file>
+        <file>qml/Constants.qml</file>
+        <file>qml/DictionaryRow.qml</file>
+        <file>qml/FlagImage.qml</file>
+        <file>qml/ResultRow.qml</file>
+        <file>qml/ResultView.qml</file>
+        <file>qml/WordDelegateText.qml</file>
+        <file>txt/Wadden_Sea_vocabulary.csv</file>
+    </qresource>
+</RCC>

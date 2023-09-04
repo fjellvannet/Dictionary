@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/qt/qml">
+        <file>images/icons/alphabetic.svg</file>
+        <file>images/icons/arrow.svg</file>
+        <file>images/icons/cross_searchfield.svg</file>
+        <file>images/icons/magnifying_glass.svg</file>
+        <file>images/icons/settings.svg</file>
+        <file>include/myqquickview.h</file>
+        <file>qml/AdaptedImage.qml</file>
+        <file>qml/AdaptedScrollBar.qml</file>
+        <file>qml/AdaptedSwitch.qml</file>
+        <file>qml/AdaptedText.qml</file>
+        <file>qml/AppWindow.qml</file>
+        <file>qml/IconButton.qml</file>
+        <file>qml/TextButton.qml</file>
+        <file>qml/TextProgressBar.qml</file>
+    </qresource>
+</RCC>
