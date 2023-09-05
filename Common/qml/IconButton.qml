@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
-import Qt5Compat.GraphicalEffects
+import QtQuick.Effects
 
 Button {
     property string source
@@ -14,17 +14,18 @@ Button {
         width: height
         source: parent.source
     }
-    ColorOverlay {
+    MultiEffect {
         id: olColor
         anchors.fill: icon
         source: icon
-        color: Material.accent
+        colorizationColor: Material.accent
+        colorization: 1
     }
-    ColorOverlay {
+    MultiEffect {
         anchors.fill: icon
         source: olColor
-        color: "black"
-        opacity: 0.15
+        colorizationColor: "black"
+        colorization: 0.15
         visible: parent.visualFocus
     }
 }

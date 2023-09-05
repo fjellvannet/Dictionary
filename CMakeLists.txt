@@ -11,84 +11,82 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Core QuickControls2)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
-#qt_add_executable(appDictionary
-#    Common/src/main.cpp
-#    Common/src/myqquickview.cpp
-#    Common/include/myqquickview.h
-#)
+qt_add_executable(appDictionary
+    Common/src/main.cpp
+    Common/src/myqquickview.cpp
+    Common/include/myqquickview.h
+)
 
-#include_directories(Common/include)
+target_include_directories(appDictionary PUBLIC
+    Common/include
+)
 
-#qt_add_qml_module(appDictionary
-#    URI Dictionary
-#    VERSION 1.0
-#    QML_FILES
-#        Common/qml/AppWindow.qml
-#        Common/qml/AdaptedImage.qml
-#        Common/qml/AdaptedScrollBar.qml
-#        Common/qml/AdaptedSwitch.qml
-#        Common/qml/AdaptedText.qml
-#        Common/qml/IconButton.qml
-#        Common/qml/TextButton.qml
-#    SOURCES
-#        Common/src/main.cpp
-#        Common/src/myqquickview.cpp
-#        Common/include/myqquickview.h
-#    RESOURCES
-#        Common/images/icons/alphabetic.svg
-#        Common/images/icons/arrow.svg
-#        Common/images/icons/cross_searchfield.svg
-#        Common/images/icons/magnifying_glass.svg
-#        Common/images/icons/settings.svg
-#    RESOURCE_PREFIX /
-#)
+qt_add_qml_module(appDictionary
+    URI Dictionary
+    VERSION 1.0
+    QML_FILES
+        Common/qml/AppWindow.qml
+        Common/qml/AdaptedImage.qml
+        Common/qml/AdaptedScrollBar.qml
+        Common/qml/AdaptedSwitch.qml
+        Common/qml/AdaptedText.qml
+        Common/qml/IconButton.qml
+        Common/qml/TextButton.qml
+    SOURCES
+        Common/src/main.cpp
+        Common/src/myqquickview.cpp
+        Common/include/myqquickview.h
+    RESOURCES
+        Common/images/icons/alphabetic.svg
+        Common/images/icons/arrow.svg
+        Common/images/icons/cross_searchfield.svg
+        Common/images/icons/magnifying_glass.svg
+        Common/images/icons/settings.svg
+        LICENSE.md
+        README.md
+)
 
-add_subdirectory(Common)
-
-
-#qt_add_executable(appDictionary
-#    common/src/main.cpp
-#)
-
-
-#add_subdirectory(Common)
-#qt_add_qml_module(appDictionary
-#    URI Dictionary
-#    VERSION 1.0
-#    QML_FILES common/qml/Main.qml
-#)
-
-
-#qt_target_qml_sources(appDictionary
-#    QML_FILES common/qml/Main.qml
-#)
-#target_sources(appDictionary PUBLIC
-#    WaddenSeaDictionary/WaddenSeaDictionary.qrc
-#)
-if(${WADDEN_SEA_DICTIONARY} EQUAL 1)
+if(${WADDEN_SEA_DICTIONARY} EQUAL 1) # Wadden Sea Dictionary
     add_compile_definitions(WADDEN_SEA_DICTIONARY)
-    add_subdirectory(WaddenSeaDictionary)
-    target_link_libraries(appDictionary PUBLIC DictLib)
-    #    WaddenSeaDictionary/include/dictionarymodel.h
-    #    WaddenSeaDictionary/include/vocabularylistmodel.h
-    #    WaddenSeaDictionary/include/vocabularymodel.h
-    #    WaddenSeaDictionary/src/dictionarymodel.cpp
-    #    WaddenSeaDictionary/src/vocabularylistmodel.cpp
-    #    WaddenSeaDictionary/src/vocabularymodel.cpp
-    #)
-    #include_directories(WaddenSeaDictionary/Dict/include)
-    target_sources(appDictionary PUBLIC
-        WaddenSeaDictionary/WaddenSeaDictionary.qrc
-    )
     target_include_directories(appDictionary PUBLIC
         WaddenSeaDictionary/include
     )
-    #qt_target_qml_sources(
-    #    appDictionary
-    #    QML_FILES wadden_sea_dictionary/qml/AdaptedText.qml
-    #)
-else()
-    add_subdirectory(buchmaal)
+    target_sources(appDictionary PUBLIC
+        WaddenSeaDictionary/include/dictionarymodel.h
+        WaddenSeaDictionary/include/vocabularylistmodel.h
+        WaddenSeaDictionary/include/vocabularymodel.h
+        WaddenSeaDictionary/src/dictionarymodel.cpp
+        WaddenSeaDictionary/src/vocabularylistmodel.cpp
+        WaddenSeaDictionary/src/vocabularymodel.cpp
+    )
+    set_source_files_properties(WaddenSeaDictionary/qml/Constants.qml PROPERTIES QT_RESOURCE_ALIAS Dictionary/Common/qml/Constants.qml)
+    set_source_files_properties(WaddenSeaDictionary/qml/DictionaryRow.qml PROPERTIES QT_RESOURCE_ALIAS Dictionary/Common/qml/DictionaryRow.qml)
+    set_source_files_properties(WaddenSeaDictionary/qml/FlagImage.qml PROPERTIES QT_RESOURCE_ALIAS Dictionary/Common/qml/FlagImage.qml)
+    set_source_files_properties(WaddenSeaDictionary/qml/ResultRow.qml PROPERTIES QT_RESOURCE_ALIAS Dictionary/Common/qml/ResultRow.qml)
+    set_source_files_properties(WaddenSeaDictionary/qml/ResultView.qml PROPERTIES QT_RESOURCE_ALIAS Dictionary/Common/qml/ResultView.qml)
+    set_source_files_properties(WaddenSeaDictionary/qml/WordDelegateText.qml PROPERTIES QT_RESOURCE_ALIAS Dictionary/Common/qml/WordDelegateText.qml)
+    set_source_files_properties(WaddenSeaDictionary/images/background/background.jpg PROPERTIES QT_RESOURCE_ALIAS Dictionary/Common/images/background/background.jpg)
+
+    qt_target_qml_sources(
+        appDictionary
+        QML_FILES
+            WaddenSeaDictionary/qml/Constants.qml
+            WaddenSeaDictionary/qml/DictionaryRow.qml
+            WaddenSeaDictionary/qml/FlagImage.qml
+            WaddenSeaDictionary/qml/ResultRow.qml
+            WaddenSeaDictionary/qml/ResultView.qml
+            WaddenSeaDictionary/qml/WordDelegateText.qml
+        RESOURCES
+            WaddenSeaDictionary/images/background/background.jpg
+            WaddenSeaDictionary/images/flags/danish_flag.svg
+            WaddenSeaDictionary/images/flags/german_flag.svg
+            WaddenSeaDictionary/images/flags/netherlands_flag.svg
+            WaddenSeaDictionary/images/flags/union_jack.svg
+            WaddenSeaDictionary/images/icons/app_icon.svg
+            WaddenSeaDictionary/txt/Wadden_Sea_vocabulary.csv
+        PREFIX /qt/qml/
+    )
+else() # Buchmål
 endif()
 
 

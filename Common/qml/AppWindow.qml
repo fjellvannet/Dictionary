@@ -1,8 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
-import Qt5Compat.GraphicalEffects
 import QtQuick.Layouts
+import QtQuick.Effects
 import QtCore
 import QtQuick.Window
 
@@ -88,7 +88,7 @@ Item {
 
     Image {
         anchors.fill: parent
-        source: "qrc:/Dictionary/images/background/background.jpg"
+        source: "qrc:/qt/qml/Dictionary/Common/images/background/background.jpg"
         fillMode: Image.PreserveAspectCrop
         opacity: 0.3
     }
@@ -113,7 +113,7 @@ Item {
                     id: stateButton
                     Layout.fillHeight: true
                     Layout.preferredWidth: height
-                    source: "qrc:/Dictionary/images/icons/arrow.svg"
+                    source: "qrc:/qt/qml/Dictionary/Common/images/icons/arrow.svg"
 
                     onClicked: {
                         if(mainlayout.state !== "settings")
@@ -136,11 +136,11 @@ Item {
                         id: fi
                         anchors.fill: parent
                     }
-                    ColorOverlay {
+                    MultiEffect {
                         anchors.fill: parent
                         source: fi
-                        color: "black"
-                        opacity: 0.15
+                        colorizationColor: "black"
+                        colorization: 0.15
                         visible: parent.visualFocus
                     }
 
@@ -174,7 +174,7 @@ Item {
                     Layout.fillHeight: true
                     Layout.preferredWidth: height
                     Layout.alignment: Qt.AlignRight
-                    source: "qrc:/Dictionary/images/icons/settings.svg"
+                    source: "qrc:/qt/qml/Dictionary/Common/images/icons/settings.svg"
                     onClicked: {
                         mainlayout.state = mainlayout.state === "settings" ? (settings.vocabularyList ? "vocabularyList" : "dictionary") : "settings"
                     }
@@ -221,7 +221,6 @@ Item {
 
                     GridLayout {
                         flow:  tbDefault.implicitWidth > parent.width / 3.5 ? GridLayout.TopToBottom : GridLayout.LeftToRight
-                        Layout.fillWidth: true
                         rowSpacing: mg
                         columnSpacing: mg
 
@@ -329,7 +328,7 @@ Item {
                     AdaptedSwitch {
                         id: swFlags_in_all_language_mode
                         text: qsTr("Show flags in dictionary search results (might make search slower%1)").arg("")//qsTr(", experimental"))
-                        checked: true //in Android experimental einsetzen und die Standardeinstellung auf false
+                        checked: false //in Android experimental einsetzen und die Standardeinstellung auf false
                         Layout.fillWidth: true
                     }
 
@@ -371,8 +370,8 @@ Item {
 //                    }
 
                     AdaptedImage {
-                        source: "qrc:/Dictionary/images/icons/app_icon.svg"
-                        Layout.preferredWidth: Math.min(10 * em, parent.width / 2)
+                        source: "qrc:/qt/qml/WaddenSeaDictionary/images/icons/app_icon.svg"
+                        Layout.preferredWidth: 10 * em
                         Layout.preferredHeight: width
                         Layout.alignment: Qt.AlignHCenter
                     }
@@ -548,13 +547,14 @@ Item {
                                 AdaptedImage {
                                     anchors.fill: parent
                                     id: magnifying_glass_image
-                                    source: "qrc:/Dictionary/images/icons/magnifying_glass.svg"
+                                    source: "qrc:/qt/qml/Dictionary/Common/images/icons/magnifying_glass.svg"
                                 }
                                 onClicked: searchField.performSearch()
-                                ColorOverlay {
+                                MultiEffect {
                                     anchors.fill: magnifying_glass_image
                                     source: magnifying_glass_image
-                                    color: Material.accent
+                                    colorizationColor: Material.accent
+                                    colorization: 1
                                 }
                             }
 
@@ -610,17 +610,18 @@ Item {
                                     id: ai
                                     width: parent.height * 3/4
                                     height: width
-                                    source: "qrc:/Dictionary/images/icons/cross_searchfield.svg"
+                                    source: "qrc:/qt/qml/Dictionary/Common/images/icons/cross_searchfield.svg"
                                 }
                                 onClicked: {
                                     searchField.text = ""
                                     searchField.performSearch()
                                     searchField.forceActiveFocus()
                                 }
-                                ColorOverlay {
+                                MultiEffect {
                                     anchors.fill: ai
                                     source: ai
-                                    color: Material.accent
+                                    colorizationColor: Material.accent
+                                    colorization: 1
                                 }
                             }
                         }
@@ -749,7 +750,7 @@ Item {
                 PropertyChanges { target: activityTitle; text: qsTr("Settings") }
                 PropertyChanges { target: settingsWindow; contentY: 0; visible: true; focus: true }
                 PropertyChanges { target: gridLayout; visible: false }
-                PropertyChanges { target: stateButton; source: "qrc:/Dictionary/images/icons/arrow.svg" }
+                PropertyChanges { target: stateButton; source: "qrc:/qt/qml/Dictionary/Common/images/icons/arrow.svg" }
             },
 
             State {
@@ -757,7 +758,7 @@ Item {
                 PropertyChanges { target: activityTitle; text: constants.wordlist}
                 PropertyChanges { target: languageButton; visible: true }
                 PropertyChanges { target: lvVocabulary; focus: true; visible: true/*; model: vocabularyModel */}
-                PropertyChanges { target: stateButton; source: "qrc:/Dictionary/images/icons/magnifying_glass.svg" }
+                PropertyChanges { target: stateButton; source: "qrc:/qt/qml/Dictionary/Common/images/icons/magnifying_glass.svg" }
                 StateChangeScript { script: { lvVocabulary.updateView(); lvVocabulary.forceActiveFocus() } }
             },
 
@@ -766,7 +767,7 @@ Item {
                 PropertyChanges { target: activityTitle; text: constants.dictionary }
                 PropertyChanges { target: dictionaryWidget; visible: true; focus: true }
                 PropertyChanges { target: resultWidget; resultListView: lvDictionary }
-                PropertyChanges { target: stateButton; source: "qrc:/Dictionary/images/icons/alphabetic.svg" }
+                PropertyChanges { target: stateButton; source: "qrc:/qt/qml/Dictionary/Common/images/icons/alphabetic.svg" }
                 PropertyChanges { target: seperatorLine; visible: lvDictionary.contentHeight > lvDictionary.height }
                 StateChangeScript { script: { searchField.forceActiveFocus() } }
             }

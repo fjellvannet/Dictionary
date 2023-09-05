@@ -1,7 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Material
-import Qt5Compat.GraphicalEffects
+import QtQuick.Effects
+
 Button {
     contentItem: AdaptedText{
         text: "  " + parent.text + "  "
@@ -14,11 +15,11 @@ Button {
         color: Material.accent
         radius: parent.padding
     }
-    ColorOverlay {
+    MultiEffect {
         anchors.fill: bg
         source: bg
-        color: "black"
-        opacity: 0.15
+        colorizationColor: "black"
+        colorization: 0.15
         visible: parent.visualFocus
     }
     padding: mg

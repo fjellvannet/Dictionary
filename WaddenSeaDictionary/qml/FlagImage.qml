@@ -5,13 +5,13 @@ AdaptedImage {
     property int languageId: language
     source: switch(languageId) {
             case 0:
-                return "qrc:/Dictionary/images/flags/german_flag"
+                return "qrc:/qt/qml/WaddenSeaDictionary/images/flags/german_flag.svg"
             case 1:
-                return "qrc:/Dictionary/images/flags/union_jack"
+                return "qrc:/qt/qml/WaddenSeaDictionary/images/flags/union_jack.svg"
             case 2:
-                return "qrc:/Dictionary/images/flags/netherlands_flag"
+                return "qrc:/qt/qml/WaddenSeaDictionary/images/flags/netherlands_flag.svg"
             case 3:
-                return "qrc:/Dictionary/images/flags/danish_flag"
+                return "qrc:/qt/qml/WaddenSeaDictionary/images/flags/danish_flag.svg"
             case undefined:
                 return ""
             }

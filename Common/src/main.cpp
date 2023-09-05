@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
     qDebug() << it.next();
   }
 #if !SPLASH
-  view.setSource(QUrl("qrc:/Dictionary/qml/AppWindow.qml"));
+  view.setSource(QUrl("qrc:/qt/qml/Dictionary/Common/qml/AppWindow.qml"));
   QQuickItem* mainWindow = view.rootObject();
 #else
   QQuickItem* mainLoader = view.rootObject()->findChild<QQuickItem*>("mainLoader");
@@ -142,7 +142,7 @@ int main(int argc, char* argv[]) {
   if(mainWindow->property("vocabularyList").toBool()) { //sicherstellen, dass updateView zu Anfang einmal ausgeführt wird, wenn vocabularyList der letzte State war
     QMetaObject::invokeMethod(mainWindow->findChild<QQuickItem*>("lvVocabulary"), "updateView");
   }
-  QFile license_file(":/Dictionary/LICENSE.md");
+  QFile license_file(":/qt/qml/Dictionary/LICENSE.md");
   if(!license_file.open(QIODevice::ReadOnly))
     qDebug().noquote() << "Could not read License.md from resource";
   else
