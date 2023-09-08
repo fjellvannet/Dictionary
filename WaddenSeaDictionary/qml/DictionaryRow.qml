@@ -4,10 +4,12 @@ import QtQuick.Controls.Material
 import QtQuick.Layouts
 
 RowLayout{
-    y: em / 2
-    anchors.margins: y
-    spacing: y
-    property int baseHeight: em
+    y: mg / 2
+    anchors.margins: mg
+    anchors.leftMargin: mg
+    anchors.rightMargin: mg
+    spacing: mg
+    property int baseHeight: 1.25 * em
     property alias textHeight: dictionaryWord.contentHeight
 
     FlagImage {

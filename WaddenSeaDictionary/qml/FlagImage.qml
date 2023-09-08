@@ -3,7 +3,10 @@ import QtQuick.Controls
 
 AdaptedImage {
     property int languageId: language
-    source: switch(languageId) {
+    source: {
+        if (!visible)
+            return ""
+        switch(languageId) {
             case 0:
                 return "qrc:/qt/qml/WaddenSeaDictionary/images/flags/german_flag.svg"
             case 1:
@@ -15,4 +18,5 @@ AdaptedImage {
             case undefined:
                 return ""
             }
+    }
 }

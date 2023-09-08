@@ -6,4 +6,5 @@ Image {
     sourceSize.height: height * Screen.devicePixelRatio
     sourceSize.width: width * Screen.devicePixelRatio
     smooth: true
+    asynchronous: true
 }

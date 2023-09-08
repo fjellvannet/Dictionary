@@ -18,7 +18,7 @@ Item {
                             <p>The sourcecode is available on %4, it is free and open-source software under the license printed below.</p>")
 
                             .arg(qsTr(Qt.application.name))
-                            .arg(app_version)
+                            .arg(Qt.application.version)
                             .arg("Qt " + qt_version + "-Open-Source")
                             .arg("<a href=\"" + Qt.application.domain + "\">" + Qt.application.domain + "</a>")
                             .arg("<a href=\"mailto:fjellvannet@gmail.com\">fjellvannet@gmail.com</a>")

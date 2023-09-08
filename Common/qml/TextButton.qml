@@ -4,16 +4,20 @@ import QtQuick.Controls.Material
 import QtQuick.Effects
 
 Button {
-    contentItem: AdaptedText{
-        text: "  " + parent.text + "  "
+    /*contentItem: AdaptedText{
+        text: parent.text
         horizontalAlignment: Qt.AlignHCenter
-    }
-    background: Item{}
-    Rectangle{
+        padding: 0
+        Rectangle {
+            anchors.fill: parent
+            color: "red"
+        }
+    }*/
+    font.pixelSize: globalFontPixelSize
+    background: Rectangle{
         id: bg
-        anchors.fill: parent
         color: Material.accent
-        radius: parent.padding
+        radius: 0.75 * mg
     }
     MultiEffect {
         anchors.fill: bg
@@ -22,5 +26,8 @@ Button {
         colorization: 0.15
         visible: parent.visualFocus
     }
-    padding: mg
+    leftPadding: 0.75 * em
+    rightPadding: 0.75 * em
+    topPadding: 0.75 * em
+    bottomPadding: 0.75 * em
 }

@@ -38,7 +38,7 @@ Item {
     }
 
     property int em: fontHeight.height
-    property int mg: em / 2
+    property int mg: fontHeight.height / 2
     property int globalFontPixelSize: fontHeight.font.pixelSize
     property int px: em / 20 > 1 ? em / 20 : 1
     property bool highDpi: Math.max(Screen.height, Screen.width) / em < 50
@@ -237,7 +237,7 @@ Item {
                                 id: sizeSlider
                                 from: defaultFontHeight.font.pixelSize * Math.max(6/defaultFontHeight.font.pointSize, 0.5)//den minste verdien skal enten være 6 point eller halvparten av originalfonten (det som er størst av de)
                                 to: {
-                                    if(root.height === 0) return 1000
+                                    if(!root.height) return 1000
                                     else return Math.max(Math.min(root.height, root.width) / 17, from)
                                 }
                                 stepSize: 1
@@ -328,7 +328,7 @@ Item {
                     AdaptedSwitch {
                         id: swFlags_in_all_language_mode
                         text: qsTr("Show flags in dictionary search results (might make search slower%1)").arg("")//qsTr(", experimental"))
-                        checked: false //in Android experimental einsetzen und die Standardeinstellung auf false
+                        checked: true //in Android experimental einsetzen und die Standardeinstellung auf false
                         Layout.fillWidth: true
                     }
 
@@ -371,8 +371,8 @@ Item {
 
                     AdaptedImage {
                         source: "qrc:/qt/qml/WaddenSeaDictionary/images/icons/app_icon.svg"
-                        Layout.preferredWidth: 10 * em
-                        Layout.preferredHeight: width
+                        Layout.preferredWidth: Math.min(10 * em, parent.width)
+                        Layout.preferredHeight: Math.min(10 * em, parent.width)
                         Layout.alignment: Qt.AlignHCenter
                     }
 
@@ -579,25 +579,25 @@ Item {
                                     visible: !parent.focus && parent.length === 0
                                     verticalAlignment: Text.AlignVCenter
                                 }
-                                //property double starttime
                                 function performSearch() {
-                                    //starttime = new Date().getTime();
-                                    if(text !== dbcurrentquery)//verhindert, dass der gleiche Begriff 2x gesucht wird
+                                    if(searchField.text !== dbcurrentquery)//verhindert, dass der gleiche Begriff 2x gesucht wird
                                     {
                                         dbcurrentquery = text
                                         dictionaryModel.search(searchField.text, settings.findUmlauts)
                                         lvDictionary.currentIndex = 0
+                                        if(length > 0)
+                                        {
+                                            noSearchResults.visible = lvDictionary.count === 0
+                                        }
+                                        resultView.updateText = !resultView.updateText//damit ResultWidget aktualisiert und ggf ausgeblendet wird
                                     }
-                                    //console.log("Die Suche & Anzeige von " + text + " dauerte " + (new Date().getTime() - starttime) + " ms")
-                                    if(length > 0)
-                                    {
-                                        noSearchResults.visible = lvDictionary.count === 0
-                                        if(!noSearchResults.visible) lvDictionary.forceActiveFocus()
-                                    }
-                                    resultView.updateText = !resultView.updateText//damit ResultWidget aktualisiert und ggf ausgeblendet wird
                                 }
+                                onTextEdited: performSearch()
 
-                                onEditingFinished: performSearch()
+                                onEditingFinished: {
+                                    performSearch()
+                                    if(!noSearchResults.visible) lvDictionary.forceActiveFocus()
+                                }
                             }
                             Button {
                                 Layout.fillHeight: true
@@ -651,7 +651,7 @@ Item {
                         delegate: Rectangle {
                             id: dictionaryDelegate
                             width: lvDictionary.width
-                            height: Math.max(2*em, rl.textHeight + mg)
+                            height: Math.max(rl.baseHeight + mg, rl.textHeight + mg)
                             color: "transparent"
 
                             DictionaryRow {
