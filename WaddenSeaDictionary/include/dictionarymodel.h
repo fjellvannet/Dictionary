@@ -39,7 +39,7 @@ private:
     VocabularyModel *m_sourceModel;
     QList<QModelIndex> m_searchResultIndexes;
     QRegularExpression m_searchPattern;
-    unsigned int m_limitSearchResults = 100; /*beschreibt, wie viele Ergebnisse maximal angezeigt werden
+    unsigned int m_limitSearchResults = ~0; /*beschreibt, wie viele Ergebnisse maximal angezeigt werden
     ~0; schreibt den Maximalwert in den unsigned int (0 wird bitweise zu nur Einsen umgedreht) und steht dabei für die Anzeige aller möglichen Ergebnisse*/
 
     QString findUmlauts(QString regex, bool replace);

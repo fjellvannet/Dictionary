@@ -92,7 +92,7 @@ Switch {
             }
         }
 
-        Keys.onReleased: {
+        Keys.onReleased: function(event) {
             if(event.key === Qt.Key_Space) {
                 event.accepted = true
                 checked = !checked

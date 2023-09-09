@@ -4,28 +4,29 @@ import QtQuick.Controls.Material
 import QtQuick.Effects
 
 Button {
-    property string source
+    property string src
+    padding: mg
 
-    background: Item{}
-    AdaptedImage {
-        id: icon
-        anchors.centerIn: parent
-        height: parent.parent.height / 1.35
-        width: height
-        source: parent.source
+    background: AdaptedImage {
+        //id: icon
+        //anchors.centerIn: parent
+        //height: parent.parent.height / 1.35
+        //width: height
+        source: src
+        fillMode: Image.PreserveAspectFit
     }
     MultiEffect {
         id: olColor
-        anchors.fill: icon
-        source: icon
+        anchors.fill: parent.background
+        source: parent.background
         colorizationColor: Material.accent
         colorization: 1
     }
     MultiEffect {
-        anchors.fill: icon
+        anchors.fill: parent.background
         source: olColor
         colorizationColor: "black"
-        colorization: 0.15
+        colorization: tabColorIntensity
         visible: parent.visualFocus
     }
 }

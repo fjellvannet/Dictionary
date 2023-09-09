@@ -16,9 +16,11 @@ find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Core QuickControls2)
 qt_standard_project_setup(REQUIRES 6.5)
 
 qt_add_executable(${PROJECT_NAME}
+    MACOSX_BUNDLE
     Common/src/main.cpp
     Common/src/myqquickview.cpp
     Common/include/myqquickview.h
+
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC
@@ -49,18 +51,14 @@ qt_add_qml_module(${PROJECT_NAME}
         LICENSE.md
         README.md
 
-
-
 )
 
 if(${WADDEN_SEA_DICTIONARY} EQUAL 1) # Wadden Sea Dictionary
-    #set(QT_IOS_LAUNCH_SCREEN )
-    set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "Wadden Sea Dictionary")
-    set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/WaddenSeaDictionary/android)
-    set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY QT_ANDROID_VERSION_NAME ${CMAKE_PROJECT_VERSION})
-    set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY QT_ANDROID_VERSION_NUMBER 1)
-    #set(QT_ANDROID_PACKAGE_SOURCE_DIR )
+    set(PACKAGE no.fjellvannet.wadden_sea_dictionary)
+
     add_compile_definitions(WADDEN_SEA_DICTIONARY)
+
+
     target_include_directories(${PROJECT_NAME} PUBLIC
         WaddenSeaDictionary/include
     )
@@ -99,6 +97,32 @@ if(${WADDEN_SEA_DICTIONARY} EQUAL 1) # Wadden Sea Dictionary
             WaddenSeaDictionary/txt/Wadden_Sea_vocabulary.csv
         PREFIX /qt/qml/
     )
+    if(ANDROID)
+        set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "WaddenSeaDictionary")
+    elseif(APPLE AND NOT IOS)
+        set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "Wadden Sea Dictionary")
+    else()
+        set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "Wadden Sea Dictionary")
+    endif()
+
+    # macOS
+
+    if(APPLE AND NOT IOS)
+        set(MACOSX_BUNDLE_ICON_FILE app_icon.icns)
+        set(app_icon_macos "${CMAKE_CURRENT_SOURCE_DIR}/WaddenSeaDictionary/macos/${MACOSX_BUNDLE_ICON_FILE}")
+        set_source_files_properties(${app_icon_macos} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+        set_source_files_properties(LICENSE.md PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+        set_source_files_properties(README.md PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+        target_sources(${PROJECT_NAME} PUBLIC ${app_icon_macos} LICENSE.md README.md)
+    endif()
+
+    # Android
+    set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/WaddenSeaDictionary/android)
+    set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY QT_ANDROID_VERSION_NAME ${CMAKE_PROJECT_VERSION})
+    set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY QT_ANDROID_VERSION_NUMBER 1)
+
+    # iOS
+    #set(QT_IOS_LAUNCH_SCREEN )
 else() # Buchmål
 endif()
 
@@ -108,8 +132,8 @@ endif()
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
 # explicit, fixed bundle identifier manually though.
+set_target_properties(${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER ${PACKAGE})
 set_target_properties(${PROJECT_NAME} PROPERTIES
-#    MACOSX_BUNDLE_GUI_IDENTIFIER com.example.dictionary
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE

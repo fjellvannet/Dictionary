@@ -23,7 +23,7 @@ Button {
         anchors.fill: bg
         source: bg
         colorizationColor: "black"
-        colorization: 0.15
+        colorization: tabColorIntensity
         visible: parent.visualFocus
     }
     leftPadding: 0.75 * em

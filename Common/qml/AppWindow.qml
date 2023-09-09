@@ -5,6 +5,7 @@ import QtQuick.Layouts
 import QtQuick.Effects
 import QtCore
 import QtQuick.Window
+import Qt.labs.animation
 
 Item {
     id: root
@@ -41,7 +42,8 @@ Item {
     property int mg: fontHeight.height / 2
     property int globalFontPixelSize: fontHeight.font.pixelSize
     property int px: em / 20 > 1 ? em / 20 : 1
-    property bool highDpi: Math.max(Screen.height, Screen.width) / em < 50
+    readonly property real tabColorIntensity: 0.3
+    readonly property bool highDpi: Math.max(Screen.height, Screen.width) / em < 50
     property bool vocabularyList: true
     property int language: appLanguage
 
@@ -113,7 +115,7 @@ Item {
                     id: stateButton
                     Layout.fillHeight: true
                     Layout.preferredWidth: height
-                    source: "qrc:/qt/qml/Dictionary/Common/images/icons/arrow.svg"
+                    src: "qrc:/qt/qml/Dictionary/Common/images/icons/arrow.svg"
 
                     onClicked: {
                         if(mainlayout.state !== "settings")
@@ -140,7 +142,7 @@ Item {
                         anchors.fill: parent
                         source: fi
                         colorizationColor: "black"
-                        colorization: 0.15
+                        colorization: tabColorIntensity
                         visible: parent.visualFocus
                     }
 
@@ -174,7 +176,7 @@ Item {
                     Layout.fillHeight: true
                     Layout.preferredWidth: height
                     Layout.alignment: Qt.AlignRight
-                    source: "qrc:/qt/qml/Dictionary/Common/images/icons/settings.svg"
+                    src: "qrc:/qt/qml/Dictionary/Common/images/icons/settings.svg"
                     onClicked: {
                         mainlayout.state = mainlayout.state === "settings" ? (settings.vocabularyList ? "vocabularyList" : "dictionary") : "settings"
                     }
@@ -381,7 +383,7 @@ Item {
                         wrapMode: Text.WordWrap
                         textFormat: Text.RichText
                         text: constants.impressum
-                        onLinkActivated: Qt.openUrlExternally(link)
+                        onLinkActivated: link => Qt.openUrlExternally(link)
                     }
 
                     AdaptedText {
@@ -419,7 +421,7 @@ Item {
                     clip: true
                     boundsBehavior: ListView.StopAtBounds
                     //snapMode: ListView.SnapToItem scrollen ist dann einfach nicht mehr smooth...
-                    ScrollBar.vertical: AdaptedScrollBar {}
+                    ScrollBar.vertical: AdaptedScrollBar {id: vocScrollBar}
 
                     model: vocabularyModel
 
@@ -457,7 +459,7 @@ Item {
                     delegate: Rectangle {
                         id: wordDelegate
                         width: lvVocabulary.width
-                        height: Math.max(em, word.implicitHeight + em)
+                        height: Math.max(1.5 * em, word.implicitHeight + mg)
                         color: "transparent"
 
                         WordDelegateText{
@@ -496,22 +498,46 @@ Item {
                     AdaptedText {
                         id: sectionLetter
                         z: parent.delegate.z + 2
-                        visible: parent.verticalVelocity >= parent.maximumFlickVelocity / 4 || parent.verticalVelocity <= -parent.maximumFlickVelocity / 4
+                        visible: false
                         anchors.centerIn: parent
                         text: parent.currentSection
                         color: "white"
                         font.pixelSize: 3 * globalFontPixelSize
+                        function setVisible(speed) {
+                            if (!visible && Math.abs(speed) >= parent.maximumFlickVelocity / 100)
+                                visible = true
+                            else if (sectionLetter.visible && Math.abs(speed) <= parent.maximumFlickVelocity / 250)
+                                visible = false
+                            tm.restart()
+                        }
+                        Timer {
+                            id: tm
+                            interval: 200
+                            onTriggered: sectionLetter.visible=false
+                        }
+
                     }
 
-                    MouseArea {//Stellt sicher, dass mit dem Mausrad nicht zu schnell gescrollt wird - wie schnell kann eingestellt werden
+                    onVerticalVelocityChanged: {
+                        sectionLetter.visible = Math.abs(verticalVelocity) >= maximumFlickVelocity / 4
+                    }
+
+                    MouseArea{//Stellt sicher, dass mit dem Mausrad nicht zu schnell gescrollt wird - wie schnell kann eingestellt werden
                         anchors.fill: parent
-                        onWheel: parent.flick(0, wheel.angleDelta.y * defaultFontHeight.height / 1.5);/*Gegebenenfalls könnte man über eine Einstellung
-                             für diesen Wert nachdenken. So ist er jetzt aber genau an Windows angepasst, hoffe dass es in Mac auch läuft.*/
-                        scrollGestureEnabled: false
+                        property int filteredSpeed: 0
+                        onWheel: function(wheel) {
+                            if (wheel.device.type === PointerDevice.Mouse || wheel.device.name.includes("magic mouse")) {
+                                filteredSpeed = 0.01 * wheel.angleDelta.y / 8 + 0.9 * filteredSpeed
+                                parent.contentY = Math.min(Math.max(parent.originY, parent.contentY - filteredSpeed), parent.contentHeight + parent.originY - parent.height)
+                                vocScrollBar.show()
+                                sectionLetter.setVisible(filteredSpeed)
+                            }
+                        }
                         propagateComposedEvents: true//damit die Klicks an die darunter liegenden MouseAreas weitergeleitet werden.
+
                     }
 
-                    Keys.onReleased: {
+                    Keys.onReleased: function(event){
                         if(event.key === Qt.Key_Up || event.key === Qt.Key_Down) positionViewAtIndex(currentIndex, ListView.Center)
                         else if(event.key === Qt.Key_Home) { currentIndex = 0; positionViewAtBeginning()}
                         else if(event.key === Qt.Key_End) { currentIndex = count - 1; positionViewAtEnd()}
@@ -596,7 +622,7 @@ Item {
 
                                 onEditingFinished: {
                                     performSearch()
-                                    if(!noSearchResults.visible) lvDictionary.forceActiveFocus()
+                                    if(lvDictionary.count > 0) lvDictionary.forceActiveFocus()
                                 }
                             }
                             Button {
@@ -644,7 +670,7 @@ Item {
                         //snapMode: ListView.SnapToItem funktioniert nicht gut, scrollen ist dann überhaupt nicht mehr smooth
                         maximumFlickVelocity: defaultFontHeight.height * 500
                         flickDeceleration: maximumFlickVelocity / 2
-                        ScrollBar.vertical: AdaptedScrollBar {}
+                        ScrollBar.vertical: AdaptedScrollBar {id: dictScrollBar}
                         activeFocusOnTab: count > 0
                         model: dictionaryModel
 
@@ -674,19 +700,26 @@ Item {
                             }
                         }
 
-                        Keys.onReleased: {
+                        Keys.onReleased: function(event) {
                             if(event.key === Qt.Key_Up || event.key === Qt.Key_Down) positionViewAtIndex(currentIndex, ListView.Center)
                             else if(event.key === Qt.Key_Home) { currentIndex = 0; positionViewAtBeginning()}
                             else if(event.key === Qt.Key_End) { currentIndex = count - 1; positionViewAtEnd()}
                         }
 
-                        MouseArea {//Stellt sicher, dass mit dem Mausrad nicht zu schnell gescrollt wird - wie schnell kann eingestellt werden
+
+                        MouseArea{//Stellt sicher, dass mit dem Mausrad nicht zu schnell gescrollt wird - wie schnell kann eingestellt werden
                             anchors.fill: parent
-                            onWheel: parent.flick(0, wheel.angleDelta.y * defaultFontHeight.height / 1.5);/*Gegebenenfalls könnte man über eine Einstellung
-                                 für diesen Wert nachdenken. So ist er jetzt aber genau an Windows angepasst, hoffe dass es in Mac auch läuft.*/
-                            scrollGestureEnabled: false
+                            property int filteredSpeed: 0
+                            onWheel: function(wheel) {
+                                if (wheel.device.type === PointerDevice.Mouse || wheel.device.name.includes("magic mouse")) {
+                                    filteredSpeed = 0.1 * wheel.angleDelta.y / 8 + 0.9 * filteredSpeed
+                                    parent.contentY = Math.min(Math.max(parent.originY, parent.contentY - filteredSpeed), parent.contentHeight + parent.originY - parent.height)
+                                    dictScrollBar.show()
+                                }
+                            }
                             propagateComposedEvents: true//damit die Klicks an die darunter liegenden MouseAreas weitergeleitet werden.
                         }
+
 
                         AdaptedText {
                             id: noSearchResults
@@ -750,7 +783,7 @@ Item {
                 PropertyChanges { target: activityTitle; text: qsTr("Settings") }
                 PropertyChanges { target: settingsWindow; contentY: 0; visible: true; focus: true }
                 PropertyChanges { target: gridLayout; visible: false }
-                PropertyChanges { target: stateButton; source: "qrc:/qt/qml/Dictionary/Common/images/icons/arrow.svg" }
+                PropertyChanges { target: stateButton; src: "qrc:/qt/qml/Dictionary/Common/images/icons/arrow.svg" }
             },
 
             State {
@@ -758,7 +791,7 @@ Item {
                 PropertyChanges { target: activityTitle; text: constants.wordlist}
                 PropertyChanges { target: languageButton; visible: true }
                 PropertyChanges { target: lvVocabulary; focus: true; visible: true/*; model: vocabularyModel */}
-                PropertyChanges { target: stateButton; source: "qrc:/qt/qml/Dictionary/Common/images/icons/magnifying_glass.svg" }
+                PropertyChanges { target: stateButton; src: "qrc:/qt/qml/Dictionary/Common/images/icons/magnifying_glass.svg" }
                 StateChangeScript { script: { lvVocabulary.updateView(); lvVocabulary.forceActiveFocus() } }
             },
 
@@ -767,7 +800,7 @@ Item {
                 PropertyChanges { target: activityTitle; text: constants.dictionary }
                 PropertyChanges { target: dictionaryWidget; visible: true; focus: true }
                 PropertyChanges { target: resultWidget; resultListView: lvDictionary }
-                PropertyChanges { target: stateButton; source: "qrc:/qt/qml/Dictionary/Common/images/icons/alphabetic.svg" }
+                PropertyChanges { target: stateButton; src: "qrc:/qt/qml/Dictionary/Common/images/icons/alphabetic.svg" }
                 PropertyChanges { target: seperatorLine; visible: lvDictionary.contentHeight > lvDictionary.height }
                 StateChangeScript { script: { searchField.forceActiveFocus() } }
             }
