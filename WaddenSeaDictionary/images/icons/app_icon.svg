@@ -2,20 +2,23 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="250"
    height="250"
    viewBox="0 0 250 250"
    id="svg4342"
    version="1.1"
-   inkscape:version="0.91 r13725"
-   sodipodi:docname="Icon.svg">
+   inkscape:version="1.3 (0e150ed, 2023-07-21)"
+   sodipodi:docname="app_icon.svg"
+   inkscape:export-filename="../../ios/app_icon.png"
+   inkscape:export-xdpi="196.608"
+   inkscape:export-ydpi="196.608"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <defs
      id="defs4344" />
   <sodipodi:namedview
@@ -26,17 +29,20 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
-     inkscape:cx="-1.5891362"
-     inkscape:cy="7.291869"
+     inkscape:cx="-1.4285714"
+     inkscape:cy="7.5"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      units="px"
-     inkscape:window-width="1920"
-     inkscape:window-height="929"
-     inkscape:window-x="0"
-     inkscape:window-y="25"
-     inkscape:window-maximized="1" />
+     inkscape:window-width="2560"
+     inkscape:window-height="1440"
+     inkscape:window-x="1440"
+     inkscape:window-y="-1980"
+     inkscape:window-maximized="0"
+     inkscape:showpageshadow="2"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
   <metadata
      id="metadata4347">
     <rdf:RDF>
@@ -45,7 +51,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -62,7 +68,8 @@
     <g
        style="clip-rule:evenodd;fill-rule:evenodd;image-rendering:optimizeQuality;shape-rendering:geometricPrecision;text-rendering:geometricPrecision"
        id="Ebene_x0020_1"
-       transform="matrix(0.05152004,-0.05152004,0.05152004,0.05152004,39.796464,919.08837)">
+       transform="matrix(0.05152004,-0.05152004,0.05152004,0.05152004,39.796464,919.08837)"
+       inkscape:label="Ebene 1">
       <metadata
          id="CorelCorpID_0Corel-Layer" />
       <path

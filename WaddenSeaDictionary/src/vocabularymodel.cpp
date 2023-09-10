@@ -69,7 +69,7 @@ bool WaddenseaWord::fillFromCsvLine(QString csvLine)
 VocabularyModel::VocabularyModel(QObject *parent)
     : QAbstractTableModel(parent)
 {
-    fillModelFromCsv(":/qt/qml/WaddenSeaDictionary/txt/Wadden_Sea_vocabulary.csv");
+    fillModelFromCsv(":/qt/qml/Dictionary/txt/Wadden_Sea_vocabulary.csv");
 }
 
 bool VocabularyModel::fillModelFromCsv(QString a_csvPath)

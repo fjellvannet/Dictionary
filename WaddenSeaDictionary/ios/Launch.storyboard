@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="m5s-zO-4Jl">
+            <objects>
+                <viewController useStoryboardIdentifierAsRestorationIdentifier="YES" id="ppu-pu-02I" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Tts-8G-SJe"/>
+                        <viewControllerLayoutGuide type="bottom" id="2it-Ur-U81"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleAspectFit" id="crc-Sb-Xob">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="app_icon.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ndo-cr-zYw">
+                                <rect key="frame" x="94" y="240" width="187" height="187"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="Ndo-cr-zYw" secondAttribute="height" multiplier="1:1" id="uh2-VE-ZEW"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Ndo-cr-zYw" firstAttribute="trailing" secondItem="crc-Sb-Xob" secondAttribute="centerX" multiplier="1.5" id="58v-zG-by7"/>
+                            <constraint firstItem="Ndo-cr-zYw" firstAttribute="centerY" secondItem="crc-Sb-Xob" secondAttribute="centerY" id="Nel-gL-jah"/>
+                            <constraint firstItem="Ndo-cr-zYw" firstAttribute="leading" secondItem="crc-Sb-Xob" secondAttribute="centerX" multiplier="0.5" id="Qsz-QL-sUX"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="p0l-HX-p71" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-0.80000000000000004" y="-0.44977511244377816"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="app_icon.png" width="187.12690734863281" height="187.12690734863281"/>
+    </resources>
+</document>

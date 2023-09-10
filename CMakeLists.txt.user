@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 11.0.2, 2023-09-09T21:59:57. -->
+<!-- Written by QtCreator 11.0.2, 2023-09-10T11:15:17. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -8,7 +8,7 @@
  </data>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
-  <value type="qlonglong">0</value>
+  <value type="qlonglong">2</value>
  </data>
  <data>
   <variable>ProjectExplorer.Project.EditorSettings</variable>
@@ -865,7 +865,6 @@
 -DCMAKE_CXX_FLAGS_INIT:STRING=%{Qt:QML_DEBUG_FLAG}
 %{Ios:DevelopmentTeam:Flag}
 %{Ios:ProvisioningProfile:Flag}</value>
-    <value type="int" key="EnableQmlDebugging">0</value>
     <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/Users/lukas/Documents/Utvikling/Qt/Workspace/build-Dictionary-Qt_6_5_2_for_iOS_Simulator</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
@@ -1171,9 +1170,9 @@
      <value type="QString" key="identifier">643535E2-A76A-4E1F-AA25-5C6AFE39BE06</value>
      <value type="int" key="type">1</value>
     </valuemap>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Run  on iOS Simulator</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.IosRunConfiguration:dictionary</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">dictionary</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Run WaddenSeaDictionary on iOS Simulator</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.IosRunConfiguration:Dictionary</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">Dictionary</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
    </valuemap>

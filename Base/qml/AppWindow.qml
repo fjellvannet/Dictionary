@@ -90,7 +90,7 @@ Item {
 
     Image {
         anchors.fill: parent
-        source: "qrc:/qt/qml/Dictionary/Common/images/background/background.jpg"
+        source: "qrc:/qt/qml/Dictionary/images/background/background.jpg"
         fillMode: Image.PreserveAspectCrop
         opacity: 0.3
     }
@@ -115,7 +115,7 @@ Item {
                     id: stateButton
                     Layout.fillHeight: true
                     Layout.preferredWidth: height
-                    src: "qrc:/qt/qml/Dictionary/Common/images/icons/arrow.svg"
+                    src: "qrc:/qt/qml/Dictionary/images/icons/arrow.svg"
 
                     onClicked: {
                         if(mainlayout.state !== "settings")
@@ -176,7 +176,7 @@ Item {
                     Layout.fillHeight: true
                     Layout.preferredWidth: height
                     Layout.alignment: Qt.AlignRight
-                    src: "qrc:/qt/qml/Dictionary/Common/images/icons/settings.svg"
+                    src: "qrc:/qt/qml/Dictionary/images/icons/settings.svg"
                     onClicked: {
                         mainlayout.state = mainlayout.state === "settings" ? (settings.vocabularyList ? "vocabularyList" : "dictionary") : "settings"
                     }
@@ -372,7 +372,7 @@ Item {
 //                    }
 
                     AdaptedImage {
-                        source: "qrc:/qt/qml/WaddenSeaDictionary/images/icons/app_icon.svg"
+                        source: "qrc:/qt/qml/Dictionary/images/icons/app_icon.svg"
                         Layout.preferredWidth: Math.min(10 * em, parent.width)
                         Layout.preferredHeight: Math.min(10 * em, parent.width)
                         Layout.alignment: Qt.AlignHCenter
@@ -527,7 +527,7 @@ Item {
                         property int filteredSpeed: 0
                         onWheel: function(wheel) {
                             if (wheel.device.type === PointerDevice.Mouse || wheel.device.name.includes("magic mouse")) {
-                                filteredSpeed = 0.01 * wheel.angleDelta.y / 8 + 0.9 * filteredSpeed
+                                filteredSpeed = 0.1 * wheel.angleDelta.y / 8 + 0.9 * filteredSpeed
                                 parent.contentY = Math.min(Math.max(parent.originY, parent.contentY - filteredSpeed), parent.contentHeight + parent.originY - parent.height)
                                 vocScrollBar.show()
                                 sectionLetter.setVisible(filteredSpeed)
@@ -573,7 +573,7 @@ Item {
                                 AdaptedImage {
                                     anchors.fill: parent
                                     id: magnifying_glass_image
-                                    source: "qrc:/qt/qml/Dictionary/Common/images/icons/magnifying_glass.svg"
+                                    source: "qrc:/qt/qml/Dictionary/images/icons/magnifying_glass.svg"
                                 }
                                 onClicked: searchField.performSearch()
                                 MultiEffect {
@@ -636,7 +636,7 @@ Item {
                                     id: ai
                                     width: parent.height * 3/4
                                     height: width
-                                    source: "qrc:/qt/qml/Dictionary/Common/images/icons/cross_searchfield.svg"
+                                    source: "qrc:/qt/qml/Dictionary/images/icons/cross_searchfield.svg"
                                 }
                                 onClicked: {
                                     searchField.text = ""
@@ -783,7 +783,7 @@ Item {
                 PropertyChanges { target: activityTitle; text: qsTr("Settings") }
                 PropertyChanges { target: settingsWindow; contentY: 0; visible: true; focus: true }
                 PropertyChanges { target: gridLayout; visible: false }
-                PropertyChanges { target: stateButton; src: "qrc:/qt/qml/Dictionary/Common/images/icons/arrow.svg" }
+                PropertyChanges { target: stateButton; src: "qrc:/qt/qml/Dictionary/images/icons/arrow.svg" }
             },
 
             State {
@@ -791,7 +791,7 @@ Item {
                 PropertyChanges { target: activityTitle; text: constants.wordlist}
                 PropertyChanges { target: languageButton; visible: true }
                 PropertyChanges { target: lvVocabulary; focus: true; visible: true/*; model: vocabularyModel */}
-                PropertyChanges { target: stateButton; src: "qrc:/qt/qml/Dictionary/Common/images/icons/magnifying_glass.svg" }
+                PropertyChanges { target: stateButton; src: "qrc:/qt/qml/Dictionary/images/icons/magnifying_glass.svg" }
                 StateChangeScript { script: { lvVocabulary.updateView(); lvVocabulary.forceActiveFocus() } }
             },
 
@@ -800,7 +800,7 @@ Item {
                 PropertyChanges { target: activityTitle; text: constants.dictionary }
                 PropertyChanges { target: dictionaryWidget; visible: true; focus: true }
                 PropertyChanges { target: resultWidget; resultListView: lvDictionary }
-                PropertyChanges { target: stateButton; src: "qrc:/qt/qml/Dictionary/Common/images/icons/alphabetic.svg" }
+                PropertyChanges { target: stateButton; src: "qrc:/qt/qml/Dictionary/images/icons/alphabetic.svg" }
                 PropertyChanges { target: seperatorLine; visible: lvDictionary.contentHeight > lvDictionary.height }
                 StateChangeScript { script: { searchField.forceActiveFocus() } }
             }

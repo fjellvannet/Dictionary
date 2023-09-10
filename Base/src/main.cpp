@@ -92,9 +92,9 @@ int main(int argc, char* argv[]) {
 #endif
   ctxt->setContextProperty("appLanguage", appLanguage);
   ctxt->setContextProperty("qt_version", QT_VERSION_STR);
-  QFile license_file(":/qt/qml/Dictionary/LICENSE.md");
-  view.setSource(QUrl("qrc:/qt/qml/Dictionary/Common/qml/AppWindow.qml"));
+  view.setSource(QUrl("qrc:/qt/qml/Dictionary/qml/AppWindow.qml"));
   QQuickItem* mainWindow = view.rootObject();
+  QFile license_file(":/qt/qml/Dictionary/LICENSE.md");
   if(!license_file.open(QIODevice::ReadOnly))
     qDebug().noquote() << "Could not read License.md from resource";
   else
