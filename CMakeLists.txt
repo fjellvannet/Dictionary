@@ -8,6 +8,7 @@ else()
 endif()
 
 project(${PROJECT} VERSION 1.1.0 LANGUAGES CXX)
+message("${PROJECT_NAME} ${CMAKE_PROJECT_VERSION}")
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTORCC ON)
@@ -24,17 +25,15 @@ set(BASE_DIR Base)
 set(BASE_URI Dictionary)
 
 macro(addHeadersAndSources DIR)
-    set(HEADERS)
-    set(SOURCES)
-    file(GLOB HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "${DIR}/include/*.h")
-    file(GLOB SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "${DIR}/src/*.cpp")
+    file(GLOB FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "${DIR}/include/*.h")
+    list(APPEND HEADERS ${FILES})
+    file(GLOB FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "${DIR}/src/*.cpp")
+    list(APPEND SOURCES ${FILES})
     include_directories(${DIR}/include)
 endmacro()
 
 macro(addResources)
     cmake_parse_arguments(RSC "" DIR RESOURCE_DIRS ${ARGN})
-    set(QML_FILES)
-    set(RESOURCES)
 
     file(GLOB QML_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "${RSC_DIR}/qml/*.qml")
 
@@ -53,11 +52,14 @@ macro(addResources)
     endforeach()
 endmacro()
 
-addResources(DIR ${BASE_DIR} RESOURCE_DIRS "images *.svg *.jpg")
-list(APPEND RESOURCES LICENSE.md README.md)
 addHeadersAndSources(${BASE_DIR})
+addHeadersAndSources(${PROJECT_NAME})
 
 qt_add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
+
+list(APPEND RESOURCES LICENSE.md README.md)
+addResources(DIR ${BASE_DIR} RESOURCE_DIRS "images *.svg *.jpg")
+addResources(DIR ${PROJECT_NAME} RESOURCE_DIRS "images *.svg *.jpg" "txt *.csv")
 
 qt_add_qml_module(${PROJECT_NAME}
     URI ${BASE_URI}
@@ -67,42 +69,21 @@ qt_add_qml_module(${PROJECT_NAME}
     RESOURCES ${RESOURCES}
 )
 
+foreach(VAR IN ITEMS HEADERS SOURCES QML_FILES RESOURCES)
+    message("\n${VAR}")
+    foreach(FILE IN LISTS ${VAR})
+        message("    ${FILE}")
+    endforeach()
+endforeach()
+
 if(${WADDEN_SEA_DICTIONARY} EQUAL 1) # Wadden Sea Dictionary
     add_compile_definitions(WADDEN_SEA_DICTIONARY)
     set(PACKAGE no.fjellvannet.wadden_sea_dictionary)
 
-    addHeadersAndSources(${PROJECT_NAME})
-    target_sources(${PROJECT_NAME} PUBLIC ${HEADERS} ${SOURCES})
-
-    addResources(DIR ${PROJECT_NAME} RESOURCE_DIRS "images *.svg *.jpg" "txt *.csv")
-
-    qt_target_qml_sources(
-        ${PROJECT_NAME}
-        QML_FILES ${QML_FILES}
-        RESOURCES ${RESOURCES}
-        PREFIX /qt/qml/${BASE_URI}
-    )
-
-    if(APPLE AND NOT IOS)
-        set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "Wadden Sea Dictionary")
-    endif()
-
-    # macOS
-    if(APPLE AND NOT IOS)
-        set(MACOSX_BUNDLE_ICON_FILE app_icon.icns)
-        set(APP_ICON_MACOS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}/macos/${MACOSX_BUNDLE_ICON_FILE}")
-        set_source_files_properties(${APP_ICON_MACOS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-        set_source_files_properties(LICENSE.md PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-        set_source_files_properties(README.md PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-        target_sources(${PROJECT_NAME} PUBLIC ${app_icon_macos} LICENSE.md README.md)
-    endif()
-
-    # Android
     if(ANDROID)
-        set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${PLUGIN_DIR}/android)
-        set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY QT_ANDROID_VERSION_NAME ${CMAKE_PROJECT_VERSION})
-        set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY QT_ANDROID_VERSION_NUMBER 1)
+        set(ANDROID_VERSION_NUMBER 1)
     endif()
+
     # iOS
     if(IOS)
         file(GLOB_RECURSE app_icons CONFIGURE_DEPENDS "${PLUGIN_DIR}/ios/AppIcon*.png")
@@ -129,6 +110,24 @@ if(${WADDEN_SEA_DICTIONARY} EQUAL 1) # Wadden Sea Dictionary
 
 else() # Buchmål
     set(PACKAGE no.fjellvannet.buchmaal)
+endif()
+
+# macOS
+if(APPLE AND NOT IOS)
+    set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "Wadden Sea Dictionary")
+    set(MACOSX_BUNDLE_ICON_FILE app_icon.icns)
+    set(APP_ICON_MACOS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}/macos/${MACOSX_BUNDLE_ICON_FILE}")
+    set_source_files_properties(${APP_ICON_MACOS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    set_source_files_properties(LICENSE.md PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    set_source_files_properties(README.md PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
+    target_sources(${PROJECT_NAME} PUBLIC ${app_icon_macos} LICENSE.md README.md)
+endif()
+
+# Android
+if(ANDROID)
+    set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}/android)
+    set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY QT_ANDROID_VERSION_NAME ${CMAKE_PROJECT_VERSION})
+    set_property(TARGET ${PROJECT_NAME} APPEND PROPERTY QT_ANDROID_VERSION_NUMBER ${ANDROID_VERSION_NUMBER})
 endif()
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
