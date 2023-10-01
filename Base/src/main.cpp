@@ -75,6 +75,12 @@ int main(int argc, char* argv[]) {
         ;//nur um Compiler-Warnungen zu unterdrücken, kann durch das vorangegangene if nicht auftreten
     }
   }
+#if 0  // Show resources
+  QDirIterator it(":", QDirIterator::Subdirectories);
+  while (it.hasNext()) {
+    qDebug() << it.next();
+  }
+#endif
   QQuickStyle::setStyle("Material");
   QQuickWindow::setDefaultAlphaBuffer(true);
   MyQQuickView view;

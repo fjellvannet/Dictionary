@@ -35,7 +35,8 @@ endmacro()
 macro(addResources)
     cmake_parse_arguments(RSC "" DIR RESOURCE_DIRS ${ARGN})
 
-    file(GLOB QML_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "${RSC_DIR}/qml/*.qml")
+    file(GLOB RSC_QML_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "${RSC_DIR}/qml/*.qml")
+    list(APPEND QML_FILES ${RSC_QML_FILES})
 
     foreach(DIR_EXTENSIONS IN ITEMS ${RSC_RESOURCE_DIRS})
         separate_arguments(EXTENSIONS UNIX_COMMAND ${DIR_EXTENSIONS})
@@ -43,13 +44,16 @@ macro(addResources)
         foreach(EXTENSION IN LISTS EXTENSIONS)
             file(GLOB_RECURSE FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} CONFIGURE_DEPENDS "${RSC_DIR}/${_DIR}/${EXTENSION}")
             list(APPEND RESOURCES ${FILES})
+            list(APPEND RSC_RESOURCES ${FILES})
         endforeach()
     endforeach()
 
-    foreach(FILE IN ITEMS ${QML_FILES} ${RESOURCES})
+    foreach(FILE IN ITEMS ${RSC_QML_FILES} ${RSC_RESOURCES})
         file(RELATIVE_PATH FILE_NAME ${CMAKE_SOURCE_DIR}/${RSC_DIR} ${CMAKE_SOURCE_DIR}/${FILE})
         set_source_files_properties(${FILE} PROPERTIES QT_RESOURCE_ALIAS ${FILE_NAME})
     endforeach()
+    unset(RSC_QML_FILES)
+    unset(RSC_RESOURCES)
 endmacro()
 
 addHeadersAndSources(${BASE_DIR})
@@ -67,6 +71,7 @@ qt_add_qml_module(${PROJECT_NAME}
     QML_FILES ${QML_FILES}
     SOURCES ${SOURCES}
     RESOURCES ${RESOURCES}
+    PREFIX /qt/qml
 )
 
 foreach(VAR IN ITEMS HEADERS SOURCES QML_FILES RESOURCES)
@@ -117,10 +122,13 @@ if(APPLE AND NOT IOS)
     set_target_properties(${PROJECT_NAME} PROPERTIES OUTPUT_NAME "Wadden Sea Dictionary")
     set(MACOSX_BUNDLE_ICON_FILE app_icon.icns)
     set(APP_ICON_MACOS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}/macos/${MACOSX_BUNDLE_ICON_FILE}")
-    set_source_files_properties(${APP_ICON_MACOS} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-    set_source_files_properties(LICENSE.md PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-    set_source_files_properties(README.md PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
-    target_sources(${PROJECT_NAME} PUBLIC ${app_icon_macos} LICENSE.md README.md)
+    set_source_files_properties(
+        ${APP_ICON_MACOS}
+        LICENSE.md
+        README.md
+        PROPERTIES MACOSX_PACKAGE_LOCATION Resources
+    )
+    target_sources(${PROJECT_NAME} PUBLIC ${APP_ICON_MACOS} LICENSE.md README.md)
 endif()
 
 # Android

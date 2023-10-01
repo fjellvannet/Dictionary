@@ -415,7 +415,7 @@ Item {
                     visible: false
                     Layout.fillHeight: true
                     Layout.fillWidth: true
-                    maximumFlickVelocity: defaultFontHeight.height * 500
+                    maximumFlickVelocity: em * 500
                     activeFocusOnTab: true
                     flickDeceleration: maximumFlickVelocity / 2
                     clip: true
@@ -503,13 +503,6 @@ Item {
                         text: parent.currentSection
                         color: "white"
                         font.pixelSize: 3 * globalFontPixelSize
-                        function setVisible(speed) {
-                            if (!visible && Math.abs(speed) >= parent.maximumFlickVelocity / 100)
-                                visible = true
-                            else if (sectionLetter.visible && Math.abs(speed) <= parent.maximumFlickVelocity / 250)
-                                visible = false
-                            tm.restart()
-                        }
                         Timer {
                             id: tm
                             interval: 200
@@ -518,23 +511,20 @@ Item {
 
                     }
 
-                    onVerticalVelocityChanged: {
-                        sectionLetter.visible = Math.abs(verticalVelocity) >= maximumFlickVelocity / 4
+                    ScrollMouseArea {
+                        onWheel: function(wheel){
+                            vocScrollBar.show()
+                            let speed = performScroll(wheel) / 2
+                            if (!visible && Math.abs(speed) >= parent.maximumFlickVelocity / 100)
+                                visible = true
+                            else if (sectionLetter.visible && Math.abs(speed) <= parent.maximumFlickVelocity / 250)
+                                visible = false
+                            tm.restart()
+                        }
                     }
 
-                    MouseArea{//Stellt sicher, dass mit dem Mausrad nicht zu schnell gescrollt wird - wie schnell kann eingestellt werden
-                        anchors.fill: parent
-                        property int filteredSpeed: 0
-                        onWheel: function(wheel) {
-                            if (wheel.device.type === PointerDevice.Mouse || wheel.device.name.includes("magic mouse")) {
-                                filteredSpeed = 0.1 * wheel.angleDelta.y / 8 + 0.9 * filteredSpeed
-                                parent.contentY = Math.min(Math.max(parent.originY, parent.contentY - filteredSpeed), parent.contentHeight + parent.originY - parent.height)
-                                vocScrollBar.show()
-                                sectionLetter.setVisible(filteredSpeed)
-                            }
-                        }
-                        propagateComposedEvents: true//damit die Klicks an die darunter liegenden MouseAreas weitergeleitet werden.
-
+                    onVerticalVelocityChanged: {
+                        sectionLetter.visible = Math.abs(verticalVelocity) >= maximumFlickVelocity / 4
                     }
 
                     Keys.onReleased: function(event){
@@ -668,7 +658,7 @@ Item {
                         clip: true
                         boundsBehavior: ListView.StopAtBounds
                         //snapMode: ListView.SnapToItem funktioniert nicht gut, scrollen ist dann überhaupt nicht mehr smooth
-                        maximumFlickVelocity: defaultFontHeight.height * 500
+                        maximumFlickVelocity: em * 500
                         flickDeceleration: maximumFlickVelocity / 2
                         ScrollBar.vertical: AdaptedScrollBar {id: dictScrollBar}
                         activeFocusOnTab: count > 0
@@ -707,19 +697,12 @@ Item {
                         }
 
 
-                        MouseArea{//Stellt sicher, dass mit dem Mausrad nicht zu schnell gescrollt wird - wie schnell kann eingestellt werden
-                            anchors.fill: parent
-                            property int filteredSpeed: 0
-                            onWheel: function(wheel) {
-                                if (wheel.device.type === PointerDevice.Mouse || wheel.device.name.includes("magic mouse")) {
-                                    filteredSpeed = 0.1 * wheel.angleDelta.y / 8 + 0.9 * filteredSpeed
-                                    parent.contentY = Math.min(Math.max(parent.originY, parent.contentY - filteredSpeed), parent.contentHeight + parent.originY - parent.height)
-                                    dictScrollBar.show()
-                                }
+                        ScrollMouseArea {
+                            onWheel: {
+                                performScroll()
+                                dictScrollBar.show()
                             }
-                            propagateComposedEvents: true//damit die Klicks an die darunter liegenden MouseAreas weitergeleitet werden.
                         }
-
 
                         AdaptedText {
                             id: noSearchResults
