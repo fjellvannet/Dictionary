@@ -26,11 +26,14 @@
     <key>CFBundleShortVersionString</key>
     <string>$(MARKETING_VERSION)</string>
 
+    <key>NSHumanReadableCopyright</key>
+    <string></string>
+
     <key>CFBundleIconFile</key>
-    <string>AppIcon</string>
+    <string></string>
 
     <key>CFBundleDevelopmentRegion</key>
-    <string>$(DEVELOPMENT_LANGUAGE)</string>
+    <string>en</string>
     <key>CFBundleAllowMixedLocalizations</key>
     <true/>
 
@@ -38,7 +41,7 @@
     <true/>
 
     <key>UILaunchStoryboardName</key>
-    <string>LaunchScreen</string>
+    <string>CustomLaunchScreen</string>
 
     <key>UISupportedInterfaceOrientations</key>
     <array>

@@ -508,7 +508,6 @@ Item {
                             interval: 200
                             onTriggered: sectionLetter.visible=false
                         }
-
                     }
 
                     ScrollMouseArea {
@@ -695,7 +694,6 @@ Item {
                             else if(event.key === Qt.Key_Home) { currentIndex = 0; positionViewAtBeginning()}
                             else if(event.key === Qt.Key_End) { currentIndex = count - 1; positionViewAtEnd()}
                         }
-
 
                         ScrollMouseArea {
                             onWheel: {
